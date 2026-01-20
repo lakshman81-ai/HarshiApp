@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/HarshiAppv1.1new/static/css/main.b7c8926a.css",
+    "main.js": "/HarshiAppv1.1new/static/js/main.4071112f.js",
+    "index.html": "/HarshiAppv1.1new/index.html",
+    "main.b7c8926a.css.map": "/HarshiAppv1.1new/static/css/main.b7c8926a.css.map",
+    "main.4071112f.js.map": "/HarshiAppv1.1new/static/js/main.4071112f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b7c8926a.css",
+    "static/js/main.4071112f.js"
+  ]
+}
