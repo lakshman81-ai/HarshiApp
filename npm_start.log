@@ -1,0 +1,37 @@
+
+> studyhub-grade8@1.1.0 start
+> react-scripts start
+
+(node:2498) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:2498) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled with warnings.
+
+[eslint]
+src/StudyHub.jsx
+  Line 2:310:    'Menu' is defined but never used                                                                                                                                                               no-unused-vars
+  Line 2:335:    'WifiOff' is defined but never used                                                                                                                                                            no-unused-vars
+  Line 2:350:    'RotateCcw' is defined but never used                                                                                                                                                          no-unused-vars
+  Line 650:6:    React Hook useEffect has a missing dependency: 'loadFromSheets'. Either include it or remove the dependency array                                                                              react-hooks/exhaustive-deps
+  Line 765:6:    React Hook useEffect has missing dependencies: 'progress.achievements', 'progress.lastStudyDate', 'progress.streak', and 'updateProgress'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 955:7:    'xpToNextLevel' is assigned a value but never used                                                                                                                                             no-unused-vars
+  Line 1497:21:  'SectionIcon' is assigned a value but never used                                                                                                                                               no-unused-vars
+  Line 1785:42:  'syncStatus' is assigned a value but never used                                                                                                                                                no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint]
+src/StudyHub.jsx
+  Line 2:310:    'Menu' is defined but never used                                                                                                                                                               no-unused-vars
+  Line 2:335:    'WifiOff' is defined but never used                                                                                                                                                            no-unused-vars
+  Line 2:350:    'RotateCcw' is defined but never used                                                                                                                                                          no-unused-vars
+  Line 650:6:    React Hook useEffect has a missing dependency: 'loadFromSheets'. Either include it or remove the dependency array                                                                              react-hooks/exhaustive-deps
+  Line 765:6:    React Hook useEffect has missing dependencies: 'progress.achievements', 'progress.lastStudyDate', 'progress.streak', and 'updateProgress'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  Line 955:7:    'xpToNextLevel' is assigned a value but never used                                                                                                                                             no-unused-vars
+  Line 1497:21:  'SectionIcon' is assigned a value but never used                                                                                                                                               no-unused-vars
+  Line 1785:42:  'syncStatus' is assigned a value but never used                                                                                                                                                no-unused-vars
+
+webpack compiled with 1 warning
