@@ -1,4 +1,5 @@
-import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
+import React, { memo, useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { Star } from 'lucide-react';
 
 // Import subcomponents
@@ -85,8 +86,18 @@ const StudyGuide = memo(({
   const progressPercent = progress?.topics?.[topicKey]?.progress || 0;
   const xpEarned = progress?.topics?.[topicKey]?.xp || 0;
   const bookmarks = progress?.bookmarks || [];
-  const isBookmarked = currentSection && bookmarks.includes(`${topicKey}-${currentSection.id}`);
   const userNotes = progress?.notes?.[topicKey] || '';
+
+  // Memoize topic-specific bookmarks to avoid recalculation on every render
+  const topicBookmarks = useMemo(
+    () => bookmarks.filter(b => b.startsWith(topicKey)),
+    [bookmarks, topicKey]
+  );
+
+  const isBookmarked = useMemo(
+    () => currentSection && bookmarks.includes(`${topicKey}-${currentSection.id}`),
+    [currentSection, bookmarks, topicKey]
+  );
 
   // Scroll to top when section changes
   useEffect(() => {
@@ -349,6 +360,34 @@ const StudyGuide = memo(({
 });
 
 StudyGuide.displayName = 'StudyGuide';
+
+StudyGuide.propTypes = {
+  subject: PropTypes.string.isRequired,
+  topicIndex: PropTypes.number.isRequired,
+  onBack: PropTypes.func.isRequired,
+  onOpenSettings: PropTypes.func,
+  studyData: PropTypes.shape({
+    progress: PropTypes.object,
+    subjects: PropTypes.object,
+    sections: PropTypes.object,
+    objectives: PropTypes.object,
+    keyTerms: PropTypes.object,
+    studyContent: PropTypes.object,
+    formulas: PropTypes.object,
+    quizQuestions: PropTypes.object,
+    updateProgress: PropTypes.func,
+    settings: PropTypes.shape({
+      darkMode: PropTypes.bool,
+    }),
+    DEFAULT_SECTIONS: PropTypes.object,
+    DEFAULT_OBJECTIVES: PropTypes.object,
+    DEFAULT_KEY_TERMS: PropTypes.object,
+    DEFAULT_CONTENT: PropTypes.object,
+    DEFAULT_FORMULAS: PropTypes.object,
+    DEFAULT_QUIZZES: PropTypes.object,
+  }).isRequired,
+  ICON_MAP: PropTypes.object,
+};
 
 export default StudyGuide;
 

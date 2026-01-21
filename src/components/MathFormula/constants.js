@@ -56,7 +56,27 @@ export const MATH_OPERATORS = {
   '\\degree': '°',
   '\\circ': '°',
   '\\prime': '′',
-  '\\dprime': '″'
+  '\\dprime': '″',
+  // Calculus and limits
+  '\\int': '∫',
+  '\\oint': '∮',
+  '\\lim': 'lim',
+  // Trigonometric functions
+  '\\sin': 'sin',
+  '\\cos': 'cos',
+  '\\tan': 'tan',
+  // Logarithms
+  '\\log': 'log',
+  '\\ln': 'ln',
+  // Set theory and logic
+  '\\forall': '∀',
+  '\\exists': '∃',
+  '\\in': '∈',
+  '\\notin': '∉',
+  '\\subset': '⊂',
+  '\\supset': '⊃',
+  '\\cup': '∪',
+  '\\cap': '∩'
 };
 
 // Arrow symbols

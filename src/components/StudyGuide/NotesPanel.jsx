@@ -1,4 +1,5 @@
 import React, { memo, useState, useEffect, useCallback, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { StickyNote, Save, Loader2 } from 'lucide-react';
 
 const cn = (...classes) => classes.flat().filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
@@ -26,6 +27,7 @@ const NotesPanel = memo(({
   const [notes, setNotes] = useState(initialNotes || '');
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
+  const [saveStatus, setSaveStatus] = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
   const saveTimeoutRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -38,14 +40,18 @@ const NotesPanel = memo(({
   const debouncedSave = useCallback((content) => {
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
+      saveTimeoutRef.current = null;
     }
 
     saveTimeoutRef.current = setTimeout(() => {
       setIsSaving(true);
+      setSaveStatus('saving');
       onSave?.(topicId, content);
       setTimeout(() => {
         setIsSaving(false);
+        setSaveStatus('saved');
         setLastSaved(new Date());
+        saveTimeoutRef.current = null;
       }, 500);
     }, 1000);
   }, [topicId, onSave]);
@@ -61,11 +67,14 @@ const NotesPanel = memo(({
   const handleManualSave = () => {
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
+      saveTimeoutRef.current = null; // Clear ref to prevent race condition
     }
     setIsSaving(true);
+    setSaveStatus('saving');
     onSave?.(topicId, notes);
     setTimeout(() => {
       setIsSaving(false);
+      setSaveStatus('saved');
       setLastSaved(new Date());
     }, 500);
   };
@@ -177,5 +186,19 @@ const NotesPanel = memo(({
 });
 
 NotesPanel.displayName = 'NotesPanel';
+
+NotesPanel.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  topicId: PropTypes.string.isRequired,
+  initialNotes: PropTypes.string,
+  darkMode: PropTypes.bool,
+  onSave: PropTypes.func,
+  onClose: PropTypes.func,
+};
+
+NotesPanel.defaultProps = {
+  initialNotes: '',
+  darkMode: false,
+};
 
 export default NotesPanel;

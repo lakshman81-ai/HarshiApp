@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const cn = (...classes) => classes.flat().filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
@@ -58,11 +59,13 @@ const FloatingNavigation = memo(({
         </button>
 
         {/* Progress Dots */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5" role="navigation" aria-label="Section progress">
           {Array.from({ length: totalSections }).map((_, i) => (
             <button
               key={i}
               onClick={() => onSelectSection(i)}
+              aria-label={`Go to section ${i + 1}${i < activeSection ? ', completed' : i === activeSection ? ', current' : ''}`}
+              aria-current={i === activeSection ? 'step' : undefined}
               className={cn(
                 "h-2 rounded-full transition-all",
                 i === activeSection
@@ -100,5 +103,21 @@ const FloatingNavigation = memo(({
 });
 
 FloatingNavigation.displayName = 'FloatingNavigation';
+
+FloatingNavigation.propTypes = {
+  activeSection: PropTypes.number.isRequired,
+  totalSections: PropTypes.number.isRequired,
+  config: PropTypes.shape({
+    gradient: PropTypes.string,
+  }).isRequired,
+  darkMode: PropTypes.bool,
+  onPrevious: PropTypes.func.isRequired,
+  onNext: PropTypes.func.isRequired,
+  onSelectSection: PropTypes.func.isRequired,
+};
+
+FloatingNavigation.defaultProps = {
+  darkMode: false,
+};
 
 export default FloatingNavigation;

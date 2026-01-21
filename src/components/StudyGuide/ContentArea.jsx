@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import { FileText } from 'lucide-react';
 import {
   ObjectivesBlock,
@@ -11,6 +12,7 @@ import {
   ImageBlock
 } from './ContentBlocks';
 import QuizSection from '../QuizSection';
+import ContentErrorBoundary from '../ErrorBoundary';
 
 const cn = (...classes) => classes.flat().filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
 
@@ -49,8 +51,12 @@ const ContentArea = memo(({
   // Render content block based on type
   const renderContentBlock = (content, index) => {
     // Find matching formula for formula content type
+    // Priority: 1. By explicit formulaId, 2. By label match, 3. By formula text match, 4. Fallback to first
     const matchingFormula = content.type === 'formula'
-      ? formulas?.find(f => f.label === content.title || f.formula === content.text) || formulas?.[0]
+      ? formulas?.find(f => content.formulaId && f.id === content.formulaId) ||
+        formulas?.find(f => f.label === content.title) ||
+        formulas?.find(f => f.formula === content.text) ||
+        formulas?.[0]
       : null;
 
     switch (content.type) {
@@ -125,7 +131,11 @@ const ContentArea = memo(({
           <>
             {sectionContent && sectionContent.length > 0 ? (
               <div className="space-y-6">
-                {sectionContent.map((content, index) => renderContentBlock(content, index))}
+                {sectionContent.map((content, index) => (
+                  <ContentErrorBoundary key={content.id || index} darkMode={darkMode}>
+                    {renderContentBlock(content, index)}
+                  </ContentErrorBoundary>
+                ))}
               </div>
             ) : (
               <div
@@ -162,5 +172,43 @@ const ContentArea = memo(({
 });
 
 ContentArea.displayName = 'ContentArea';
+
+ContentArea.propTypes = {
+  currentSection: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    type: PropTypes.string,
+    icon: PropTypes.string,
+  }),
+  sectionContent: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    type: PropTypes.string,
+    title: PropTypes.string,
+    text: PropTypes.string,
+    formulaId: PropTypes.string,
+  })),
+  objectives: PropTypes.array,
+  formulas: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    label: PropTypes.string,
+    formula: PropTypes.string,
+  })),
+  quizQuestions: PropTypes.array,
+  config: PropTypes.shape({
+    gradient: PropTypes.string,
+    color: PropTypes.string,
+  }),
+  darkMode: PropTypes.bool,
+  userXp: PropTypes.number,
+  topicId: PropTypes.string,
+  onQuizComplete: PropTypes.func,
+  onUseHint: PropTypes.func,
+  contentRef: PropTypes.object,
+};
+
+ContentArea.defaultProps = {
+  darkMode: false,
+  userXp: 0,
+};
 
 export default ContentArea;
