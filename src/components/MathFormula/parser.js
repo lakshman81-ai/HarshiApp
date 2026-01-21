@@ -21,7 +21,7 @@ export function replaceSymbols(text) {
 }
 
 /**
- * Extract content from braces, handling nested braces
+ * Extract content from braces, handling nested braces and escaped braces
  * @param {string} text - Input text starting after opening brace
  * @returns {{ content: string, remaining: string }} - Extracted content and remaining text
  */
@@ -30,6 +30,16 @@ function extractBraceContent(text) {
   let i = 0;
 
   while (i < text.length && depth > 0) {
+    // Check for escaped braces (e.g., \{ or \})
+    if (i > 0 && text[i - 1] === '\\' && (text[i] === '{' || text[i] === '}')) {
+      i++;
+      continue;
+    }
+    // Also check if current char is backslash and next is brace
+    if (text[i] === '\\' && i + 1 < text.length && (text[i + 1] === '{' || text[i + 1] === '}')) {
+      i += 2;
+      continue;
+    }
     if (text[i] === '{') depth++;
     else if (text[i] === '}') depth--;
     i++;

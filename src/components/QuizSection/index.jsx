@@ -1,4 +1,5 @@
-import React, { memo, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { memo, useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { HelpCircle, Clock, Lightbulb, ChevronLeft, ChevronRight, Check, X, CheckCircle2, RotateCcw, Filter, Sparkles, Image as ImageIcon } from 'lucide-react';
 
 const cn = (...classes) => classes.flat().filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
@@ -127,14 +128,17 @@ const QuizSection = memo(({
   const hasAnswered = currentQuestion && answers[currentQuestion.id] !== undefined;
   const isLastQuestion = currentIndex === filteredQuestions.length - 1;
 
-  // Timer effect
+  // Ref to hold latest handleSubmit to avoid stale closure in timer effect
+  const handleSubmitRef = useRef(null);
+
+  // Timer effect - uses ref to avoid stale closure issue
   useEffect(() => {
     if (phase !== 'active' || !showTimer || timeRemaining === null) {
       return;
     }
 
     if (timeRemaining <= 0) {
-      handleSubmit();
+      handleSubmitRef.current?.();
       return;
     }
 
@@ -245,6 +249,11 @@ const QuizSection = memo(({
 
     onComplete?.(finalScore, earnedXp, quizResults);
   }, [filteredQuestions, answers, hintsUsed, onComplete]);
+
+  // Keep handleSubmitRef updated to avoid stale closure in timer
+  useEffect(() => {
+    handleSubmitRef.current = handleSubmit;
+  }, [handleSubmit]);
 
   // Retry quiz
   const handleRetry = () => {
@@ -561,8 +570,31 @@ const QuizSection = memo(({
             {currentQuestion.question}
           </p>
 
+          {/* Question Progress Indicators */}
+          <div className="flex gap-1 flex-wrap mb-4" role="navigation" aria-label="Question navigation">
+            {filteredQuestions.map((q, i) => (
+              <button
+                key={q.id}
+                onClick={() => setCurrentIndex(i)}
+                aria-label={`Go to question ${i + 1}${answers[q.id] ? ', answered' : ', not answered'}`}
+                aria-current={i === currentIndex ? 'step' : undefined}
+                className={cn(
+                  "w-8 h-8 rounded-full text-xs font-bold transition-all",
+                  i === currentIndex
+                    ? cn("ring-2 ring-offset-2", darkMode ? "ring-white ring-offset-slate-800" : "ring-slate-800 ring-offset-white")
+                    : "",
+                  answers[q.id]
+                    ? "bg-emerald-500 text-white"
+                    : darkMode ? "bg-slate-700 text-slate-300" : "bg-slate-200 text-slate-600"
+                )}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+
           {/* Options */}
-          <div className="space-y-3">
+          <div className="space-y-3" role="radiogroup" aria-label="Answer options">
             {currentQuestion.options.map(option => {
               const isSelected = answers[currentQuestion.id] === option.label;
 
@@ -570,6 +602,15 @@ const QuizSection = memo(({
                 <button
                   key={option.label}
                   onClick={() => handleSelectAnswer(option.label)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSelectAnswer(option.label);
+                    }
+                  }}
+                  role="radio"
+                  aria-checked={isSelected}
+                  aria-label={`Option ${option.label}: ${option.text}`}
                   className={cn(
                     "w-full flex items-center gap-4 p-4 rounded-xl text-left transition-all border-2",
                     isSelected
@@ -913,5 +954,48 @@ const QuizSection = memo(({
 });
 
 QuizSection.displayName = 'QuizSection';
+
+QuizSection.propTypes = {
+  questions: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    question: PropTypes.string.isRequired,
+    options: PropTypes.arrayOf(PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    })).isRequired,
+    correctAnswer: PropTypes.string.isRequired,
+    difficulty: PropTypes.oneOf(['easy', 'medium', 'hard']),
+    hint: PropTypes.string,
+    explanation: PropTypes.string,
+    xpReward: PropTypes.number,
+    imageUrl: PropTypes.string,
+    isAIGenerated: PropTypes.bool,
+  })),
+  darkMode: PropTypes.bool,
+  subjectConfig: PropTypes.shape({
+    gradient: PropTypes.string,
+    color: PropTypes.string,
+  }),
+  onComplete: PropTypes.func,
+  topicId: PropTypes.string,
+  showTimer: PropTypes.bool,
+  timeLimit: PropTypes.number,
+  allowHints: PropTypes.bool,
+  hintCost: PropTypes.number,
+  userXp: PropTypes.number,
+  onUseHint: PropTypes.func,
+  showDifficultyFilter: PropTypes.bool,
+};
+
+QuizSection.defaultProps = {
+  questions: [],
+  darkMode: false,
+  showTimer: false,
+  timeLimit: null,
+  allowHints: true,
+  hintCost: 5,
+  userXp: 0,
+  showDifficultyFilter: true,
+};
 
 export default QuizSection;
