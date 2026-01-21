@@ -660,7 +660,9 @@ const DataProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, [isDemoMode, loadFromSheets]);
 
-  const value = {
+  const refresh = useCallback(() => loadFromSheets(true), [loadFromSheets]);
+
+  const value = useMemo(() => ({
     ...data,
     isLoading,
     isRefreshing,
@@ -668,8 +670,8 @@ const DataProvider = ({ children }) => {
     lastSync,
     syncStatus,
     isDemoMode,
-    refresh: () => loadFromSheets(true)
-  };
+    refresh
+  }), [data, isLoading, isRefreshing, error, lastSync, syncStatus, isDemoMode, refresh]);
 
   return (
     <DataContext.Provider value={value}>
@@ -762,7 +764,7 @@ const StudyProvider = ({ children }) => {
     }
   }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     progress,
     settings,
     subjects: data?.subjects || DEFAULT_SUBJECTS,
@@ -778,7 +780,12 @@ const StudyProvider = ({ children }) => {
     showToast,
     toast,
     setToast
-  };
+  }), [
+    progress, settings,
+    data?.subjects, data?.sections, data?.objectives, data?.keyTerms,
+    data?.studyContent, data?.formulas, data?.quizQuestions, data?.achievements,
+    updateProgress, toggleDarkMode, showToast, toast, setToast
+  ]);
 
   return (
     <StudyContext.Provider value={value}>
@@ -1864,6 +1871,13 @@ const AppContent = () => {
   const [topicIndex, setTopicIndex] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
 
+  const handleSelectSubject = useCallback((s) => { setSubject(s); setView('subject'); }, []);
+  const handleOpenSettings = useCallback(() => setShowSettings(true), []);
+  const handleBackToDashboard = useCallback(() => setView('dashboard'), []);
+  const handleSelectTopic = useCallback((i) => { setTopicIndex(i); setView('study'); }, []);
+  const handleBackToSubject = useCallback(() => setView('subject'), []);
+  const handleCloseSettings = useCallback(() => setShowSettings(false), []);
+
   if (isLoading) {
     return (
       <div className={cn("min-h-screen flex flex-col items-center justify-center", darkMode ? "bg-slate-900" : "bg-slate-50")}>
@@ -1876,18 +1890,18 @@ const AppContent = () => {
   return (
     <div className={cn("font-sans antialiased", darkMode && "dark")}>
       {view === 'dashboard' && (
-        <Dashboard onSelectSubject={(s) => { setSubject(s); setView('subject'); }} onOpenSettings={() => setShowSettings(true)} />
+        <Dashboard onSelectSubject={handleSelectSubject} onOpenSettings={handleOpenSettings} />
       )}
 
       {view === 'subject' && subject && (
-        <SubjectOverview subject={subject} onBack={() => setView('dashboard')} onSelectTopic={(i) => { setTopicIndex(i); setView('study'); }} onOpenSettings={() => setShowSettings(true)} />
+        <SubjectOverview subject={subject} onBack={handleBackToDashboard} onSelectTopic={handleSelectTopic} onOpenSettings={handleOpenSettings} />
       )}
 
       {view === 'study' && subject && (
-        <StudyGuide subject={subject} topicIndex={topicIndex} onBack={() => setView('subject')} onOpenSettings={() => setShowSettings(true)} />
+        <StudyGuide subject={subject} topicIndex={topicIndex} onBack={handleBackToSubject} onOpenSettings={handleOpenSettings} />
       )}
 
-      {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} />}
+      {showSettings && <SettingsPanel onClose={handleCloseSettings} />}
 
       <style>{`
         @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

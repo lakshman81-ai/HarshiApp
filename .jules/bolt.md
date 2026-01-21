@@ -1,0 +1,3 @@
+## 2026-01-21 - Context Value Instability
+**Learning:** In `StudyHub.jsx`, the `DataProvider` and `StudyProvider` were creating new `value` objects on every render. This caused the entire application to re-render whenever any state in the providers changed (e.g., background sync status), even if the consumed data remained the same.
+**Action:** Always memoize Context values using `useMemo`. When a Context combines "Data" and "Status", ensure consumers only trigger re-renders when the specific part they use changes, or split the Context. Here, destructuring dependencies in `useMemo` for `StudyProvider` effectively isolated data consumers from status updates.
