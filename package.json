@@ -2,7 +2,7 @@
   "name": "studyhub-grade8",
   "version": "1.1.0",
   "description": "Grade 8 learning platform with real-time Google Sheets synchronization",
-  "homepage": "https://lakshman81-ai.github.io/HarshiAppv1.1new",
+  "homepage": "https://lakshman81-ai.github.io/HarshiApp",
   "private": true,
   "dependencies": {
     "lucide-react": "^0.298.0",
