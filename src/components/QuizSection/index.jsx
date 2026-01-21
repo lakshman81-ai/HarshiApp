@@ -1,7 +1,56 @@
-import React, { memo, useState, useEffect, useCallback } from 'react';
-import { HelpCircle, Clock, Lightbulb, ChevronLeft, ChevronRight, Check, X, CheckCircle2, RotateCcw } from 'lucide-react';
+import React, { memo, useState, useEffect, useCallback, useMemo } from 'react';
+import { HelpCircle, Clock, Lightbulb, ChevronLeft, ChevronRight, Check, X, CheckCircle2, RotateCcw, Filter, Sparkles, Image as ImageIcon } from 'lucide-react';
 
 const cn = (...classes) => classes.flat().filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+
+// Difficulty badge colors
+const DIFFICULTY_CONFIG = {
+  easy: {
+    label: 'Easy',
+    bg: 'bg-emerald-100',
+    text: 'text-emerald-700',
+    darkBg: 'bg-emerald-900/30',
+    darkText: 'text-emerald-400',
+    border: 'border-emerald-300',
+    xpMultiplier: 1
+  },
+  medium: {
+    label: 'Medium',
+    bg: 'bg-amber-100',
+    text: 'text-amber-700',
+    darkBg: 'bg-amber-900/30',
+    darkText: 'text-amber-400',
+    border: 'border-amber-300',
+    xpMultiplier: 1.5
+  },
+  hard: {
+    label: 'Hard',
+    bg: 'bg-red-100',
+    text: 'text-red-700',
+    darkBg: 'bg-red-900/30',
+    darkText: 'text-red-400',
+    border: 'border-red-300',
+    xpMultiplier: 2
+  }
+};
+
+/**
+ * DifficultyBadge Component
+ */
+const DifficultyBadge = memo(({ difficulty, darkMode, small = false }) => {
+  const config = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG.medium;
+
+  return (
+    <span className={cn(
+      "rounded-full font-medium capitalize",
+      small ? "px-2 py-0.5 text-xs" : "px-3 py-1 text-sm",
+      darkMode ? config.darkBg : config.bg,
+      darkMode ? config.darkText : config.text
+    )}>
+      {config.label}
+    </span>
+  );
+});
 
 /**
  * Format time in seconds to MM:SS display
@@ -31,6 +80,7 @@ const formatTime = (seconds) => {
  * @param {number} props.hintCost - XP cost per hint (default: 5)
  * @param {number} props.userXp - User's current XP (for hint cost check)
  * @param {Function} props.onUseHint - Callback when hint is used (xpCost)
+ * @param {boolean} props.showDifficultyFilter - Show difficulty filter (default: true)
  */
 const QuizSection = memo(({
   questions = [],
@@ -43,7 +93,8 @@ const QuizSection = memo(({
   allowHints = true,
   hintCost = 5,
   userXp = 0,
-  onUseHint
+  onUseHint,
+  showDifficultyFilter = true
 }) => {
   // Quiz state
   const [phase, setPhase] = useState('ready'); // 'ready' | 'active' | 'review' | 'complete'
@@ -54,10 +105,27 @@ const QuizSection = memo(({
   const [results, setResults] = useState(null);
   const [score, setScore] = useState(null);
   const [xpEarned, setXpEarned] = useState(null);
+  const [difficultyFilter, setDifficultyFilter] = useState('all'); // 'all' | 'easy' | 'medium' | 'hard'
 
-  const currentQuestion = questions[currentIndex];
+  // Filter questions by difficulty
+  const filteredQuestions = useMemo(() => {
+    if (difficultyFilter === 'all') return questions;
+    return questions.filter(q => (q.difficulty || 'medium') === difficultyFilter);
+  }, [questions, difficultyFilter]);
+
+  // Get difficulty distribution
+  const difficultyStats = useMemo(() => {
+    const stats = { easy: 0, medium: 0, hard: 0 };
+    questions.forEach(q => {
+      const diff = q.difficulty || 'medium';
+      if (stats[diff] !== undefined) stats[diff]++;
+    });
+    return stats;
+  }, [questions]);
+
+  const currentQuestion = filteredQuestions[currentIndex];
   const hasAnswered = currentQuestion && answers[currentQuestion.id] !== undefined;
-  const isLastQuestion = currentIndex === questions.length - 1;
+  const isLastQuestion = currentIndex === filteredQuestions.length - 1;
 
   // Timer effect
   useEffect(() => {
@@ -132,28 +200,32 @@ const QuizSection = memo(({
 
   // Submit quiz
   const handleSubmit = useCallback(() => {
-    const quizResults = questions.map(q => {
+    const quizResults = filteredQuestions.map(q => {
       const selectedAnswer = answers[q.id] || null;
       const isCorrect = selectedAnswer === q.correctAnswer;
 
       return {
         questionId: q.id,
+        question: q.question,
         selectedAnswer,
         correctAnswer: q.correctAnswer,
         isCorrect,
         hintsUsed: hintsUsed[q.id] || false,
+        difficulty: q.difficulty || 'medium',
         timeSpent: 0
       };
     });
 
     const correctCount = quizResults.filter(r => r.isCorrect).length;
-    const finalScore = Math.round((correctCount / questions.length) * 100);
+    const finalScore = Math.round((correctCount / filteredQuestions.length) * 100);
 
-    // Calculate XP
+    // Calculate XP with difficulty multiplier
     let earnedXp = 0;
     quizResults.forEach((r, i) => {
       if (r.isCorrect) {
-        let questionXP = questions[i].xpReward || 10;
+        let questionXP = filteredQuestions[i].xpReward || 10;
+        const diffConfig = DIFFICULTY_CONFIG[r.difficulty] || DIFFICULTY_CONFIG.medium;
+        questionXP = Math.floor(questionXP * diffConfig.xpMultiplier);
         if (r.hintsUsed) {
           questionXP = Math.floor(questionXP * 0.5);
         }
@@ -172,7 +244,7 @@ const QuizSection = memo(({
     setPhase('complete');
 
     onComplete?.(finalScore, earnedXp, quizResults);
-  }, [questions, answers, hintsUsed, onComplete]);
+  }, [filteredQuestions, answers, hintsUsed, onComplete]);
 
   // Retry quiz
   const handleRetry = () => {
@@ -209,7 +281,11 @@ const QuizSection = memo(({
 
   // Ready Phase
   if (phase === 'ready') {
-    const maxXp = questions.reduce((sum, q) => sum + (q.xpReward || 10), 0) + 20; // +20 for perfect bonus
+    // Calculate max XP with difficulty multipliers
+    const maxXp = filteredQuestions.reduce((sum, q) => {
+      const diffConfig = DIFFICULTY_CONFIG[q.difficulty || 'medium'];
+      return sum + Math.floor((q.xpReward || 10) * diffConfig.xpMultiplier);
+    }, 0) + 20; // +20 for perfect bonus
 
     return (
       <div
@@ -245,6 +321,79 @@ const QuizSection = memo(({
             Test your understanding
           </p>
 
+          {/* Difficulty Filter */}
+          {showDifficultyFilter && questions.length > 0 && (
+            <div className="mb-6">
+              <div className={cn(
+                "flex items-center justify-center gap-2 mb-3",
+                darkMode ? "text-slate-400" : "text-slate-500"
+              )}>
+                <Filter className="w-4 h-4" />
+                <span className="text-sm font-medium">Filter by Difficulty</span>
+              </div>
+              <div className="flex justify-center gap-2 flex-wrap">
+                <button
+                  onClick={() => setDifficultyFilter('all')}
+                  className={cn(
+                    "px-4 py-2 rounded-lg text-sm font-medium transition-all",
+                    difficultyFilter === 'all'
+                      ? cn("bg-gradient-to-r text-white", subjectConfig.gradient)
+                      : darkMode
+                        ? "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  )}
+                >
+                  All ({questions.length})
+                </button>
+                {difficultyStats.easy > 0 && (
+                  <button
+                    onClick={() => setDifficultyFilter('easy')}
+                    className={cn(
+                      "px-4 py-2 rounded-lg text-sm font-medium transition-all",
+                      difficultyFilter === 'easy'
+                        ? "bg-emerald-500 text-white"
+                        : darkMode
+                          ? "bg-emerald-900/30 text-emerald-400 hover:bg-emerald-900/50"
+                          : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                    )}
+                  >
+                    Easy ({difficultyStats.easy})
+                  </button>
+                )}
+                {difficultyStats.medium > 0 && (
+                  <button
+                    onClick={() => setDifficultyFilter('medium')}
+                    className={cn(
+                      "px-4 py-2 rounded-lg text-sm font-medium transition-all",
+                      difficultyFilter === 'medium'
+                        ? "bg-amber-500 text-white"
+                        : darkMode
+                          ? "bg-amber-900/30 text-amber-400 hover:bg-amber-900/50"
+                          : "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                    )}
+                  >
+                    Medium ({difficultyStats.medium})
+                  </button>
+                )}
+                {difficultyStats.hard > 0 && (
+                  <button
+                    onClick={() => setDifficultyFilter('hard')}
+                    className={cn(
+                      "px-4 py-2 rounded-lg text-sm font-medium transition-all",
+                      difficultyFilter === 'hard'
+                        ? "bg-red-500 text-white"
+                        : darkMode
+                          ? "bg-red-900/30 text-red-400 hover:bg-red-900/50"
+                          : "bg-red-100 text-red-700 hover:bg-red-200"
+                    )}
+                  >
+                    Hard ({difficultyStats.hard})
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="flex justify-center gap-6 mb-8">
             <div className="text-center">
               <div
@@ -253,7 +402,7 @@ const QuizSection = memo(({
                   darkMode ? "text-white" : "text-slate-800"
                 )}
               >
-                {questions.length}
+                {filteredQuestions.length}
               </div>
               <div
                 className={cn(
@@ -320,18 +469,32 @@ const QuizSection = memo(({
 
   // Active Phase
   if (phase === 'active') {
+    const questionDifficulty = currentQuestion.difficulty || 'medium';
+
     return (
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <span
-            className={cn(
-              "text-sm font-medium",
-              darkMode ? "text-slate-400" : "text-slate-500"
+          <div className="flex items-center gap-3">
+            <span
+              className={cn(
+                "text-sm font-medium",
+                darkMode ? "text-slate-400" : "text-slate-500"
+              )}
+            >
+              Question {currentIndex + 1} of {filteredQuestions.length}
+            </span>
+            <DifficultyBadge difficulty={questionDifficulty} darkMode={darkMode} small />
+            {currentQuestion.isAIGenerated && (
+              <span className={cn(
+                "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs",
+                darkMode ? "bg-purple-900/30 text-purple-400" : "bg-purple-100 text-purple-700"
+              )}>
+                <Sparkles className="w-3 h-3" />
+                AI
+              </span>
             )}
-          >
-            Question {currentIndex + 1} of {questions.length}
-          </span>
+          </div>
           {showTimer && timeRemaining !== null && (
             <span
               className={cn(
@@ -361,7 +524,7 @@ const QuizSection = memo(({
               "h-full transition-all bg-gradient-to-r",
               subjectConfig.gradient
             )}
-            style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+            style={{ width: `${((currentIndex + 1) / filteredQuestions.length) * 100}%` }}
           />
         </div>
 
@@ -372,6 +535,23 @@ const QuizSection = memo(({
             darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"
           )}
         >
+          {/* Question Image (if provided from Google Sheets) */}
+          {currentQuestion.imageUrl && (
+            <div className="mb-4 rounded-xl overflow-hidden">
+              <img
+                src={currentQuestion.imageUrl}
+                alt="Question illustration"
+                className={cn(
+                  "w-full h-auto max-h-48 object-contain",
+                  darkMode ? "bg-slate-700" : "bg-slate-100"
+                )}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            </div>
+          )}
+
           <p
             className={cn(
               "text-lg font-medium mb-6",

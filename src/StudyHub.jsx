@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo, createContext, useContext, memo, useRef } from 'react';
-import { BookOpen, FlaskConical, Calculator, Leaf, FileText, HelpCircle, ClipboardList, Settings, ChevronRight, ChevronLeft, Lightbulb, AlertTriangle, Globe, X, Download, RefreshCw, Flame, Trophy, Star, Target, Check, Clock, Bookmark, StickyNote, Copy, Zap, Award, CheckCircle2, Circle, CircleDot, Moon, Sun, Menu, AlertCircle, Wifi, WifiOff, Save, RotateCcw, Loader2, ExternalLink, Database, Cloud, CloudOff } from 'lucide-react';
+import { BookOpen, FlaskConical, Calculator, Leaf, FileText, HelpCircle, ClipboardList, Settings, ChevronRight, ChevronLeft, Lightbulb, AlertTriangle, Globe, X, Download, RefreshCw, Flame, Trophy, Star, Target, Check, Clock, Bookmark, StickyNote, Copy, Zap, Award, CheckCircle2, Circle, CircleDot, Moon, Sun, Menu, AlertCircle, Wifi, WifiOff, Save, RotateCcw, Loader2, ExternalLink, Database, Cloud, CloudOff, Calendar, Sparkles, Play, Image as ImageIcon } from 'lucide-react';
 
 // Import modular StudyGuide component
 import StudyGuideNew from './components/StudyGuide';
+
+// Import DailyChallenge component
+import DailyChallenge from './components/DailyChallenge';
 
 // ============================================================================
 // GOOGLE SHEETS CONFIGURATION
@@ -43,7 +46,17 @@ const GOOGLE_SHEETS_CONFIG = {
     STUDY_CONTENT: 'Study_Content',
     FORMULAS: 'Formulas',
     QUIZ_QUESTIONS: 'Quiz_Questions',
-    ACHIEVEMENTS: 'Achievements'
+    ACHIEVEMENTS: 'Achievements',
+    DAILY_CHALLENGES: 'Daily_Challenges',
+    APP_SETTINGS: 'App_Settings'
+  },
+
+  // AI Configuration for generating questions/challenges
+  AI_CONFIG: {
+    ENABLED: true,
+    // Set your AI API endpoint here (optional - for AI-generated content)
+    API_ENDPOINT: '',
+    API_KEY: ''
   }
 };
 
@@ -291,6 +304,7 @@ class DataTransformer {
   }
 
   // Transform study content (grouped by section_id)
+  // Supports video_url, image_url, and description from Google Sheets
   static transformContent(rows) {
     const content = {};
 
@@ -307,6 +321,12 @@ class DataTransformer {
         type: row.content_type || 'text',
         title: row.content_title || '',
         text: row.content_text || '',
+        // Video support - URL from Google Sheets
+        videoUrl: row.video_url || '',
+        // Image support - URL from Google Sheets
+        imageUrl: row.image_url || '',
+        // Optional description for images/videos
+        description: row.description || '',
         orderIndex: parseInt(row.order_index) || 0
       });
     });
@@ -364,6 +384,7 @@ class DataTransformer {
   }
 
   // Transform quiz questions (grouped by topic_id)
+  // Supports difficulty levels and hints from Google Sheets
   static transformQuizzes(rows) {
     const quizzes = {};
 
@@ -386,11 +407,66 @@ class DataTransformer {
         ].filter(opt => opt.text),
         correctAnswer: row.correct_answer?.toUpperCase() || 'A',
         explanation: row.explanation || '',
+        // Difficulty level: easy, medium, hard (from Google Sheets)
+        difficulty: row.difficulty?.toLowerCase() || 'medium',
+        // Hint text (from Google Sheets)
+        hint: row.hint || '',
+        // Image URL for question (from Google Sheets)
+        imageUrl: row.image_url || '',
         xpReward: parseInt(row.xp_reward) || 10
       });
     });
 
     return quizzes;
+  }
+
+  // Transform daily challenges from Google Sheets
+  static transformDailyChallenges(rows) {
+    const challenges = {};
+
+    rows.forEach(row => {
+      const date = row.date; // Format: YYYY-MM-DD
+      if (!date) return;
+
+      challenges[date] = {
+        id: row.challenge_id || `dc-${date}`,
+        date: date,
+        type: row.challenge_type || 'quiz', // quiz, math_puzzle, word_problem
+        subjectKey: row.subject_key || 'math',
+        question: row.question_text || '',
+        options: [
+          { label: 'A', text: row.option_a || '' },
+          { label: 'B', text: row.option_b || '' },
+          { label: 'C', text: row.option_c || '' },
+          { label: 'D', text: row.option_d || '' }
+        ].filter(opt => opt.text),
+        correctAnswer: row.correct_answer?.toUpperCase() || 'A',
+        explanation: row.explanation || '',
+        hint: row.hint || '',
+        xpReward: parseInt(row.xp_reward) || 25,
+        imageUrl: row.image_url || '',
+        difficulty: row.difficulty?.toLowerCase() || 'medium'
+      };
+    });
+
+    return challenges;
+  }
+
+  // Transform app settings from Google Sheets
+  static transformSettings(rows) {
+    const settings = {};
+
+    rows.forEach(row => {
+      const key = row.setting_key;
+      if (!key) return;
+
+      settings[key] = {
+        value: row.setting_value || '',
+        description: row.description || ''
+      };
+    });
+
+    return settings;
   }
 
   // Transform achievements
@@ -420,8 +496,176 @@ class DataTransformer {
       studyContent: this.transformContent(rawData.STUDY_CONTENT || []),
       formulas: this.transformFormulas(rawData.FORMULAS || []),
       quizQuestions: this.transformQuizzes(rawData.QUIZ_QUESTIONS || []),
-      achievements: this.transformAchievements(rawData.ACHIEVEMENTS || [])
+      achievements: this.transformAchievements(rawData.ACHIEVEMENTS || []),
+      // New: Daily challenges from Google Sheets
+      dailyChallenges: this.transformDailyChallenges(rawData.DAILY_CHALLENGES || []),
+      // New: App settings from Google Sheets
+      appSettings: this.transformSettings(rawData.APP_SETTINGS || [])
     };
+  }
+}
+
+// ============================================================================
+// AI SERVICE - For generating questions and challenges
+// ============================================================================
+
+class AIService {
+  // Generate a daily challenge using AI when none exists in Google Sheets
+  static generateDailyChallenge(subjects, existingQuestions) {
+    // Fallback challenges when no AI API is configured
+    const fallbackChallenges = [
+      {
+        type: 'math_puzzle',
+        subjectKey: 'math',
+        question: 'What is 2^10?',
+        options: [
+          { label: 'A', text: '512' },
+          { label: 'B', text: '1024' },
+          { label: 'C', text: '2048' },
+          { label: 'D', text: '4096' }
+        ],
+        correctAnswer: 'B',
+        explanation: '2^10 = 2×2×2×2×2×2×2×2×2×2 = 1024',
+        hint: 'Remember: 2^10 is also known as 1 kilobyte in computing!',
+        difficulty: 'medium',
+        xpReward: 25
+      },
+      {
+        type: 'physics',
+        subjectKey: 'physics',
+        question: 'If a 5 kg object accelerates at 4 m/s², what force is acting on it?',
+        options: [
+          { label: 'A', text: '9 N' },
+          { label: 'B', text: '1.25 N' },
+          { label: 'C', text: '20 N' },
+          { label: 'D', text: '25 N' }
+        ],
+        correctAnswer: 'C',
+        explanation: 'Using F = ma: F = 5 kg × 4 m/s² = 20 N',
+        hint: 'Use Newton\'s Second Law: F = m × a',
+        difficulty: 'easy',
+        xpReward: 25
+      },
+      {
+        type: 'chemistry',
+        subjectKey: 'chemistry',
+        question: 'What is the chemical symbol for Gold?',
+        options: [
+          { label: 'A', text: 'Go' },
+          { label: 'B', text: 'Gd' },
+          { label: 'C', text: 'Au' },
+          { label: 'D', text: 'Ag' }
+        ],
+        correctAnswer: 'C',
+        explanation: 'Au comes from the Latin word "Aurum" meaning gold.',
+        hint: 'It comes from the Latin word for gold.',
+        difficulty: 'easy',
+        xpReward: 25
+      },
+      {
+        type: 'biology',
+        subjectKey: 'biology',
+        question: 'Which organelle is known as the "powerhouse of the cell"?',
+        options: [
+          { label: 'A', text: 'Nucleus' },
+          { label: 'B', text: 'Mitochondria' },
+          { label: 'C', text: 'Ribosome' },
+          { label: 'D', text: 'Golgi Body' }
+        ],
+        correctAnswer: 'B',
+        explanation: 'Mitochondria produce ATP, the energy currency of cells, through cellular respiration.',
+        hint: 'It produces ATP through cellular respiration.',
+        difficulty: 'easy',
+        xpReward: 25
+      }
+    ];
+
+    // Pick a challenge based on the day of year (cycles through)
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    const challenge = fallbackChallenges[dayOfYear % fallbackChallenges.length];
+
+    const today = new Date().toISOString().split('T')[0];
+    return {
+      id: `ai-dc-${today}`,
+      date: today,
+      ...challenge,
+      isAIGenerated: true
+    };
+  }
+
+  // Generate additional quiz questions using AI
+  static generateQuizQuestions(topicId, topicName, subjectKey, count = 3) {
+    // Fallback questions when no AI API is configured
+    const fallbackQuestions = {
+      physics: [
+        {
+          question: 'What is the SI unit of force?',
+          options: [
+            { label: 'A', text: 'Joule' },
+            { label: 'B', text: 'Newton' },
+            { label: 'C', text: 'Watt' },
+            { label: 'D', text: 'Pascal' }
+          ],
+          correctAnswer: 'B',
+          explanation: 'The Newton (N) is the SI unit of force, named after Sir Isaac Newton.',
+          hint: 'Named after a famous scientist who studied gravity.',
+          difficulty: 'easy'
+        }
+      ],
+      math: [
+        {
+          question: 'What is the value of π (pi) to 2 decimal places?',
+          options: [
+            { label: 'A', text: '3.12' },
+            { label: 'B', text: '3.14' },
+            { label: 'C', text: '3.16' },
+            { label: 'D', text: '3.18' }
+          ],
+          correctAnswer: 'B',
+          explanation: 'π ≈ 3.14159... which rounds to 3.14',
+          hint: 'It starts with 3.1...',
+          difficulty: 'easy'
+        }
+      ],
+      chemistry: [
+        {
+          question: 'What is the atomic number of Carbon?',
+          options: [
+            { label: 'A', text: '4' },
+            { label: 'B', text: '6' },
+            { label: 'C', text: '8' },
+            { label: 'D', text: '12' }
+          ],
+          correctAnswer: 'B',
+          explanation: 'Carbon has 6 protons, so its atomic number is 6.',
+          hint: 'Count the protons in a Carbon atom.',
+          difficulty: 'easy'
+        }
+      ],
+      biology: [
+        {
+          question: 'What is the basic unit of life?',
+          options: [
+            { label: 'A', text: 'Atom' },
+            { label: 'B', text: 'Molecule' },
+            { label: 'C', text: 'Cell' },
+            { label: 'D', text: 'Organ' }
+          ],
+          correctAnswer: 'C',
+          explanation: 'The cell is the basic structural and functional unit of all living organisms.',
+          hint: 'Robert Hooke first discovered them in 1665.',
+          difficulty: 'easy'
+        }
+      ]
+    };
+
+    const questions = fallbackQuestions[subjectKey] || fallbackQuestions.math;
+    return questions.slice(0, count).map((q, i) => ({
+      id: `ai-q-${topicId}-${i}`,
+      ...q,
+      xpReward: 10,
+      isAIGenerated: true
+    }));
   }
 }
 
@@ -524,21 +768,67 @@ const DEFAULT_FORMULAS = {
 const DEFAULT_QUIZZES = {
   'phys-t001': [
     {
-      id: 'quiz-001', question: 'If a 10 kg object accelerates at 2 m/s², what is the force?', options: [
+      id: 'quiz-001',
+      question: 'If a 10 kg object accelerates at 2 m/s², what is the force?',
+      options: [
         { label: 'A', text: '5 N' }, { label: 'B', text: '20 N' }, { label: 'C', text: '12 N' }, { label: 'D', text: '8 N' }
-      ], correctAnswer: 'B', explanation: 'Using F = m × a: F = 10 × 2 = 20 N', xpReward: 10
+      ],
+      correctAnswer: 'B',
+      explanation: 'Using F = m × a: F = 10 × 2 = 20 N',
+      difficulty: 'easy',
+      hint: 'Use the formula F = m × a and multiply the values.',
+      xpReward: 10
     },
     {
-      id: 'quiz-002', question: "Newton's First Law is also known as the law of:", options: [
+      id: 'quiz-002',
+      question: "Newton's First Law is also known as the law of:",
+      options: [
         { label: 'A', text: 'Acceleration' }, { label: 'B', text: 'Action-Reaction' }, { label: 'C', text: 'Inertia' }, { label: 'D', text: 'Gravity' }
-      ], correctAnswer: 'C', explanation: "Newton's First Law describes inertia - objects resist changes in motion", xpReward: 10
+      ],
+      correctAnswer: 'C',
+      explanation: "Newton's First Law describes inertia - objects resist changes in motion",
+      difficulty: 'easy',
+      hint: 'It describes how objects resist changes in their state of motion.',
+      xpReward: 10
     },
     {
-      id: 'quiz-003', question: "Which statement best describes Newton's Third Law?", options: [
+      id: 'quiz-003',
+      question: "Which statement best describes Newton's Third Law?",
+      options: [
         { label: 'A', text: 'F = ma' }, { label: 'B', text: 'Objects at rest stay at rest' }, { label: 'C', text: 'Every action has an equal and opposite reaction' }, { label: 'D', text: 'Heavier objects fall faster' }
-      ], correctAnswer: 'C', explanation: "Newton's Third Law states that forces come in pairs", xpReward: 10
+      ],
+      correctAnswer: 'C',
+      explanation: "Newton's Third Law states that forces come in pairs",
+      difficulty: 'medium',
+      hint: 'Think about what happens when you push against a wall.',
+      xpReward: 10
+    },
+    {
+      id: 'quiz-004',
+      question: "A car of mass 1500 kg accelerates from rest to 20 m/s in 10 seconds. What is the net force acting on the car?",
+      options: [
+        { label: 'A', text: '1500 N' }, { label: 'B', text: '3000 N' }, { label: 'C', text: '30000 N' }, { label: 'D', text: '750 N' }
+      ],
+      correctAnswer: 'B',
+      explanation: 'First find acceleration: a = (20-0)/10 = 2 m/s². Then F = ma = 1500 × 2 = 3000 N',
+      difficulty: 'hard',
+      hint: 'First calculate the acceleration using a = Δv/t, then use F = ma.',
+      xpReward: 15
     }
   ]
+};
+
+// Default daily challenges (fallback when Google Sheets is empty)
+const DEFAULT_DAILY_CHALLENGES = {
+  // Today's date will be generated dynamically
+};
+
+// Default app settings
+const DEFAULT_APP_SETTINGS = {
+  'placeholder_image': { value: 'https://via.placeholder.com/400x300?text=Image+Coming+Soon', description: 'Default placeholder for images' },
+  'placeholder_video': { value: 'https://www.youtube.com/embed/dQw4w9WgXcQ', description: 'Default placeholder for videos' },
+  'ai_enabled': { value: 'true', description: 'Enable AI-generated content' },
+  'daily_challenge_xp': { value: '25', description: 'XP reward for daily challenge' }
 };
 
 const DEFAULT_ACHIEVEMENTS = [
@@ -561,13 +851,15 @@ const DEFAULT_PROGRESS = {
   quizScores: {},
   bookmarks: [],
   notes: {},
-  achievements: ['first-login']
+  achievements: ['first-login'],
+  dailyChallengeCompleted: null // Tracks last completed daily challenge date (YYYY-MM-DD)
 };
 
 const ICON_MAP = {
   Zap, Calculator, FlaskConical, Leaf, Trophy, Star, Award, Flame,
   HelpCircle, CheckCircle2, Target, BookOpen, FileText, Clock, Globe,
-  Lightbulb, AlertTriangle, Database, Cloud, CloudOff
+  Lightbulb, AlertTriangle, Database, Cloud, CloudOff, Calendar, Sparkles,
+  Play, ImageIcon
 };
 
 const STORAGE_KEY = 'studyhub_v6_data';
@@ -606,7 +898,9 @@ const DataProvider = ({ children }) => {
         studyContent: DEFAULT_CONTENT,
         formulas: DEFAULT_FORMULAS,
         quizQuestions: DEFAULT_QUIZZES,
-        achievements: DEFAULT_ACHIEVEMENTS
+        achievements: DEFAULT_ACHIEVEMENTS,
+        dailyChallenges: DEFAULT_DAILY_CHALLENGES,
+        appSettings: DEFAULT_APP_SETTINGS
       });
       setSyncStatus('offline');
       setIsLoading(false);
@@ -648,7 +942,9 @@ const DataProvider = ({ children }) => {
           studyContent: DEFAULT_CONTENT,
           formulas: DEFAULT_FORMULAS,
           quizQuestions: DEFAULT_QUIZZES,
-          achievements: DEFAULT_ACHIEVEMENTS
+          achievements: DEFAULT_ACHIEVEMENTS,
+          dailyChallenges: DEFAULT_DAILY_CHALLENGES,
+          appSettings: DEFAULT_APP_SETTINGS
         });
       }
     } finally {
@@ -775,6 +1071,20 @@ const StudyProvider = ({ children }) => {
     }
   }, []);
 
+  // Get today's daily challenge (from Google Sheets or AI-generated)
+  const getTodayChallenge = useCallback(() => {
+    const today = new Date().toISOString().split('T')[0];
+    const challenges = data?.dailyChallenges || DEFAULT_DAILY_CHALLENGES;
+
+    // Check if we have a challenge for today in Google Sheets
+    if (challenges[today]) {
+      return challenges[today];
+    }
+
+    // Generate AI challenge as fallback
+    return AIService.generateDailyChallenge(data?.subjects || DEFAULT_SUBJECTS, data?.quizQuestions || DEFAULT_QUIZZES);
+  }, [data]);
+
   const value = {
     progress,
     settings,
@@ -786,6 +1096,9 @@ const StudyProvider = ({ children }) => {
     formulas: data?.formulas || DEFAULT_FORMULAS,
     quizQuestions: data?.quizQuestions || DEFAULT_QUIZZES,
     achievements: data?.achievements || DEFAULT_ACHIEVEMENTS,
+    dailyChallenges: data?.dailyChallenges || DEFAULT_DAILY_CHALLENGES,
+    appSettings: data?.appSettings || DEFAULT_APP_SETTINGS,
+    getTodayChallenge,
     updateProgress,
     toggleDarkMode,
     showToast,
@@ -980,7 +1293,7 @@ const countCompletedTopics = (subjects, topicsProgress) => {
 // ============================================================================
 
 const Dashboard = memo(({ onSelectSubject, onOpenSettings }) => {
-  const { progress, settings, subjects, achievements, toggleDarkMode } = useStudy();
+  const { progress, settings, subjects, achievements, toggleDarkMode, getTodayChallenge, updateProgress, showToast } = useStudy();
   const { isDemoMode } = useData();
   const darkMode = settings.darkMode;
 
@@ -989,6 +1302,25 @@ const Dashboard = memo(({ onSelectSubject, onOpenSettings }) => {
   const completedTopics = countCompletedTopics(subjects, progress.topics);
 
   const allAchievements = achievements.map(a => ({ ...a, unlocked: progress.achievements.includes(a.id) }));
+
+  // Get today's challenge
+  const todayChallenge = getTodayChallenge();
+  const today = new Date().toISOString().split('T')[0];
+  const challengeCompleted = progress.dailyChallengeCompleted === today;
+
+  // Handle daily challenge completion
+  const handleChallengeComplete = useCallback((xpEarned, isCorrect) => {
+    updateProgress({
+      xp: progress.xp + xpEarned,
+      dailyChallengeCompleted: today
+    });
+
+    if (isCorrect) {
+      showToast(`Daily Challenge completed! +${xpEarned} XP`, 'success');
+    } else {
+      showToast('Better luck tomorrow!', 'info');
+    }
+  }, [progress.xp, today, updateProgress, showToast]);
 
   return (
     <div className={cn("min-h-screen", darkMode ? "bg-slate-900" : "bg-gradient-to-br from-slate-50 via-white to-slate-100")}>
@@ -1052,6 +1384,18 @@ const Dashboard = memo(({ onSelectSubject, onOpenSettings }) => {
             </Card>
           ))}
         </div>
+
+        {/* Daily Challenge Section */}
+        {todayChallenge && (
+          <div className="mb-8">
+            <DailyChallenge
+              challenge={todayChallenge}
+              darkMode={darkMode}
+              completed={challengeCompleted}
+              onComplete={handleChallengeComplete}
+            />
+          </div>
+        )}
 
         {/* Subjects Grid */}
         <h2 className={cn("text-xl font-bold mb-4", darkMode ? "text-white" : "text-slate-800")}>Your Subjects</h2>
