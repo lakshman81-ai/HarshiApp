@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo, createContext, useContext, memo, useRef } from 'react';
 import { BookOpen, FlaskConical, Calculator, Leaf, FileText, HelpCircle, ClipboardList, Settings, ChevronRight, ChevronLeft, Lightbulb, AlertTriangle, Globe, X, Download, RefreshCw, Flame, Trophy, Star, Target, Check, Clock, Bookmark, StickyNote, Copy, Zap, Award, CheckCircle2, Circle, CircleDot, Moon, Sun, Menu, AlertCircle, Wifi, WifiOff, Save, RotateCcw, Loader2, ExternalLink, Database, Cloud, CloudOff } from 'lucide-react';
 
+// Import modular StudyGuide component
+import StudyGuideNew from './components/StudyGuide';
+
 // ============================================================================
 // GOOGLE SHEETS CONFIGURATION
 // ============================================================================
@@ -342,9 +345,19 @@ class DataTransformer {
       formulas[topicId].push({
         id: row.formula_id,
         formula: row.formula_text,
+        formulaDisplay: row.formula_display || row.formula_text, // For MathFormula rendering
         label: row.formula_label || '',
-        variables
+        orderIndex: parseInt(row.order_index) || 0,
+        variables,
+        category: row.category || '',
+        difficulty: row.difficulty || 'basic',
+        notes: row.notes || ''
       });
+    });
+
+    // Sort by order index
+    Object.values(formulas).forEach(arr => {
+      arr.sort((a, b) => a.orderIndex - b.orderIndex);
     });
 
     return formulas;
@@ -1856,13 +1869,24 @@ export default function Grade8StudyHub() {
 
 const AppContent = () => {
   const { isLoading } = useData();
-  const { settings } = useStudy();
-  const darkMode = settings.darkMode;
+  const studyData = useStudy();
+  const darkMode = studyData.settings.darkMode;
 
   const [view, setView] = useState('dashboard');
   const [subject, setSubject] = useState(null);
   const [topicIndex, setTopicIndex] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
+
+  // Prepare studyData object with defaults for the new modular StudyGuide
+  const studyDataWithDefaults = useMemo(() => ({
+    ...studyData,
+    DEFAULT_SECTIONS,
+    DEFAULT_OBJECTIVES,
+    DEFAULT_KEY_TERMS,
+    DEFAULT_CONTENT,
+    DEFAULT_FORMULAS,
+    DEFAULT_QUIZZES
+  }), [studyData]);
 
   if (isLoading) {
     return (
@@ -1884,7 +1908,14 @@ const AppContent = () => {
       )}
 
       {view === 'study' && subject && (
-        <StudyGuide subject={subject} topicIndex={topicIndex} onBack={() => setView('subject')} onOpenSettings={() => setShowSettings(true)} />
+        <StudyGuideNew
+          subject={subject}
+          topicIndex={topicIndex}
+          onBack={() => setView('subject')}
+          onOpenSettings={() => setShowSettings(true)}
+          studyData={studyDataWithDefaults}
+          ICON_MAP={ICON_MAP}
+        />
       )}
 
       {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} />}
