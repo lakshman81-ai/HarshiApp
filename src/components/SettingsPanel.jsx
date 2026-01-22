@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { X } from 'lucide-react';
 import { useStudy } from '../contexts/StudyContext';
-import { useData } from '../contexts/DataContext';
 import { cn } from '../utils';
 
 const SettingsPanel = memo(({ onClose }) => {
