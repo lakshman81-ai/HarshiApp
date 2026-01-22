@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/HarshiApp/static/css/main.93b61257.css",
-    "main.js": "/HarshiApp/static/js/main.3d410c7e.js",
+    "main.css": "/HarshiApp/static/css/main.a661e480.css",
+    "main.js": "/HarshiApp/static/js/main.86ec1ed0.js",
     "index.html": "/HarshiApp/index.html",
-    "main.93b61257.css.map": "/HarshiApp/static/css/main.93b61257.css.map",
-    "main.3d410c7e.js.map": "/HarshiApp/static/js/main.3d410c7e.js.map"
+    "main.a661e480.css.map": "/HarshiApp/static/css/main.a661e480.css.map",
+    "main.86ec1ed0.js.map": "/HarshiApp/static/js/main.86ec1ed0.js.map"
   },
   "entrypoints": [
-    "static/css/main.93b61257.css",
-    "static/js/main.3d410c7e.js"
+    "static/css/main.a661e480.css",
+    "static/js/main.86ec1ed0.js"
   ]
 }
