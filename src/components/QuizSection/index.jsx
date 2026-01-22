@@ -670,7 +670,10 @@ const QuizSection = memo(({
                   )}
                 >
                   <Lightbulb className="w-5 h-5" />
-                  <span>Use Hint (-{hintCost} XP)</span>
+                  <div className="flex flex-col gap-1 items-start">
+                    <span className="font-bold">Know More / Hint</span>
+                    <span className="text-xs opacity-75">(-{hintCost} XP)</span>
+                  </div>
                 </button>
               )}
             </div>

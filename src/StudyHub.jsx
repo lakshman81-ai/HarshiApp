@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, createContext, useContext, memo, useRef } from 'react';
 import { BookOpen, FlaskConical, Calculator, Leaf, FileText, HelpCircle, ClipboardList, Settings, ChevronRight, ChevronLeft, Lightbulb, AlertTriangle, Globe, X, Download, RefreshCw, Flame, Trophy, Star, Target, Check, Clock, Bookmark, StickyNote, Copy, Zap, Award, CheckCircle2, Circle, CircleDot, Moon, Sun, Menu, AlertCircle, Wifi, WifiOff, Save, RotateCcw, Loader2, ExternalLink, Database, Cloud, CloudOff, Calendar, Sparkles, Play, Image as ImageIcon } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 // Import modular StudyGuide component
 import StudyGuideNew from './components/StudyGuide';
@@ -667,6 +668,463 @@ class AIService {
       isAIGenerated: true
     }));
   }
+
+  // Storage key for generated content
+  static STORAGE_KEY = 'studyhub_generated_content';
+
+  // Get API key from environment or localStorage
+  static getApiKey() {
+    // Check environment variable first (set in .env file)
+    const envKey = process.env.REACT_APP_GEMINI_API_KEY;
+    if (envKey && envKey !== 'your_gemini_api_key_here') {
+      return envKey;
+    }
+    // Fallback to localStorage
+    return localStorage.getItem('studyhub_ai_api_key') || '';
+  }
+
+  // Check if API key is from environment
+  static isEnvKeyConfigured() {
+    const envKey = process.env.REACT_APP_GEMINI_API_KEY;
+    return envKey && envKey !== 'your_gemini_api_key_here';
+  }
+
+  // Load stored generated content
+  static loadStoredContent() {
+    try {
+      const stored = localStorage.getItem(this.STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  // Save generated content to storage
+  static saveContent(content) {
+    try {
+      const stored = this.loadStoredContent();
+      stored.unshift(content); // Add to beginning
+      // Keep only last 50 items
+      const trimmed = stored.slice(0, 50);
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(trimmed));
+      return trimmed;
+    } catch (error) {
+      console.error('Error saving generated content:', error);
+      return [];
+    }
+  }
+
+  // Clear all stored content
+  static clearStoredContent() {
+    localStorage.removeItem(this.STORAGE_KEY);
+  }
+
+  // Generate content using Google Gemini API
+  static async generateContent(topicId, subTopic, contentType, apiKey, topicName = '', subjectName = '') {
+    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+
+    // Use provided key or get from env/storage
+    const finalApiKey = apiKey || this.getApiKey();
+
+    if (!finalApiKey) {
+      throw new Error('No API key provided. Set REACT_APP_GEMINI_API_KEY in .env or enter manually.');
+    }
+
+    // Build the prompt based on content type
+    let prompt = '';
+    const topicContext = topicName ? `Topic: ${topicName}` : `Topic ID: ${topicId}`;
+    const subjectContext = subjectName ? `Subject: ${subjectName}` : '';
+    const subTopicContext = subTopic ? `Sub-topic focus: ${subTopic}` : '';
+
+    switch (contentType) {
+      case 'questions':
+        prompt = `You are an educational content generator for Grade 8 students.
+${subjectContext}
+${topicContext}
+${subTopicContext}
+
+Generate 5 multiple-choice quiz questions about this topic. Each question should have 4 options (A, B, C, D) with exactly one correct answer.
+
+Respond ONLY with valid JSON in this exact format (no markdown, no explanation):
+{
+  "questions": [
+    {
+      "question": "Question text here?",
+      "options": [
+        {"label": "A", "text": "Option A text"},
+        {"label": "B", "text": "Option B text"},
+        {"label": "C", "text": "Option C text"},
+        {"label": "D", "text": "Option D text"}
+      ],
+      "correctAnswer": "B",
+      "explanation": "Brief explanation of why B is correct",
+      "difficulty": "easy|medium|hard",
+      "hint": "A helpful hint for students"
+    }
+  ]
+}`;
+        break;
+
+      case 'studyguide':
+        prompt = `You are an educational content generator for Grade 8 students.
+${subjectContext}
+${topicContext}
+${subTopicContext}
+
+Generate a comprehensive study guide for this topic. Include key concepts, definitions, formulas (if applicable), and examples.
+
+Respond ONLY with valid JSON in this exact format (no markdown, no explanation):
+{
+  "studyGuide": {
+    "title": "Study Guide: [Topic Name]",
+    "introduction": "Brief introduction paragraph",
+    "keyConceptsList": ["Concept 1", "Concept 2", "Concept 3"],
+    "sections": [
+      {
+        "heading": "Section Title",
+        "content": "Section content with explanations..."
+      }
+    ],
+    "keyTerms": [
+      {"term": "Term", "definition": "Definition"}
+    ],
+    "formulas": ["Formula 1 if applicable"],
+    "summary": "Brief summary of main points"
+  }
+}`;
+        break;
+
+      case 'handout':
+        prompt = `You are an educational content generator for Grade 8 students.
+${subjectContext}
+${topicContext}
+${subTopicContext}
+
+Generate a one-page handout/cheat sheet for this topic. Make it concise, easy to scan, with bullet points and key facts.
+
+Respond ONLY with valid JSON in this exact format (no markdown, no explanation):
+{
+  "handout": {
+    "title": "Quick Reference: [Topic Name]",
+    "keyPoints": ["Key point 1", "Key point 2", "Key point 3"],
+    "definitions": [
+      {"term": "Term", "definition": "Brief definition"}
+    ],
+    "formulas": ["Formula 1 = explanation"],
+    "examples": ["Example 1 with solution"],
+    "tips": ["Study tip 1", "Study tip 2"],
+    "commonMistakes": ["Common mistake to avoid"]
+  }
+}`;
+        break;
+
+      default:
+        throw new Error('Unknown content type');
+    }
+
+    try {
+      const response = await fetch(`${GEMINI_API_URL}?key=${finalApiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: prompt }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 2048,
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || `API Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Extract text from Gemini response
+      const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!textContent) {
+        throw new Error('No content in API response');
+      }
+
+      // Parse JSON from response (handle potential markdown code blocks)
+      let jsonStr = textContent.trim();
+      if (jsonStr.startsWith('```json')) {
+        jsonStr = jsonStr.slice(7);
+      }
+      if (jsonStr.startsWith('```')) {
+        jsonStr = jsonStr.slice(3);
+      }
+      if (jsonStr.endsWith('```')) {
+        jsonStr = jsonStr.slice(0, -3);
+      }
+      jsonStr = jsonStr.trim();
+
+      const parsed = JSON.parse(jsonStr);
+
+      // Transform response based on content type
+      const timestamp = Date.now();
+      let result;
+
+      switch (contentType) {
+        case 'questions':
+          result = {
+            id: `gen-q-${timestamp}`,
+            type: 'questions',
+            topicId,
+            topicName: topicName || topicId,
+            subjectName: subjectName || '',
+            subTopic: subTopic || '',
+            generatedAt: new Date().toISOString(),
+            count: parsed.questions?.length || 0,
+            items: (parsed.questions || []).map((q, i) => ({
+              id: `ai-gen-${timestamp}-${i}`,
+              question: q.question,
+              options: q.options,
+              correctAnswer: q.correctAnswer,
+              explanation: q.explanation,
+              difficulty: q.difficulty || 'medium',
+              hint: q.hint || '',
+              xpReward: q.difficulty === 'hard' ? 15 : q.difficulty === 'easy' ? 5 : 10,
+              isAIGenerated: true
+            }))
+          };
+          break;
+
+        case 'studyguide':
+          result = {
+            id: `gen-sg-${timestamp}`,
+            type: 'studyguide',
+            topicId,
+            topicName: topicName || topicId,
+            subjectName: subjectName || '',
+            subTopic: subTopic || '',
+            generatedAt: new Date().toISOString(),
+            count: 1,
+            items: [{
+              id: `ai-sg-${timestamp}`,
+              ...parsed.studyGuide,
+              isAIGenerated: true
+            }]
+          };
+          break;
+
+        case 'handout':
+          result = {
+            id: `gen-ho-${timestamp}`,
+            type: 'handout',
+            topicId,
+            topicName: topicName || topicId,
+            subjectName: subjectName || '',
+            subTopic: subTopic || '',
+            generatedAt: new Date().toISOString(),
+            count: 1,
+            items: [{
+              id: `ai-ho-${timestamp}`,
+              ...parsed.handout,
+              format: 'structured',
+              isAIGenerated: true
+            }]
+          };
+          break;
+
+        default:
+          throw new Error('Unknown content type');
+      }
+
+      // Save to storage
+      this.saveContent(result);
+
+      return result;
+
+    } catch (error) {
+      console.error('Gemini API error:', error);
+
+      // Provide more helpful error messages
+      if (error.message.includes('API key')) {
+        throw new Error('Invalid API key. Please check your Gemini API key.');
+      }
+      if (error.message.includes('quota')) {
+        throw new Error('API quota exceeded. Please try again later.');
+      }
+      if (error instanceof SyntaxError) {
+        throw new Error('Failed to parse AI response. Please try again.');
+      }
+
+      throw error;
+    }
+  }
+}
+
+// ============================================================================
+// AI SERVICE - For generating questions and challenges
+// ============================================================================
+
+class AIService {
+  // Generate a daily challenge using AI when none exists in Google Sheets
+  static generateDailyChallenge(subjects, existingQuestions) {
+    // Fallback challenges when no AI API is configured
+    const fallbackChallenges = [
+      {
+        type: 'math_puzzle',
+        subjectKey: 'math',
+        question: 'What is 2^10?',
+        options: [
+          { label: 'A', text: '512' },
+          { label: 'B', text: '1024' },
+          { label: 'C', text: '2048' },
+          { label: 'D', text: '4096' }
+        ],
+        correctAnswer: 'B',
+        explanation: '2^10 = 2×2×2×2×2×2×2×2×2×2 = 1024',
+        hint: 'Remember: 2^10 is also known as 1 kilobyte in computing!',
+        difficulty: 'medium',
+        xpReward: 25
+      },
+      {
+        type: 'physics',
+        subjectKey: 'physics',
+        question: 'If a 5 kg object accelerates at 4 m/s², what force is acting on it?',
+        options: [
+          { label: 'A', text: '9 N' },
+          { label: 'B', text: '1.25 N' },
+          { label: 'C', text: '20 N' },
+          { label: 'D', text: '25 N' }
+        ],
+        correctAnswer: 'C',
+        explanation: 'Using F = ma: F = 5 kg × 4 m/s² = 20 N',
+        hint: 'Use Newton\'s Second Law: F = m × a',
+        difficulty: 'easy',
+        xpReward: 25
+      },
+      {
+        type: 'chemistry',
+        subjectKey: 'chemistry',
+        question: 'What is the chemical symbol for Gold?',
+        options: [
+          { label: 'A', text: 'Go' },
+          { label: 'B', text: 'Gd' },
+          { label: 'C', text: 'Au' },
+          { label: 'D', text: 'Ag' }
+        ],
+        correctAnswer: 'C',
+        explanation: 'Au comes from the Latin word "Aurum" meaning gold.',
+        hint: 'It comes from the Latin word for gold.',
+        difficulty: 'easy',
+        xpReward: 25
+      },
+      {
+        type: 'biology',
+        subjectKey: 'biology',
+        question: 'Which organelle is known as the "powerhouse of the cell"?',
+        options: [
+          { label: 'A', text: 'Nucleus' },
+          { label: 'B', text: 'Mitochondria' },
+          { label: 'C', text: 'Ribosome' },
+          { label: 'D', text: 'Golgi Body' }
+        ],
+        correctAnswer: 'B',
+        explanation: 'Mitochondria produce ATP, the energy currency of cells, through cellular respiration.',
+        hint: 'It produces ATP through cellular respiration.',
+        difficulty: 'easy',
+        xpReward: 25
+      }
+    ];
+
+    // Pick a challenge based on the day of year (cycles through)
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    const challenge = fallbackChallenges[dayOfYear % fallbackChallenges.length];
+
+    const today = new Date().toISOString().split('T')[0];
+    return {
+      id: `ai-dc-${today}`,
+      date: today,
+      ...challenge,
+      isAIGenerated: true
+    };
+  }
+
+  // Generate additional quiz questions using AI
+  static generateQuizQuestions(topicId, topicName, subjectKey, count = 3) {
+    // Fallback questions when no AI API is configured
+    const fallbackQuestions = {
+      physics: [
+        {
+          question: 'What is the SI unit of force?',
+          options: [
+            { label: 'A', text: 'Joule' },
+            { label: 'B', text: 'Newton' },
+            { label: 'C', text: 'Watt' },
+            { label: 'D', text: 'Pascal' }
+          ],
+          correctAnswer: 'B',
+          explanation: 'The Newton (N) is the SI unit of force, named after Sir Isaac Newton.',
+          hint: 'Named after a famous scientist who studied gravity.',
+          difficulty: 'easy'
+        }
+      ],
+      math: [
+        {
+          question: 'What is the value of π (pi) to 2 decimal places?',
+          options: [
+            { label: 'A', text: '3.12' },
+            { label: 'B', text: '3.14' },
+            { label: 'C', text: '3.16' },
+            { label: 'D', text: '3.18' }
+          ],
+          correctAnswer: 'B',
+          explanation: 'π ≈ 3.14159... which rounds to 3.14',
+          hint: 'It starts with 3.1...',
+          difficulty: 'easy'
+        }
+      ],
+      chemistry: [
+        {
+          question: 'What is the atomic number of Carbon?',
+          options: [
+            { label: 'A', text: '4' },
+            { label: 'B', text: '6' },
+            { label: 'C', text: '8' },
+            { label: 'D', text: '12' }
+          ],
+          correctAnswer: 'B',
+          explanation: 'Carbon has 6 protons, so its atomic number is 6.',
+          hint: 'Count the protons in a Carbon atom.',
+          difficulty: 'easy'
+        }
+      ],
+      biology: [
+        {
+          question: 'What is the basic unit of life?',
+          options: [
+            { label: 'A', text: 'Atom' },
+            { label: 'B', text: 'Molecule' },
+            { label: 'C', text: 'Cell' },
+            { label: 'D', text: 'Organ' }
+          ],
+          correctAnswer: 'C',
+          explanation: 'The cell is the basic structural and functional unit of all living organisms.',
+          hint: 'Robert Hooke first discovered them in 1665.',
+          difficulty: 'easy'
+        }
+      ]
+    };
+
+    const questions = fallbackQuestions[subjectKey] || fallbackQuestions.math;
+    return questions.slice(0, count).map((q, i) => ({
+      id: `ai-q-${topicId}-${i}`,
+      ...q,
+      xpReward: 10,
+      isAIGenerated: true
+    }));
+  }
 }
 
 // ============================================================================
@@ -889,6 +1347,69 @@ const DataProvider = ({ children }) => {
   // Load data from Google Sheets
   const loadFromSheets = useCallback(async (isManualRefresh = false) => {
     if (isDemoMode) {
+      log('Demo mode - attempting to load local Excel content');
+      try {
+        const filePath = (process.env.PUBLIC_URL || '') + '/StudyHub_Data.xlsx';
+        const response = await fetch(filePath + '?v=' + new Date().getTime());
+        if (!response.ok) throw new Error(`Local file not found at ${filePath}`);
+
+        const buffer = await response.arrayBuffer();
+        const workbook = XLSX.read(buffer);
+        const rawData = {};
+
+        // Map sheet names from config to rawData keys expected by transformer
+        // The transformer looks for keys like 'Subjects', 'Topics' which match the internal Sheet names
+        // defined in GOOGLE_SHEETS_CONFIG.SHEETS values
+        Object.entries(GOOGLE_SHEETS_CONFIG.SHEETS).forEach(([key, sheetName]) => {
+          if (workbook.Sheets[sheetName]) {
+            rawData[key] = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+          } else {
+            // Fallback for missing sheets?
+            rawData[sheetName] = [];
+          }
+        });
+
+        // Use a slight variation of transformAll that expects dict keys to be Sheet Names directly
+        // The existing transformAll expects rawData.SUBJECTS etc, but those keys come from 
+        // sheetsService.fetchAllSheets which maps them.
+
+        // Actually sheetsService.fetchAllSheets returns an object where keys are the specific sheet names like 'Subjects', 'Topics'
+        // DataTransformer.transformAll accesses rawData.SUBJECTS (which is 'Subjects' value from config)
+        // Wait, review DataTransformer.transformAll (line 484)
+        // It accesses rawData.SUBJECTS ? No, it accesses rawData[GOOGLE_SHEETS_CONFIG.SHEETS.SUBJECTS] ??
+        // Let's check line 488: subjects = this.transformSubjects(rawData.SUBJECTS || []); 
+        // This implies rawData has keys like 'SUBJECTS', 'TOPICS'.
+        // BUT fetchAllSheets usually returns data keyed by how it was fetched.
+        // Let's re-read GoogleSheetsService.fetchAllSheets to see what keys it returns.
+
+        // I can't check it right now inside this tool call. 
+        // Based on line 488 `rawData.SUBJECTS`, the DataTransformer expects keys named 'SUBJECTS', 'TOPICS' etc.
+        // So I should map them:
+
+        const transformedRawData = {};
+        Object.entries(GOOGLE_SHEETS_CONFIG.SHEETS).forEach(([configKey, sheetName]) => {
+          // configKey is 'SUBJECTS', 'TOPICS' etc.
+          if (workbook.Sheets[sheetName]) {
+            transformedRawData[configKey] = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+          }
+        });
+
+        const transformed = DataTransformer.transformAll(transformedRawData);
+        if (Object.keys(transformed.subjects).length === 0) {
+          throw new Error('No subjects found in local Excel file');
+        }
+
+        setData(transformed);
+        setSyncStatus('offline'); // using local file is still technically 'offline' relative to Google Sheets
+        setIsLoading(false);
+        log('Loaded data from local Excel file');
+        return;
+
+      } catch (err) {
+        console.warn('Could not load local Excel file, falling back to defaults:', err);
+        // Fallthrough to defaults
+      }
+
       log('Demo mode - using default data');
       setData({
         subjects: DEFAULT_SUBJECTS,
@@ -1270,8 +1791,7 @@ const NotesEditor = memo(({ topicId, darkMode }) => {
 // UTILITY FUNCTIONS
 // ============================================================================
 
-const calculateLevel = (xp) => Math.floor(xp / 200) + 1;
-const xpToNextLevel = (xp) => 200 - (xp % 200);
+// Level calculation removed - XP tracking retained for progress
 const formatStudyTime = (mins) => mins < 60 ? `${mins}m` : `${Math.floor(mins / 60)}h ${mins % 60 > 0 ? `${mins % 60}m` : ''}`;
 
 const calculateSubjectProgress = (subjectKey, topicsProgress, topics) => {
@@ -1298,7 +1818,6 @@ const Dashboard = memo(({ onSelectSubject, onOpenSettings }) => {
   const darkMode = settings.darkMode;
 
   const totalXP = progress.xp;
-  const level = calculateLevel(totalXP);
   const completedTopics = countCompletedTopics(subjects, progress.topics);
 
   const allAchievements = achievements.map(a => ({ ...a, unlocked: progress.achievements.includes(a.id) }));
@@ -1324,15 +1843,6 @@ const Dashboard = memo(({ onSelectSubject, onOpenSettings }) => {
 
   return (
     <div className={cn("min-h-screen", darkMode ? "bg-slate-900" : "bg-gradient-to-br from-slate-50 via-white to-slate-100")}>
-      {/* Demo Mode Banner */}
-      {isDemoMode && (
-        <div className="bg-amber-500 text-white px-4 py-2 text-center text-sm">
-          <strong>Demo Mode:</strong> Configure your Google Sheet ID and API Key in the code to enable live sync.
-          <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="ml-2 underline inline-flex items-center gap-1">
-            Get API Key <ExternalLink className="w-3 h-3" />
-          </a>
-        </div>
-      )}
 
       {/* Header */}
       <header className={cn("px-4 sm:px-6 py-4 border-b", darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200")}>
@@ -1349,10 +1859,6 @@ const Dashboard = memo(({ onSelectSubject, onOpenSettings }) => {
 
           <div className="flex items-center gap-3">
             <SyncStatusBadge darkMode={darkMode} />
-            <div className={cn("flex items-center gap-2 px-3 py-1.5 rounded-lg", darkMode ? "bg-amber-900/50 text-amber-300" : "bg-amber-100 text-amber-700")}>
-              <Star className="w-4 h-4" />
-              <span className="font-bold">Lv.{level}</span>
-            </div>
             <button onClick={toggleDarkMode} className={cn("p-2 rounded-lg", darkMode ? "hover:bg-slate-700 text-slate-300" : "hover:bg-slate-100 text-slate-600")}>
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
@@ -1704,447 +2210,144 @@ const SubjectOverview = memo(({ subject, onBack, onSelectTopic, onOpenSettings }
   );
 });
 
-// ============================================================================
-// STUDY GUIDE COMPONENT
-// ============================================================================
 
-const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
-  const { progress, subjects, sections, objectives, keyTerms, studyContent, formulas, quizQuestions, updateProgress, settings } = useStudy();
-  const darkMode = settings.darkMode;
-
-  const config = subjects[subject];
-  const topic = config.topics[topicIndex];
-  const topicKey = topic.id;
-  const IconComponent = ICON_MAP[config.icon] || BookOpen;
-
-  // Get data for this topic
-  const topicSections = sections[topicKey] || DEFAULT_SECTIONS[topicKey] || [];
-  const topicObjectives = objectives[topicKey] || DEFAULT_OBJECTIVES[topicKey] || [];
-  const topicTerms = keyTerms[topicKey] || DEFAULT_KEY_TERMS[topicKey] || [];
-  const topicFormulas = formulas[topicKey] || DEFAULT_FORMULAS[topicKey] || [];
-  const topicQuizzes = quizQuestions[topicKey] || DEFAULT_QUIZZES[topicKey] || [];
-
-  const [activeSection, setActiveSection] = useState(0);
-  const [showNotes, setShowNotes] = useState(false);
-  const [quizAnswer, setQuizAnswer] = useState(null);
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [xpGain, setXpGain] = useState(null);
-
-  const currentSection = topicSections[activeSection];
-  const sectionContent = currentSection ? (studyContent[currentSection.id] || DEFAULT_CONTENT[currentSection.id] || []) : [];
-
-  const progressPercent = progress.topics[topicKey]?.progress || 0;
-  const bookmarked = progress.bookmarks.filter(b => b.startsWith(topicKey));
-
-  const copyFormula = (text) => {
-    navigator.clipboard?.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleSectionComplete = (sectionIndex) => {
-    const currentProgress = progress.topics[topicKey]?.progress || 0;
-    const newProgress = Math.min(100, Math.round(((sectionIndex + 1) / topicSections.length) * 100));
-
-    if (newProgress > currentProgress) {
-      const xpEarned = 10;
-      setXpGain(xpEarned);
-
-      const newAchievements = [...progress.achievements];
-      if (newProgress === 100 && !newAchievements.includes('topic-complete')) {
-        newAchievements.push('topic-complete');
-      }
-
-      updateProgress({
-        xp: progress.xp + xpEarned,
-        topics: { [topicKey]: { progress: newProgress, xp: (progress.topics[topicKey]?.xp || 0) + xpEarned, lastAccessed: new Date().toISOString() } },
-        studyTimeMinutes: progress.studyTimeMinutes + 2,
-        achievements: newAchievements
-      });
-
-      setTimeout(() => setXpGain(null), 1500);
-    }
-  };
-
-  const handleQuizSubmit = () => {
-    if (quizAnswer === null) return;
-    setQuizSubmitted(true);
-
-    const currentQuiz = topicQuizzes[0];
-    const isCorrect = currentQuiz && quizAnswer === currentQuiz.correctAnswer;
-
-    // Unlock 'first-quiz' achievement on any quiz completion
-    const newAchievements = [...progress.achievements];
-    if (!newAchievements.includes('first-quiz')) {
-      newAchievements.push('first-quiz');
-    }
-
-    if (isCorrect) {
-      const xpEarned = currentQuiz.xpReward;
-      setXpGain(xpEarned);
-      updateProgress({ xp: progress.xp + xpEarned, achievements: newAchievements });
-      setTimeout(() => setXpGain(null), 1500);
-    } else {
-      // Still unlock achievement even if answer is wrong
-      updateProgress({ achievements: newAchievements });
-    }
-  };
-
-  const toggleBookmark = (sectionId) => {
-    const key = `${topicKey}-${sectionId}`;
-    const newBookmarks = progress.bookmarks.includes(key)
-      ? progress.bookmarks.filter(b => b !== key)
-      : [...progress.bookmarks, key];
-    updateProgress({ bookmarks: newBookmarks });
-  };
-
-  return (
-    <div className={cn("min-h-screen flex", darkMode ? "bg-slate-900" : "bg-slate-50")}>
-      {/* XP Animation */}
-      {xpGain && (
-        <div className="fixed top-20 right-8 z-50 animate-bounce">
-          <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-white px-4 py-2 rounded-full shadow-lg font-bold flex items-center gap-2">
-            <Star className="w-5 h-5" />+{xpGain} XP
-          </div>
-        </div>
-      )}
-
-      {/* Sidebar */}
-      <aside className={cn("hidden lg:flex w-72 flex-col border-r", darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200")}>
-        {/* Header */}
-        <div className={cn("p-4 border-b", darkMode ? "border-slate-700" : "border-slate-200")}>
-          <button onClick={onBack} className={cn("flex items-center gap-2 mb-4", darkMode ? "text-slate-400 hover:text-slate-200" : "text-slate-600 hover:text-slate-800")}>
-            <ChevronLeft className="w-5 h-5" /><span className="font-medium">Back</span>
-          </button>
-          <div className="flex items-center gap-3">
-            <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br", config.gradient)}>
-              <IconComponent className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className={cn("font-bold truncate", darkMode ? "text-white" : "text-slate-800")}>{topic.name}</h2>
-              <p className={cn("text-sm", darkMode ? "text-slate-400" : "text-slate-500")}>{config.name}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress */}
-        <div className={cn("p-4 border-b", darkMode ? "border-slate-700" : "border-slate-200")}>
-          <div className="flex items-center justify-between mb-2">
-            <span className={cn("text-sm font-medium", darkMode ? "text-slate-400" : "text-slate-600")}>Progress</span>
-            <span className="text-sm font-bold" style={{ color: config.color }}>{progressPercent}%</span>
-          </div>
-          <div className={cn("w-full h-2 rounded-full overflow-hidden", darkMode ? "bg-slate-700" : "bg-slate-100")}>
-            <div className={cn("h-full rounded-full transition-all bg-gradient-to-r", config.gradient)} style={{ width: `${progressPercent}%` }} />
-          </div>
-        </div>
-
-        {/* Sections */}
-        <nav className="flex-1 overflow-y-auto p-4">
-          <h3 className={cn("text-xs font-bold uppercase tracking-wider mb-3", darkMode ? "text-slate-500" : "text-slate-400")}>Outline</h3>
-          <div className="space-y-1">
-            {topicSections.map((section, i) => {
-              const SectionIcon = ICON_MAP[section.icon] || FileText;
-              const isCompleted = i < Math.floor((progressPercent / 100) * topicSections.length);
-              return (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(i)}
-                  className={cn(
-                    "w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all",
-                    activeSection === i ? cn("bg-gradient-to-r text-white shadow-lg", config.gradient)
-                      : isCompleted ? darkMode ? "bg-emerald-900/30 text-emerald-400" : "bg-emerald-50 text-emerald-700"
-                        : darkMode ? "hover:bg-slate-700 text-slate-400" : "hover:bg-slate-100 text-slate-600"
-                  )}
-                >
-                  <div className={cn("w-6 h-6 rounded-full flex items-center justify-center", activeSection === i ? "bg-white/20" : isCompleted ? "bg-emerald-500 text-white" : darkMode ? "border-2 border-slate-600" : "border-2 border-slate-300")}>
-                    {isCompleted && activeSection !== i ? <Check className="w-4 h-4" /> : <span className="text-xs font-bold">{i + 1}</span>}
-                  </div>
-                  <span className="font-medium text-sm flex-1">{section.title}</span>
-                </button>
-              );
-            })}
-          </div>
-        </nav>
-
-        {/* XP Earned */}
-        <div className={cn("p-4 border-t", darkMode ? "border-slate-700" : "border-slate-200")}>
-          <div className="flex items-center gap-3">
-            <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", darkMode ? "bg-amber-900/50" : "bg-amber-100")}>
-              <Star className={cn("w-5 h-5", darkMode ? "text-amber-400" : "text-amber-600")} />
-            </div>
-            <div>
-              <p className={cn("font-bold", darkMode ? "text-white" : "text-slate-800")}>+{progress.topics[topicKey]?.xp || 0} XP</p>
-              <p className={cn("text-xs", darkMode ? "text-slate-400" : "text-slate-500")}>Earned this topic</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col">
-        {/* Top Bar */}
-        <div className={cn("px-4 sm:px-8 py-4 border-b flex items-center justify-between", darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200")}>
-          <div className="flex items-center gap-3 lg:hidden">
-            <button onClick={onBack} className={cn("p-2 rounded-lg", darkMode ? "hover:bg-slate-700" : "hover:bg-slate-100")}>
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <h2 className={cn("font-bold", darkMode ? "text-white" : "text-slate-800")}>{topic.name}</h2>
-          </div>
-          <div className="hidden lg:block">
-            <h2 className={cn("text-xl font-bold", darkMode ? "text-white" : "text-slate-800")}>{currentSection?.title}</h2>
-          </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => currentSection && toggleBookmark(currentSection.id)} className={cn("p-2 rounded-lg", bookmarked.includes(`${topicKey}-${currentSection?.id}`) ? "bg-amber-100 text-amber-600" : darkMode ? "hover:bg-slate-700 text-slate-400" : "hover:bg-slate-100 text-slate-500")}>
-              <Bookmark className="w-5 h-5" />
-            </button>
-            <button onClick={() => setShowNotes(!showNotes)} className={cn("p-2 rounded-lg", showNotes ? "bg-blue-100 text-blue-600" : darkMode ? "hover:bg-slate-700 text-slate-400" : "hover:bg-slate-100 text-slate-500")}>
-              <StickyNote className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-8">
-          <div className="max-w-prose mx-auto">
-            {/* Learning Objectives */}
-            {currentSection?.type === 'objectives' && (
-              <div className={cn("rounded-2xl p-6 border mb-8", darkMode ? "bg-indigo-900/30 border-indigo-700" : "bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-200")}>
-                <div className="flex items-center gap-2 mb-4">
-                  <Target className={cn("w-6 h-6", darkMode ? "text-indigo-400" : "text-indigo-600")} />
-                  <h2 className={cn("text-lg font-bold", darkMode ? "text-indigo-300" : "text-indigo-800")}>After this lesson, you will be able to:</h2>
-                </div>
-                <ul className="space-y-3">
-                  {topicObjectives.map((obj, i) => (
-                    <li key={obj.id || i} className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Check className="w-4 h-4 text-white" />
-                      </div>
-                      <span className={darkMode ? "text-indigo-200" : "text-indigo-800"}>{obj.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Content Sections */}
-            {(currentSection?.type === 'content' || currentSection?.type === 'intro' || currentSection?.type === 'applications') && (
-              <>
-                {sectionContent.map((content, i) => (
-                  <div key={content.id || i} className="mb-6">
-                    {content.type === 'introduction' && (
-                      <p className={cn("text-lg leading-relaxed", darkMode ? "text-slate-300" : "text-slate-600")}>{content.text}</p>
-                    )}
-
-                    {content.type === 'formula' && (
-                      <div className="bg-slate-900 rounded-2xl p-6 sm:p-8 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl" />
-                        <div className="relative">
-                          <p className="text-blue-300 text-sm font-medium mb-2">{content.title}</p>
-                          <div className="flex items-center justify-center gap-4 mb-4">
-                            <span className="text-4xl sm:text-5xl font-bold text-white font-mono">{content.text}</span>
-                          </div>
-                          {topicFormulas[0]?.variables && (
-                            <div className="grid grid-cols-3 gap-4 text-center mb-4">
-                              {topicFormulas[0].variables.map((v, j) => (
-                                <div key={j}>
-                                  <div className={cn("text-2xl font-bold", j === 0 ? "text-blue-400" : j === 1 ? "text-emerald-400" : "text-amber-400")}>{v.symbol}</div>
-                                  <div className="text-sm text-slate-400">{v.name} ({v.unit})</div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          <button onClick={() => copyFormula(content.text)} className="flex items-center gap-2 mx-auto px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-sm">
-                            <Copy className="w-4 h-4" />{copied ? 'Copied!' : 'Copy equation'}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {content.type === 'concept_helper' && (
-                      <div className={cn("rounded-2xl p-5 border-l-4", darkMode ? "bg-blue-900/30 border-blue-500" : "bg-blue-50 border-blue-500")}>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Lightbulb className={cn("w-5 h-5", darkMode ? "text-blue-400" : "text-blue-600")} />
-                          <span className={cn("font-bold", darkMode ? "text-blue-300" : "text-blue-800")}>💡 {content.title}</span>
-                        </div>
-                        <p className={darkMode ? "text-blue-200" : "text-blue-900"}>{content.text}</p>
-                      </div>
-                    )}
-
-                    {content.type === 'warning' && (
-                      <div className={cn("rounded-2xl p-5 border-l-4", darkMode ? "bg-red-900/30 border-red-500" : "bg-red-50 border-red-500")}>
-                        <div className="flex items-center gap-2 mb-2">
-                          <AlertTriangle className={cn("w-5 h-5", darkMode ? "text-red-400" : "text-red-600")} />
-                          <span className={cn("font-bold", darkMode ? "text-red-300" : "text-red-800")}>⚠️ {content.title}</span>
-                        </div>
-                        <p className={darkMode ? "text-red-200" : "text-red-900"}>{content.text}</p>
-                      </div>
-                    )}
-
-                    {content.type === 'real_world' && (
-                      <div className={cn("rounded-2xl p-5 border-l-4", darkMode ? "bg-emerald-900/30 border-emerald-500" : "bg-emerald-50 border-emerald-500")}>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Globe className={cn("w-5 h-5", darkMode ? "text-emerald-400" : "text-emerald-600")} />
-                          <span className={cn("font-bold", darkMode ? "text-emerald-300" : "text-emerald-800")}>🌍 {content.title}</span>
-                        </div>
-                        <p className={darkMode ? "text-emerald-200" : "text-emerald-900"}>{content.text}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-
-                {sectionContent.length === 0 && (
-                  <div className={cn("text-center py-12", darkMode ? "text-slate-400" : "text-slate-500")}>
-                    <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>Content for this section is being prepared.</p>
-                    <p className="text-sm mt-2">Update your Google Sheet to add content!</p>
-                  </div>
-                )}
-              </>
-            )}
-
-            {/* Quiz Section */}
-            {currentSection?.type === 'quiz' && topicQuizzes.length > 0 && (
-              <div className={cn("rounded-2xl p-6 border", darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200")}>
-                <h3 className={cn("text-lg font-bold mb-4", darkMode ? "text-white" : "text-slate-800")}>Quick Quiz</h3>
-                <p className={cn("mb-6", darkMode ? "text-slate-300" : "text-slate-600")}>{topicQuizzes[0].question}</p>
-                <div className="space-y-3 mb-6">
-                  {topicQuizzes[0].options.map((opt) => (
-                    <button
-                      key={opt.label}
-                      onClick={() => !quizSubmitted && setQuizAnswer(opt.label)}
-                      disabled={quizSubmitted}
-                      className={cn(
-                        "w-full p-4 rounded-xl text-left transition-all flex items-center gap-3",
-                        quizSubmitted
-                          ? opt.label === topicQuizzes[0].correctAnswer
-                            ? "bg-emerald-100 border-2 border-emerald-500 text-emerald-800"
-                            : opt.label === quizAnswer
-                              ? "bg-red-100 border-2 border-red-500 text-red-800"
-                              : darkMode ? "bg-slate-700 text-slate-400" : "bg-slate-100 text-slate-500"
-                          : quizAnswer === opt.label
-                            ? cn("border-2 bg-gradient-to-r text-white", config.gradient)
-                            : darkMode ? "bg-slate-700 hover:bg-slate-600 text-slate-200" : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-                      )}
-                    >
-                      <span className={cn("w-8 h-8 rounded-full flex items-center justify-center font-bold", quizAnswer === opt.label && !quizSubmitted ? "bg-white/20" : darkMode ? "bg-slate-600" : "bg-slate-200")}>
-                        {opt.label}
-                      </span>
-                      <span>{opt.text}</span>
-                      {quizSubmitted && opt.label === topicQuizzes[0].correctAnswer && <CheckCircle2 className="w-5 h-5 ml-auto text-emerald-600" />}
-                    </button>
-                  ))}
-                </div>
-
-                {!quizSubmitted ? (
-                  <button onClick={handleQuizSubmit} disabled={quizAnswer === null} className={cn("w-full py-3 rounded-xl font-bold transition-all", quizAnswer === null ? darkMode ? "bg-slate-700 text-slate-500" : "bg-slate-200 text-slate-400" : cn("bg-gradient-to-r text-white", config.gradient))}>
-                    Submit Answer
-                  </button>
-                ) : (
-                  <div className={cn("p-4 rounded-xl", quizAnswer === topicQuizzes[0].correctAnswer ? "bg-emerald-50 text-emerald-800" : "bg-amber-50 text-amber-800")}>
-                    <p className="font-bold mb-1">{quizAnswer === topicQuizzes[0].correctAnswer ? '🎉 Correct!' : '❌ Not quite!'}</p>
-                    <p>{topicQuizzes[0].explanation}</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Navigation */}
-            <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
-              <button
-                onClick={() => setActiveSection(Math.max(0, activeSection - 1))}
-                disabled={activeSection === 0}
-                className={cn("flex items-center gap-2 px-6 py-3 rounded-xl font-medium", activeSection === 0 ? darkMode ? "bg-slate-800 text-slate-500" : "bg-slate-100 text-slate-400" : darkMode ? "bg-slate-700 hover:bg-slate-600 text-slate-200" : "bg-slate-100 hover:bg-slate-200 text-slate-700")}
-              >
-                <ChevronLeft className="w-5 h-5" />Previous
-              </button>
-              <div className="flex items-center gap-1">
-                {topicSections.map((_, i) => (
-                  <div key={i} className={cn("w-2 h-2 rounded-full", i === activeSection ? cn("bg-gradient-to-r", config.gradient) : i < activeSection ? "bg-emerald-500" : darkMode ? "bg-slate-600" : "bg-slate-300")} />
-                ))}
-              </div>
-              <button
-                onClick={() => { handleSectionComplete(activeSection); setActiveSection(Math.min(topicSections.length - 1, activeSection + 1)); }}
-                disabled={activeSection === topicSections.length - 1}
-                className={cn("flex items-center gap-2 px-6 py-3 rounded-xl font-medium", activeSection === topicSections.length - 1 ? darkMode ? "bg-slate-800 text-slate-500" : "bg-slate-100 text-slate-400" : cn("bg-gradient-to-r text-white", config.gradient))}
-              >
-                Next<ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Notes Panel */}
-        {showNotes && (
-          <div className={cn("border-t p-4", darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200")}>
-            <div className="max-w-prose mx-auto">
-              <h3 className={cn("font-bold mb-3 flex items-center gap-2", darkMode ? "text-white" : "text-slate-800")}>
-                <StickyNote className="w-5 h-5 text-amber-500" />Your Notes
-              </h3>
-              <NotesEditor topicId={topicKey} darkMode={darkMode} />
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* Key Terms Sidebar */}
-      <aside className={cn("hidden xl:block w-72 border-l p-4 overflow-y-auto", darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200")}>
-        <h3 className={cn("text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2", darkMode ? "text-slate-500" : "text-slate-400")}>
-          <BookOpen className="w-4 h-4" />Key Terms
-        </h3>
-        <div className="space-y-2">
-          {topicTerms.map((item, i) => (
-            <div key={item.id || i} className={cn("rounded-xl p-3", darkMode ? "bg-slate-700" : "bg-slate-50")}>
-              <p className={cn("font-bold text-sm", darkMode ? "text-white" : "text-slate-800")}>{item.term}</p>
-              <p className={cn("text-xs", darkMode ? "text-slate-400" : "text-slate-500")}>{item.definition}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Bookmarks */}
-        <h3 className={cn("text-xs font-bold uppercase tracking-wider mt-6 mb-3 flex items-center gap-2", darkMode ? "text-slate-500" : "text-slate-400")}>
-          <Bookmark className="w-4 h-4" />Bookmarks
-        </h3>
-        {bookmarked.length > 0 ? (
-          <div className="space-y-2">
-            {bookmarked.map((b, i) => {
-              const sectionId = b.split('-').pop();
-              const section = topicSections.find(s => s.id === sectionId);
-              return (
-                <button key={i} onClick={() => setActiveSection(topicSections.findIndex(s => s.id === sectionId))} className={cn("w-full flex items-center gap-2 p-2 rounded-lg text-sm text-left", darkMode ? "bg-amber-900/30 text-amber-400 hover:bg-amber-900/50" : "bg-amber-50 text-amber-800 hover:bg-amber-100")}>
-                  <Bookmark className="w-4 h-4 text-amber-500" />
-                  <span className="truncate">{section?.title || sectionId}</span>
-                </button>
-              );
-            })}
-          </div>
-        ) : (
-          <p className={cn("text-sm", darkMode ? "text-slate-500" : "text-slate-400")}>No bookmarks yet</p>
-        )}
-      </aside>
-    </div>
-  );
-});
 
 // ============================================================================
 // SETTINGS PANEL
 // ============================================================================
 
 const SettingsPanel = memo(({ onClose }) => {
-  const { settings, toggleDarkMode } = useStudy();
-  const { isDemoMode, refresh, lastSync, syncStatus } = useData();
+  const { settings, subjects } = useStudy();
+  const { isDemoMode, refresh, lastSync } = useData();
   const darkMode = settings.darkMode;
+
+  // AI Generation state
+  const [aiApiKey, setAiApiKey] = useState(() => {
+    // Use env key if available, otherwise localStorage
+    return AIService.isEnvKeyConfigured() ? '' : (localStorage.getItem('studyhub_ai_api_key') || '');
+  });
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState('');
+  const [selectedSubTopic, setSelectedSubTopic] = useState('');
+  const [contentType, setContentType] = useState('questions');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationResult, setGenerationResult] = useState(null);
+  const [generationError, setGenerationError] = useState(null);
+  const [storedContent, setStoredContent] = useState(() => AIService.loadStoredContent());
+  const [showStoredContent, setShowStoredContent] = useState(false);
+  const isMounted = useRef(true);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => { isMounted.current = false; };
+  }, []);
+
+  // Check if env key is configured
+  const isEnvKeyConfigured = AIService.isEnvKeyConfigured();
+
+  // Get subjects list for dropdown
+  const subjectsList = useMemo(() => {
+    return Object.entries(subjects).map(([key, subject]) => ({
+      key,
+      name: subject.name
+    }));
+  }, [subjects]);
+
+  // Get topics for dropdown (filtered by selected subject)
+  const filteredTopics = useMemo(() => {
+    if (!selectedSubject) return [];
+    const subject = subjects[selectedSubject];
+    if (!subject) return [];
+    return subject.topics.map(topic => ({
+      id: topic.id,
+      name: topic.name,
+      subjectName: subject.name,
+      subjectKey: selectedSubject
+    }));
+  }, [subjects, selectedSubject]);
+
+  // Save API key to localStorage
+  const handleApiKeyChange = (e) => {
+    const key = e.target.value;
+    setAiApiKey(key);
+    localStorage.setItem('studyhub_ai_api_key', key);
+  };
+
+  // Get linked Google Sheet URLs
+  const linkedSheets = useMemo(() => {
+    const sheets = [];
+    if (GOOGLE_SHEETS_CONFIG.SHEET_ID && GOOGLE_SHEETS_CONFIG.SHEET_ID !== 'YOUR_GOOGLE_SHEET_ID_HERE') {
+      sheets.push(`https://docs.google.com/spreadsheets/d/${GOOGLE_SHEETS_CONFIG.SHEET_ID}/edit`);
+    }
+    return sheets;
+  }, []);
+
+  // Handle AI generation
+  const handleGenerateAI = async () => {
+    const effectiveApiKey = isEnvKeyConfigured ? null : aiApiKey;
+    if (!isEnvKeyConfigured && !aiApiKey) {
+      alert('Please enter an API key or set REACT_APP_GEMINI_API_KEY in .env file');
+      return;
+    }
+    if (!selectedTopic) {
+      alert('Please select a topic');
+      return;
+    }
+
+    // Get topic and subject names for better prompts
+    const selectedTopicObj = filteredTopics.find(t => t.id === selectedTopic);
+    const topicName = selectedTopicObj?.name || '';
+    const subjectName = subjects[selectedSubject]?.name || '';
+
+    setIsGenerating(true);
+    setGenerationResult(null);
+    setGenerationError(null);
+    try {
+      const result = await AIService.generateContent(
+        selectedTopic,
+        selectedSubTopic,
+        contentType,
+        effectiveApiKey,
+        topicName,
+        subjectName
+      );
+      if (isMounted.current) {
+        setGenerationResult(result);
+        // Refresh stored content list
+        setStoredContent(AIService.loadStoredContent());
+      }
+    } catch (error) {
+      console.error('AI Generation error:', error);
+      if (isMounted.current) {
+        setGenerationError(error.message);
+      }
+    } finally {
+      if (isMounted.current) {
+        setIsGenerating(false);
+      }
+    }
+  };
+
+  // Clear all stored content
+  const handleClearContent = () => {
+    if (window.confirm('Are you sure you want to delete all generated content?')) {
+      AIService.clearStoredContent();
+      setStoredContent([]);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className={cn("w-full max-w-lg rounded-2xl shadow-xl overflow-hidden", darkMode ? "bg-slate-800" : "bg-white")}>
-        <div className={cn("p-6 border-b flex items-center justify-between", darkMode ? "border-slate-700" : "border-slate-200")}>
+      <div className={cn("w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-xl overflow-hidden flex flex-col", darkMode ? "bg-slate-800" : "bg-white")}>
+        {/* Header */}
+        <div className={cn("p-6 border-b flex items-center justify-between flex-shrink-0", darkMode ? "border-slate-700" : "border-slate-200")}>
           <h2 className={cn("text-xl font-bold", darkMode ? "text-white" : "text-slate-800")}>Settings</h2>
           <button onClick={onClose} className={cn("p-2 rounded-lg", darkMode ? "hover:bg-slate-700" : "hover:bg-slate-100")}><X className="w-5 h-5" /></button>
         </div>
 
-        <div className="p-6 space-y-6">
-          {/* Data Source */}
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Data Source Section */}
           <div>
             <h3 className={cn("font-bold mb-3", darkMode ? "text-white" : "text-slate-800")}>Data Source</h3>
             <div className={cn("p-4 rounded-xl", isDemoMode ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800")}>
@@ -2161,26 +2364,389 @@ const SettingsPanel = memo(({ onClose }) => {
             </div>
           </div>
 
-          {/* Dark Mode */}
-          <div className="flex items-center justify-between">
-            <div>
-              <p className={cn("font-medium", darkMode ? "text-white" : "text-slate-800")}>Dark Mode</p>
-              <p className={cn("text-sm", darkMode ? "text-slate-400" : "text-slate-500")}>Toggle dark theme</p>
+          {/* Linked Google Sheets Section */}
+          <div>
+            <h3 className={cn("font-bold mb-3", darkMode ? "text-white" : "text-slate-800")}>Linked Google Sheets</h3>
+            <div className={cn("p-4 rounded-xl", darkMode ? "bg-slate-700" : "bg-slate-100")}>
+              {linkedSheets.length > 0 ? (
+                <div className="space-y-2">
+                  {linkedSheets.map((url, i) => (
+                    <div key={i} className="flex items-start gap-2">
+                      <ExternalLink className={cn("w-4 h-4 flex-shrink-0 mt-0.5", darkMode ? "text-blue-400" : "text-blue-600")} />
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn("text-sm break-all hover:underline", darkMode ? "text-blue-400" : "text-blue-600")}
+                      >
+                        {url}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className={cn("text-sm italic", darkMode ? "text-slate-400" : "text-slate-500")}>
+                  No Google Sheets linked. Configure SHEET_ID in the code to link a sheet.
+                </p>
+              )}
+
+              {/* Documentation Downloads */}
+              <div className={cn("mt-4 pt-4 border-t", darkMode ? "border-slate-600" : "border-slate-200")}>
+                <p className={cn("text-sm font-medium mb-2", darkMode ? "text-slate-300" : "text-slate-700")}>Documentation & Templates:</p>
+                <div className="space-y-2">
+                  <a
+                    href="/GOOGLE_SHEETS_SCHEMA.md"
+                    download="GOOGLE_SHEETS_SCHEMA.md"
+                    className={cn("flex items-center gap-2 text-sm hover:underline", darkMode ? "text-blue-400" : "text-blue-600")}
+                  >
+                    <Download className="w-4 h-4" />
+                    Google Sheets Schema (MD)
+                  </a>
+                  <a
+                    href="/StudyHub_Complete_Data.xlsx"
+                    download="StudyHub_Complete_Data.xlsx"
+                    className={cn("flex items-center gap-2 text-sm hover:underline", darkMode ? "text-blue-400" : "text-blue-600")}
+                  >
+                    <Download className="w-4 h-4" />
+                    StudyHub Data Template (Excel)
+                  </a>
+                </div>
+              </div>
             </div>
-            <button onClick={toggleDarkMode} className={cn("w-12 h-7 rounded-full p-1 transition-colors", darkMode ? "bg-indigo-600" : "bg-slate-300")}>
-              <div className={cn("w-5 h-5 rounded-full bg-white shadow-md transform transition-transform", darkMode && "translate-x-5")} />
-            </button>
           </div>
 
-          {/* Setup Instructions */}
+          {/* AI Content Generation Section */}
+          <div>
+            <h3 className={cn("font-bold mb-3 flex items-center gap-2", darkMode ? "text-white" : "text-slate-800")}>
+              <Sparkles className="w-5 h-5 text-purple-500" />
+              Generate Content with AI
+            </h3>
+            <div className={cn("p-4 rounded-xl space-y-4", darkMode ? "bg-slate-700" : "bg-slate-100")}>
+              {/* API Key Input */}
+              <div>
+                <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
+                  Gemini API Key
+                </label>
+                {isEnvKeyConfigured ? (
+                  <div className={cn("flex items-center gap-2 p-2 rounded-lg", darkMode ? "bg-emerald-900/30 text-emerald-400" : "bg-emerald-100 text-emerald-700")}>
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span className="text-sm">API key configured via environment variable</span>
+                  </div>
+                ) : (
+                  <>
+                    <input
+                      type="password"
+                      value={aiApiKey}
+                      onChange={handleApiKeyChange}
+                      placeholder="Enter your Gemini API key..."
+                      className={cn(
+                        "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
+                        darkMode
+                          ? "bg-slate-600 border-slate-500 text-white placeholder-slate-400 focus:ring-purple-500"
+                          : "bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:ring-purple-500"
+                      )}
+                    />
+                    <p className={cn("text-xs mt-1", darkMode ? "text-slate-400" : "text-slate-500")}>
+                      Get your key from <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-purple-500 hover:underline">Google AI Studio</a>. Or set REACT_APP_GEMINI_API_KEY in .env
+                    </p>
+                  </>
+                )}
+              </div>
+
+              {/* Subject Dropdown */}
+              <div>
+                <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
+                  Subject
+                </label>
+                <select
+                  value={selectedSubject}
+                  onChange={(e) => { setSelectedSubject(e.target.value); setSelectedTopic(''); setSelectedSubTopic(''); }}
+                  className={cn(
+                    "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
+                    darkMode
+                      ? "bg-slate-600 border-slate-500 text-white focus:ring-purple-500"
+                      : "bg-white border-slate-300 text-slate-900 focus:ring-purple-500"
+                  )}
+                >
+                  <option value="">Select a subject...</option>
+                  {subjectsList.map(subject => (
+                    <option key={subject.key} value={subject.key}>
+                      {subject.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Topic Dropdown */}
+              <div>
+                <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
+                  Topic
+                </label>
+                <select
+                  value={selectedTopic}
+                  onChange={(e) => { setSelectedTopic(e.target.value); setSelectedSubTopic(''); }}
+                  disabled={!selectedSubject}
+                  className={cn(
+                    "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
+                    darkMode
+                      ? "bg-slate-600 border-slate-500 text-white focus:ring-purple-500 disabled:opacity-50"
+                      : "bg-white border-slate-300 text-slate-900 focus:ring-purple-500 disabled:opacity-50"
+                  )}
+                >
+                  <option value="">Select a topic...</option>
+                  {filteredTopics.map(topic => (
+                    <option key={topic.id} value={topic.id}>
+                      {topic.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sub Topic Dropdown */}
+              <div>
+                <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
+                  Sub Topic
+                </label>
+                <select
+                  value={selectedSubTopic}
+                  onChange={(e) => setSelectedSubTopic(e.target.value)}
+                  disabled={!selectedTopic}
+                  className={cn(
+                    "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
+                    darkMode
+                      ? "bg-slate-600 border-slate-500 text-white focus:ring-purple-500 disabled:opacity-50"
+                      : "bg-white border-slate-300 text-slate-900 focus:ring-purple-500 disabled:opacity-50"
+                  )}
+                >
+                  <option value="">Select a sub topic (optional)...</option>
+                  <option value="introduction">Introduction</option>
+                  <option value="key_concepts">Key Concepts</option>
+                  <option value="formulas">Formulas</option>
+                  <option value="applications">Real-World Applications</option>
+                  <option value="practice">Practice Problems</option>
+                </select>
+              </div>
+
+              {/* Content Type Dropdown */}
+              <div>
+                <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
+                  Content Type
+                </label>
+                <select
+                  value={contentType}
+                  onChange={(e) => setContentType(e.target.value)}
+                  className={cn(
+                    "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
+                    darkMode
+                      ? "bg-slate-600 border-slate-500 text-white focus:ring-purple-500"
+                      : "bg-white border-slate-300 text-slate-900 focus:ring-purple-500"
+                  )}
+                >
+                  <option value="questions">Quiz Questions</option>
+                  <option value="studyguide">Study Guide</option>
+                  <option value="handout">Handout</option>
+                </select>
+              </div>
+
+              {/* Generate Button */}
+              <button
+                onClick={handleGenerateAI}
+                disabled={isGenerating || (!isEnvKeyConfigured && !aiApiKey) || !selectedTopic}
+                className={cn(
+                  "w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2",
+                  isGenerating || (!isEnvKeyConfigured && !aiApiKey) || !selectedTopic
+                    ? darkMode ? "bg-slate-600 text-slate-400 cursor-not-allowed" : "bg-slate-300 text-slate-500 cursor-not-allowed"
+                    : "bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:shadow-lg"
+                )}
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Generating with Gemini...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5" />
+                    Generate using AI
+                  </>
+                )}
+              </button>
+
+              {/* Generation Result */}
+              {generationResult && (
+                <div className={cn("p-3 rounded-lg border", darkMode ? "bg-emerald-900/30 border-emerald-700" : "bg-emerald-50 border-emerald-200")}>
+                  <p className={cn("text-sm font-medium mb-1", darkMode ? "text-emerald-400" : "text-emerald-700")}>
+                    ✓ Content generated successfully!
+                  </p>
+                  <p className={cn("text-xs", darkMode ? "text-emerald-300" : "text-emerald-600")}>
+                    Generated {generationResult.count || 0} {generationResult.type} items for "{generationResult.topicName}".
+                  </p>
+                </div>
+              )}
+
+              {/* Generation Error */}
+              {generationError && (
+                <div className={cn("p-3 rounded-lg border", darkMode ? "bg-red-900/30 border-red-700" : "bg-red-50 border-red-200")}>
+                  <p className={cn("text-sm font-medium mb-1", darkMode ? "text-red-400" : "text-red-700")}>
+                    ✗ Generation failed
+                  </p>
+                  <p className={cn("text-xs", darkMode ? "text-red-300" : "text-red-600")}>
+                    {generationError}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Generated Content Section */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className={cn("font-bold flex items-center gap-2", darkMode ? "text-white" : "text-slate-800")}>
+                <Database className="w-5 h-5 text-indigo-500" />
+                Generated Content ({storedContent.length})
+              </h3>
+              <div className="flex gap-2">
+                {storedContent.length > 0 && isDemoMode && (
+                  <button
+                    onClick={async () => {
+                      try {
+                        // 1. Fetch current file
+                        const response = await fetch('/StudyHub_Data.xlsx');
+                        if (!response.ok) throw new Error('Base file not found');
+                        const buffer = await response.arrayBuffer();
+                        const workbook = XLSX.read(buffer);
+
+                        // 2. Prepare new rows
+                        const newQuestions = [];
+                        const newContent = [];
+
+                        storedContent.forEach(batch => {
+                          if (batch.type === 'questions') {
+                            batch.items.forEach(q => {
+                              newQuestions.push({
+                                question_id: q.id || `ai-q-${Date.now()}`,
+                                topic_id: batch.topicId,
+                                question_text: q.question,
+                                option_a: q.options[0]?.text || '',
+                                option_b: q.options[1]?.text || '',
+                                option_c: q.options[2]?.text || '',
+                                option_d: q.options[3]?.text || '',
+                                correct_answer: q.correctAnswer,
+                                explanation: q.explanation,
+                                difficulty: q.difficulty,
+                                hint: q.hint,
+                                xp_reward: q.xpReward
+                              });
+                            });
+                          } else {
+                            // Handouts / Study Guides
+                            batch.items.forEach((item, idx) => {
+                              let text = item.content_text || '';
+                              if (item.keyPoints) text += '\nKey Points:\n' + item.keyPoints.join('\n');
+                              if (item.definitions) text += '\nDefinitions:\n' + item.definitions.map(d => `${d.term}: ${d.definition}`).join('\n');
+                              if (item.points) text += '\nPoints:\n' + item.points.join('\n'); // Handout structure logic
+
+                              newContent.push({
+                                content_id: item.id || `ai-c-${Date.now()}`,
+                                section_id: `${batch.topicId}-s001`, // Default section
+                                content_type: batch.type === 'handout' ? 'text' : 'introduction', // Map to valid types
+                                content_title: item.title || batch.type,
+                                content_text: text || item.text || JSON.stringify(item),
+                                order_index: 99
+                              });
+                            });
+                          }
+                        });
+
+                        // 3. Append to sheets
+                        if (newQuestions.length > 0) {
+                          const sheet = workbook.Sheets['Quiz_Questions'];
+                          XLSX.utils.sheet_add_json(sheet, newQuestions, { skipHeader: true, origin: -1 });
+                        }
+                        if (newContent.length > 0) {
+                          const sheet = workbook.Sheets['Study_Content'];
+                          XLSX.utils.sheet_add_json(sheet, newContent, { skipHeader: true, origin: -1 });
+                        }
+
+                        // 4. Download
+                        XLSX.writeFile(workbook, "StudyHub_Data_Updated.xlsx");
+                        alert('File downloaded! Please replace public/StudyHub_Data.xlsx with this new file to make changes permanent.');
+
+                      } catch (err) {
+                        console.error('Export failed:', err);
+                        alert('Failed to export data: ' + err.message);
+                      }
+                    }}
+                    className={cn("text-xs px-2 py-1 rounded flex items-center gap-1", darkMode ? "bg-emerald-900/50 text-emerald-400 hover:bg-emerald-900" : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200")}
+                    title="Download updated Excel file with this content"
+                  >
+                    <Download className="w-3 h-3" /> Save to Excel
+                  </button>
+                )}
+                {storedContent.length > 0 && (
+                  <button
+                    onClick={handleClearContent}
+                    className={cn("text-xs px-2 py-1 rounded", darkMode ? "text-red-400 hover:bg-red-900/30" : "text-red-600 hover:bg-red-100")}
+                  >
+                    Clear All
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className={cn("p-4 rounded-xl", darkMode ? "bg-slate-700" : "bg-slate-100")}>
+              {storedContent.length > 0 ? (
+                <div className="space-y-3 max-h-60 overflow-y-auto">
+                  {storedContent.slice(0, 10).map((item, i) => (
+                    <div key={item.id || i} className={cn("p-3 rounded-lg border", darkMode ? "bg-slate-600 border-slate-500" : "bg-white border-slate-200")}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className={cn(
+                              "text-xs px-2 py-0.5 rounded-full font-medium",
+                              item.type === 'questions' ? "bg-purple-100 text-purple-700" :
+                                item.type === 'studyguide' ? "bg-blue-100 text-blue-700" :
+                                  "bg-amber-100 text-amber-700"
+                            )}>
+                              {item.type}
+                            </span>
+                            <span className={cn("text-xs", darkMode ? "text-slate-400" : "text-slate-500")}>
+                              {item.count} items
+                            </span>
+                          </div>
+                          <p className={cn("text-sm font-medium truncate", darkMode ? "text-white" : "text-slate-800")}>
+                            {item.topicName || item.topicId}
+                          </p>
+                          <p className={cn("text-xs", darkMode ? "text-slate-400" : "text-slate-500")}>
+                            {item.subjectName} • {new Date(item.generatedAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {storedContent.length > 10 && (
+                    <p className={cn("text-xs text-center", darkMode ? "text-slate-400" : "text-slate-500")}>
+                      ... and {storedContent.length - 10} more items
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className={cn("text-sm italic", darkMode ? "text-slate-400" : "text-slate-500")}>
+                  No generated content yet. Use the form above to generate quiz questions, study guides, or handouts.
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Setup Instructions (Demo Mode Only) */}
           {isDemoMode && (
             <div className={cn("p-4 rounded-xl", darkMode ? "bg-slate-700" : "bg-slate-100")}>
               <h4 className={cn("font-bold mb-2", darkMode ? "text-white" : "text-slate-800")}>Setup Instructions</h4>
               <ol className={cn("text-sm space-y-2", darkMode ? "text-slate-300" : "text-slate-600")}>
-                <li>1. Upload the Excel template to Google Sheets</li>
-                <li>2. Get your Sheet ID from the URL</li>
-                <li>3. Create a Google Cloud API key</li>
-                <li>4. Update the config in the code</li>
+                <li>1. Upload the Excel template to Google Sheets (for cloud sync)</li>
+                <li>... OR use local file mode:</li>
+                <li>2. Generate content using AI</li>
+                <li>3. Click "Save to Excel" to download updated data</li>
+                <li>4. Replace <code>public/StudyHub_Data.xlsx</code> with the new file</li>
               </ol>
               <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-3 text-indigo-500 hover:underline text-sm">
                 Google Cloud Console <ExternalLink className="w-3 h-3" />
@@ -2189,7 +2755,8 @@ const SettingsPanel = memo(({ onClose }) => {
           )}
         </div>
 
-        <div className={cn("p-6 border-t", darkMode ? "border-slate-700" : "border-slate-200")}>
+        {/* Footer */}
+        <div className={cn("p-6 border-t flex-shrink-0", darkMode ? "border-slate-700" : "border-slate-200")}>
           <button onClick={onClose} className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">Done</button>
         </div>
       </div>

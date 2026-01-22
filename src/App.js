@@ -1,11 +1,11 @@
 import React from 'react';
-import StudyHub from './StudyHub';
+import Grade8StudyHub from './Grade8_StudyHub_Complete';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <StudyHub />
+      <Grade8StudyHub />
     </div>
   );
 }
