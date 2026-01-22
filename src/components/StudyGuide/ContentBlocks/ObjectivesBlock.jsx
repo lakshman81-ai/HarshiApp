@@ -17,7 +17,7 @@ const ObjectivesBlock = memo(({ objectives, darkMode }) => {
   return (
     <div
       className={cn(
-        "rounded-2xl p-6 border mb-8",
+        "objectives-block rounded-2xl p-6 border mb-8",
         darkMode
           ? "bg-indigo-900/30 border-indigo-700"
           : "bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-200"

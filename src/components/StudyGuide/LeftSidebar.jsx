@@ -141,14 +141,16 @@ const LeftSidebar = memo(({
           Outline
         </h3>
         <div className="space-y-1">
-          {sections.map((section, i) => {
-            const isCompleted = i < Math.floor((progressPercent / 100) * sections.length);
-            const isActive = activeSection === i;
+          {sections.filter(section => section.type !== 'quiz').map((section, i) => {
+            // Find actual index in original sections array for progress calculation
+            const originalIndex = sections.findIndex(s => s.id === section.id);
+            const isCompleted = originalIndex < Math.floor((progressPercent / 100) * sections.length);
+            const isActive = activeSection === originalIndex;
 
             return (
               <button
                 key={section.id}
-                onClick={() => onSelectSection(i)}
+                onClick={() => onSelectSection(originalIndex)}
                 className={cn(
                   "w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all",
                   isActive

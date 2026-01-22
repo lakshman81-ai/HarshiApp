@@ -10,6 +10,10 @@ export function replaceSymbols(text) {
 
   let result = text;
 
+  // Normalize double backslashes to single backslashes (handles JSON escaping from data sources)
+  // This ensures \cdot and \\cdot are both handled correctly
+  result = result.replace(/\\\\/g, '\\');
+
   // Sort by length (longest first) to avoid partial replacements
   const sortedKeys = Object.keys(ALL_SYMBOLS).sort((a, b) => b.length - a.length);
 
