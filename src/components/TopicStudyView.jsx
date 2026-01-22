@@ -27,6 +27,7 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
     const [quizSubmitted, setQuizSubmitted] = useState(false);
     const [copied, setCopied] = useState(false);
     const [xpGain, setXpGain] = useState(null);
+    const [enlargedImage, setEnlargedImage] = useState(null);
 
     const currentSection = topicSections[activeSection];
     const sectionContent = currentSection ? (studyContent[currentSection.id] || []) : [];
@@ -87,6 +88,21 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
 
     return (
         <div className={cn("min-h-screen flex", darkMode ? "bg-slate-900" : "bg-slate-50")}>
+            {/* Image Modal */}
+            {enlargedImage && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setEnlargedImage(null)}>
+                    <img
+                        src={enlargedImage}
+                        alt="Enlarged view"
+                        className="max-w-full max-h-full rounded-lg shadow-2xl"
+                    />
+                    <button className="absolute top-4 right-4 text-white hover:text-gray-300">
+                        <span className="sr-only">Close</span>
+                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            )}
+
             {/* XP Animation */}
             {xpGain && (
                 <div className="fixed top-20 right-8 z-50 animate-bounce">
@@ -221,6 +237,49 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
                                             <p className={cn("text-lg leading-relaxed", darkMode ? "text-slate-300" : "text-slate-600")}>{content.text}</p>
                                         )}
 
+                                        {/* Content Image */}
+                                        {content.imageUrl && (
+                                            <div className="mb-6">
+                                                <div
+                                                    className="w-full sm:w-1/2 max-w-sm rounded-2xl shadow-md mb-2 overflow-hidden cursor-zoom-in group relative"
+                                                    onClick={() => setEnlargedImage(content.imageUrl)}
+                                                >
+                                                    <img
+                                                        src={content.imageUrl}
+                                                        alt={content.title || "Study image"}
+                                                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                                                    />
+                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                                        <div className="opacity-0 group-hover:opacity-100 bg-black/50 text-white text-xs px-2 py-1 rounded">Click to enlarge</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Content Video (Direct URL in videoUrl field) */}
+                                        {content.videoUrl && (
+                                            <div className="mb-6">
+                                                <a
+                                                    href={content.videoUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={cn(
+                                                        "inline-flex items-center gap-2 px-4 py-3 rounded-xl border transition-all hover:shadow-md",
+                                                        darkMode ? "bg-slate-800 border-slate-700 hover:bg-slate-700 text-blue-400" : "bg-white border-slate-200 hover:bg-slate-50 text-blue-600"
+                                                    )}
+                                                >
+                                                    <span className="p-2 rounded-full bg-red-100 text-red-600">
+                                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                                                    </span>
+                                                    <div>
+                                                        <div className="font-medium">Watch Video</div>
+                                                        <div className="text-sm opacity-80 truncate max-w-xs">{content.title || "External Resource"}</div>
+                                                    </div>
+                                                    <Globe className="w-4 h-4 ml-2 opacity-50" />
+                                                </a>
+                                            </div>
+                                        )}
+
                                         {content.type === 'formula' && (
                                             <div className="bg-slate-900 rounded-2xl p-6 sm:p-8 relative overflow-hidden">
                                                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl" />
@@ -291,18 +350,24 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
 
                                         {content.type === 'video' && (
                                             <div className="mb-6">
-                                                <div className="relative w-full rounded-2xl overflow-hidden shadow-lg bg-black" style={{ paddingBottom: '56.25%' }}>
-                                                    <iframe
-                                                        src={content.text.startsWith('http') ? content.text : content.url || content.text}
-                                                        title={content.title}
-                                                        className="absolute top-0 left-0 w-full h-full border-0"
-                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                        allowFullScreen
-                                                    ></iframe>
-                                                </div>
-                                                {content.title && (
-                                                    <p className={cn("mt-2 text-sm text-center font-medium", darkMode ? "text-slate-300" : "text-slate-600")}>📺 {content.title}</p>
-                                                )}
+                                                <a
+                                                    href={content.text.startsWith('http') ? content.text : content.url || content.text}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={cn(
+                                                        "inline-flex items-center gap-2 px-4 py-3 rounded-xl border transition-all hover:shadow-md",
+                                                        darkMode ? "bg-slate-800 border-slate-700 hover:bg-slate-700 text-blue-400" : "bg-white border-slate-200 hover:bg-slate-50 text-blue-600"
+                                                    )}
+                                                >
+                                                    <span className="p-2 rounded-full bg-red-100 text-red-600">
+                                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                                                    </span>
+                                                    <div>
+                                                        <div className="font-medium">Watch Video</div>
+                                                        <div className="text-sm opacity-80 truncate max-w-xs">{content.title || "External Resource"}</div>
+                                                    </div>
+                                                    <Globe className="w-4 h-4 ml-2 opacity-50" />
+                                                </a>
                                             </div>
                                         )}
 

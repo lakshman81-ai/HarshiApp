@@ -65,7 +65,7 @@ SHEET_SCHEMAS = {
         'description': 'Vocabulary terms and definitions'
     },
     'Study_Content': {
-        'columns': ['content_id', 'section_id', 'content_type', 'content_title', 'content_text', 'order_index'],
+        'columns': ['content_id', 'section_id', 'content_type', 'content_title', 'content_text', 'order_index', 'image_url', 'video_url'],
         'required': ['content_id', 'section_id', 'content_type', 'content_text'],
         'description': 'Main educational content blocks'
     },
@@ -90,11 +90,13 @@ SHEET_SCHEMAS = {
     }
 }
 
-CONTENT_TYPES = ['introduction', 'formula', 'concept_helper', 'warning', 'real_world', 'text']
+CONTENT_TYPES = ['introduction', 'formula', 'concept_helper', 'warning', 'real_world', 'text', 'video']
 SECTION_TYPES = ['objectives', 'intro', 'content', 'applications', 'quiz']
 VALID_ICONS = ['Zap', 'Calculator', 'FlaskConical', 'Leaf', 'Trophy', 'Star', 'Award', 'Flame',
                'HelpCircle', 'CheckCircle2', 'Target', 'BookOpen', 'FileText', 'Clock', 'Globe',
-               'Lightbulb', 'AlertTriangle']
+               'Lightbulb', 'AlertTriangle', 'Atom', 'Microscope', 'Dna', 'Pi', 'Hammer', 'RefreshCw',
+               'Minimize2', 'Triangle', 'Disc', 'Grid', 'ArrowDown', 'Link', 'GitCommit', 'Circle',
+               'GitBranch', 'Share2']
 
 
 # ============================================================================
@@ -117,69 +119,32 @@ SAMPLE_DATA = {
          'gradient_to': 'violet-600', 'dark_glow': 'shadow-violet-500/20'},
     ],
     'Topics': [
-        {'topic_id': 'phys-t001', 'subject_key': 'physics', 'topic_name': "Newton's Laws of Motion", 'duration_minutes': 25, 'order_index': 1},
-        {'topic_id': 'phys-t002', 'subject_key': 'physics', 'topic_name': 'Work and Energy', 'duration_minutes': 30, 'order_index': 2},
-        {'topic_id': 'phys-t003', 'subject_key': 'physics', 'topic_name': 'Light and Optics', 'duration_minutes': 20, 'order_index': 3},
-        {'topic_id': 'math-t001', 'subject_key': 'math', 'topic_name': 'Exponents', 'duration_minutes': 20, 'order_index': 1},
-        {'topic_id': 'math-t002', 'subject_key': 'math', 'topic_name': 'Probability', 'duration_minutes': 25, 'order_index': 2},
-        {'topic_id': 'chem-t001', 'subject_key': 'chemistry', 'topic_name': 'Atomic Structure', 'duration_minutes': 25, 'order_index': 1},
-        {'topic_id': 'bio-t001', 'subject_key': 'biology', 'topic_name': 'Cell Structure', 'duration_minutes': 25, 'order_index': 1},
+        # PHYSICS
+        {'topic_id': 'phys-t1', 'subject_key': 'physics', 'topic_name': "Newton's Laws", 'duration_minutes': 30, 'order_index': 1},
+        {'topic_id': 'phys-t2', 'subject_key': 'physics', 'topic_name': 'Work & Energy', 'duration_minutes': 45, 'order_index': 2},
+        {'topic_id': 'phys-t3', 'subject_key': 'physics', 'topic_name': 'Electricity', 'duration_minutes': 40, 'order_index': 3},
+
+        # MATH
+        {'topic_id': 'math-t1', 'subject_key': 'math', 'topic_name': 'Algebraic Expressions', 'duration_minutes': 35, 'order_index': 1},
+        {'topic_id': 'math-t2', 'subject_key': 'math', 'topic_name': 'Geometry: Triangles', 'duration_minutes': 30, 'order_index': 2},
+        {'topic_id': 'math-t3', 'subject_key': 'math', 'topic_name': 'Probability', 'duration_minutes': 25, 'order_index': 3},
+
+        # CHEMISTRY
+        {'topic_id': 'chem-t1', 'subject_key': 'chemistry', 'topic_name': 'Atomic Structure', 'duration_minutes': 40, 'order_index': 1},
+        {'topic_id': 'chem-t2', 'subject_key': 'chemistry', 'topic_name': 'The Periodic Table', 'duration_minutes': 35, 'order_index': 2},
+        {'topic_id': 'chem-t3', 'subject_key': 'chemistry', 'topic_name': 'Chemical Bonding', 'duration_minutes': 45, 'order_index': 3},
+
+        # BIOLOGY
+        {'topic_id': 'bio-t1', 'subject_key': 'biology', 'topic_name': 'Cell Biology', 'duration_minutes': 30, 'order_index': 1},
+        {'topic_id': 'bio-t2', 'subject_key': 'biology', 'topic_name': 'Genetics & DNA', 'duration_minutes': 40, 'order_index': 2},
+        {'topic_id': 'bio-t3', 'subject_key': 'biology', 'topic_name': 'Ecosystems', 'duration_minutes': 35, 'order_index': 3},
     ],
-    'Topic_Sections': [
-        {'section_id': 'phys-t001-s001', 'topic_id': 'phys-t001', 'section_title': 'Learning Objectives', 'section_icon': 'Target', 'order_index': 1, 'section_type': 'objectives'},
-        {'section_id': 'phys-t001-s002', 'topic_id': 'phys-t001', 'section_title': 'Introduction', 'section_icon': 'BookOpen', 'order_index': 2, 'section_type': 'intro'},
-        {'section_id': 'phys-t001-s003', 'topic_id': 'phys-t001', 'section_title': "Newton's First Law", 'section_icon': 'Zap', 'order_index': 3, 'section_type': 'content'},
-        {'section_id': 'phys-t001-s004', 'topic_id': 'phys-t001', 'section_title': "Newton's Second Law", 'section_icon': 'Zap', 'order_index': 4, 'section_type': 'content'},
-        {'section_id': 'phys-t001-s005', 'topic_id': 'phys-t001', 'section_title': "Newton's Third Law", 'section_icon': 'Zap', 'order_index': 5, 'section_type': 'content'},
-        {'section_id': 'phys-t001-s006', 'topic_id': 'phys-t001', 'section_title': 'Real-World Applications', 'section_icon': 'Globe', 'order_index': 6, 'section_type': 'applications'},
-        {'section_id': 'phys-t001-s007', 'topic_id': 'phys-t001', 'section_title': 'Topic Quiz', 'section_icon': 'HelpCircle', 'order_index': 7, 'section_type': 'quiz'},
-    ],
-    'Learning_Objectives': [
-        {'objective_id': 'obj-phys-t001-01', 'topic_id': 'phys-t001', 'objective_text': 'Explain the concept of inertia and how it relates to mass', 'order_index': 1},
-        {'objective_id': 'obj-phys-t001-02', 'topic_id': 'phys-t001', 'objective_text': 'Apply the formula F = ma to solve real-world problems', 'order_index': 2},
-        {'objective_id': 'obj-phys-t001-03', 'topic_id': 'phys-t001', 'objective_text': 'Identify action-reaction force pairs in various scenarios', 'order_index': 3},
-        {'objective_id': 'obj-phys-t001-04', 'topic_id': 'phys-t001', 'objective_text': "Analyze motion using all three of Newton's Laws", 'order_index': 4},
-    ],
-    'Key_Terms': [
-        {'term_id': 'term-phys-t001-01', 'topic_id': 'phys-t001', 'term': 'Force', 'definition': 'A push or pull on an object'},
-        {'term_id': 'term-phys-t001-02', 'topic_id': 'phys-t001', 'term': 'Mass', 'definition': 'Amount of matter in an object (kg)'},
-        {'term_id': 'term-phys-t001-03', 'topic_id': 'phys-t001', 'term': 'Acceleration', 'definition': 'Rate of change of velocity (m/s²)'},
-        {'term_id': 'term-phys-t001-04', 'topic_id': 'phys-t001', 'term': 'Inertia', 'definition': 'Resistance to change in motion'},
-        {'term_id': 'term-phys-t001-05', 'topic_id': 'phys-t001', 'term': 'Newton (N)', 'definition': 'SI unit of force (kg·m/s²)'},
-    ],
-    'Study_Content': [
-        {'content_id': 'cont-001', 'section_id': 'phys-t001-s004', 'content_type': 'introduction', 'content_title': 'Introduction',
-         'content_text': "Newton's Second Law describes what happens when an unbalanced force acts on an object. It quantifies the relationship between force, mass, and acceleration.", 'order_index': 1},
-        {'content_id': 'cont-002', 'section_id': 'phys-t001-s004', 'content_type': 'formula', 'content_title': 'The Formula',
-         'content_text': 'F = m × a', 'order_index': 2},
-        {'content_id': 'cont-003', 'section_id': 'phys-t001-s004', 'content_type': 'concept_helper', 'content_title': 'Concept Helper',
-         'content_text': 'Think of it like pushing a shopping cart. An empty cart (less mass) accelerates quickly with a small push. A full cart (more mass) needs more force for the same acceleration!', 'order_index': 3},
-        {'content_id': 'cont-004', 'section_id': 'phys-t001-s004', 'content_type': 'warning', 'content_title': 'Common Misunderstanding',
-         'content_text': 'Students often confuse mass and weight. Mass is the amount of matter (measured in kg) and stays constant. Weight is the force of gravity on that mass (measured in N) and changes based on location!', 'order_index': 4},
-        {'content_id': 'cont-005', 'section_id': 'phys-t001-s004', 'content_type': 'real_world', 'content_title': 'Real-World Application',
-         'content_text': 'Car engineers use F = ma to calculate braking distances. More massive vehicles need stronger brakes!', 'order_index': 5},
-    ],
-    'Formulas': [
-        {'formula_id': 'formula-001', 'topic_id': 'phys-t001', 'formula_text': 'F = m × a', 'formula_label': "Newton's Second Law",
-         'variable_1_symbol': 'F', 'variable_1_name': 'Force', 'variable_1_unit': 'N',
-         'variable_2_symbol': 'm', 'variable_2_name': 'Mass', 'variable_2_unit': 'kg',
-         'variable_3_symbol': 'a', 'variable_3_name': 'Acceleration', 'variable_3_unit': 'm/s²'},
-    ],
-    'Quiz_Questions': [
-        {'question_id': 'quiz-phys-t001-01', 'topic_id': 'phys-t001', 
-         'question_text': 'If a 10 kg object accelerates at 2 m/s², what is the force?',
-         'option_a': '5 N', 'option_b': '20 N', 'option_c': '12 N', 'option_d': '8 N',
-         'correct_answer': 'B', 'explanation': 'Using F = m × a: F = 10 × 2 = 20 N', 'xp_reward': 10},
-        {'question_id': 'quiz-phys-t001-02', 'topic_id': 'phys-t001',
-         'question_text': "Newton's First Law is also known as the law of:",
-         'option_a': 'Acceleration', 'option_b': 'Action-Reaction', 'option_c': 'Inertia', 'option_d': 'Gravity',
-         'correct_answer': 'C', 'explanation': "Newton's First Law describes inertia - objects resist changes in motion", 'xp_reward': 10},
-        {'question_id': 'quiz-phys-t001-03', 'topic_id': 'phys-t001',
-         'question_text': "Which statement best describes Newton's Third Law?",
-         'option_a': 'F = ma', 'option_b': 'Objects at rest stay at rest', 
-         'option_c': 'Every action has an equal and opposite reaction', 'option_d': 'Heavier objects fall faster',
-         'correct_answer': 'C', 'explanation': "Newton's Third Law states that forces come in pairs", 'xp_reward': 10},
-    ],
+    'Topic_Sections': [],
+    'Learning_Objectives': [],
+    'Key_Terms': [],
+    'Study_Content': [],
+    'Formulas': [],
+    'Quiz_Questions': [],
     'Achievements': [
         {'achievement_id': 'first-login', 'icon': 'Zap', 'name': 'First Login', 'description': 'Welcome to StudyHub!', 'unlock_condition': 'Login for the first time'},
         {'achievement_id': 'first-quiz', 'icon': 'HelpCircle', 'name': 'First Quiz', 'description': 'Complete your first quiz', 'unlock_condition': 'Complete any quiz'},
@@ -192,12 +157,395 @@ SAMPLE_DATA = {
     ]
 }
 
+# Helper to add a topic's data
+def add_topic_data(topic_id, sections, objectives, terms, content, formulas, questions):
+    # Add sections
+    for i, section in enumerate(sections, 1):
+        SAMPLE_DATA['Topic_Sections'].append({
+            'section_id': f"{topic_id}-s{i}",
+            'topic_id': topic_id,
+            'section_title': section['title'],
+            'section_icon': section.get('icon', 'FileText'),
+            'order_index': i,
+            'section_type': section.get('type', 'content')
+        })
+
+    # Add objectives
+    for i, obj in enumerate(objectives, 1):
+        SAMPLE_DATA['Learning_Objectives'].append({
+            'objective_id': f"obj-{topic_id}-{i}",
+            'topic_id': topic_id,
+            'objective_text': obj,
+            'order_index': i
+        })
+
+    # Add key terms
+    for i, term in enumerate(terms, 1):
+        SAMPLE_DATA['Key_Terms'].append({
+            'term_id': f"term-{topic_id}-{i}",
+            'topic_id': topic_id,
+            'term': term['term'],
+            'definition': term['def']
+        })
+
+    # Add content
+    for c in content:
+        SAMPLE_DATA['Study_Content'].append({
+            'content_id': f"cont-{topic_id}-{len(SAMPLE_DATA['Study_Content'])+1}",
+            'section_id': f"{topic_id}-s{c['sec_idx']}",
+            'content_type': c['type'],
+            'content_title': c.get('title', ''),
+            'content_text': c['text'],
+            'order_index': c.get('order', 1),
+            'image_url': c.get('image_url', ''),
+            'video_url': c.get('video_url', '')
+        })
+
+    # Add formulas
+    for i, f in enumerate(formulas, 1):
+        SAMPLE_DATA['Formulas'].append({
+            'formula_id': f"form-{topic_id}-{i}",
+            'topic_id': topic_id,
+            'formula_text': f['text'],
+            'formula_label': f['label'],
+            'variable_1_symbol': f.get('v1s', ''), 'variable_1_name': f.get('v1n', ''), 'variable_1_unit': f.get('v1u', ''),
+            'variable_2_symbol': f.get('v2s', ''), 'variable_2_name': f.get('v2n', ''), 'variable_2_unit': f.get('v2u', ''),
+            'variable_3_symbol': f.get('v3s', ''), 'variable_3_name': f.get('v3n', ''), 'variable_3_unit': f.get('v3u', ''),
+        })
+
+    # Add quizzes
+    for i, q in enumerate(questions, 1):
+        SAMPLE_DATA['Quiz_Questions'].append({
+            'question_id': f"quiz-{topic_id}-{i}",
+            'topic_id': topic_id,
+            'question_text': q['text'],
+            'option_a': q['a'], 'option_b': q['b'], 'option_c': q['c'], 'option_d': q['d'],
+            'correct_answer': q['ans'],
+            'explanation': q['exp'],
+            'xp_reward': 10
+        })
+
+# ==========================================
+# POPULATE DETAILED CONTENT
+# ==========================================
+
+# 1. PHYSICS - Newton's Laws
+add_topic_data('phys-t1',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Introduction', 'icon': 'BookOpen', 'type': 'intro'},
+        {'title': 'First Law (Inertia)', 'icon': 'Zap', 'type': 'content'},
+        {'title': 'Second Law (F=ma)', 'icon': 'Calculator', 'type': 'content'},
+        {'title': 'Third Law (Action-Reaction)', 'icon': 'Zap', 'type': 'content'},
+        {'title': 'Assessment', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Define inertia and its relationship to mass', 'Apply F=ma to solve problems', 'Identify action-reaction pairs'],
+    terms=[
+        {'term': 'Inertia', 'def': 'Resistance of any physical object to any change in its velocity'},
+        {'term': 'Force', 'def': 'A push or pull upon an object resulting from interaction with another object'},
+        {'term': 'Mass', 'def': 'A measure of the amount of matter in an object'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'introduction', 'title': 'The Foundations of Dynamics', 'text': "Isaac Newton's three laws of motion describe the relationship between the motion of an object and the forces acting on it.", 'image_url': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800'},
+        {'sec_idx': 3, 'type': 'concept_helper', 'title': 'Law of Inertia', 'text': 'An object at rest stays at rest and an object in motion stays in motion unless acted upon by an unbalanced force.'},
+        {'sec_idx': 3, 'type': 'real_world', 'title': 'Seatbelts', 'text': 'When a car stops suddenly, your body keeps moving forward due to inertia. Seatbelts provide the unbalanced force to stop you.'},
+        {'sec_idx': 4, 'type': 'formula', 'title': 'The Equation', 'text': 'F = ma'},
+        {'sec_idx': 4, 'type': 'text', 'title': 'Explanation', 'text': 'Force equals mass times acceleration. The more mass an object has, the more force is needed to accelerate it.'},
+        {'sec_idx': 5, 'type': 'text', 'title': 'Symmetry in Forces', 'text': 'For every action, there is an equal and opposite reaction. Forces always come in pairs.'},
+        {'sec_idx': 5, 'type': 'warning', 'title': 'Common Mistake', 'text': 'Action and reaction forces act on DIFFERENT objects, so they do not cancel each other out!'}
+    ],
+    formulas=[
+        {'text': 'F = m \\cdot a', 'label': "Newton's Second Law", 'v1s': 'F', 'v1n': 'Force', 'v1u': 'N', 'v2s': 'm', 'v2n': 'Mass', 'v2u': 'kg', 'v3s': 'a', 'v3n': 'Acceleration', 'v3u': 'm/s²'}
+    ],
+    questions=[
+        {'text': 'Which property of an object determines its inertia?', 'a': 'Volume', 'b': 'Mass', 'c': 'Weight', 'd': 'Velocity', 'ans': 'B', 'exp': 'Mass is a direct measure of inertia.'},
+        {'text': 'If you double the force on an object, what happens to its acceleration?', 'a': 'Doubles', 'b': 'Halves', 'c': 'Quadruples', 'd': 'Stays same', 'ans': 'A', 'exp': 'Acceleration is directly proportional to force (F=ma).'}
+    ]
+)
+
+# 2. PHYSICS - Work & Energy
+add_topic_data('phys-t2',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Work', 'icon': 'Hammer', 'type': 'content'},
+        {'title': 'Energy Types', 'icon': 'Zap', 'type': 'content'},
+        {'title': 'Conservation', 'icon': 'RefreshCw', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Define Work in physics', 'Distinguish between kinetic and potential energy', 'Apply conservation of energy principle'],
+    terms=[
+        {'term': 'Work', 'def': 'Force applied over a distance (Joules)'},
+        {'term': 'Kinetic Energy', 'def': 'Energy of motion'},
+        {'term': 'Potential Energy', 'def': 'Stored energy due to position or state'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'introduction', 'title': 'Physics Definition of Work', 'text': 'In physics, work is done only when a force moves an object. Pushing a wall and not moving it means zero work is done!', 'image_url': 'https://images.unsplash.com/photo-1516937941348-c096b542b9c9?w=800'},
+        {'sec_idx': 2, 'type': 'formula', 'title': 'Work Formula', 'text': 'W = F \\cdot d'},
+        {'sec_idx': 3, 'type': 'text', 'title': 'Kinetic vs Potential', 'text': 'A roller coaster at the top has high Potential Energy. As it falls, it converts to Kinetic Energy.'},
+        {'sec_idx': 3, 'type': 'video', 'title': 'Roller Coaster Physics', 'text': 'Watch how energy transforms.', 'video_url': 'https://www.youtube.com/watch?v=Jnj8mc04r9E'},
+        {'sec_idx': 4, 'type': 'concept_helper', 'title': 'Law of Conservation', 'text': 'Energy cannot be created or destroyed, only transformed.'}
+    ],
+    formulas=[
+        {'text': 'W = F \\cdot d', 'label': 'Work', 'v1s': 'W', 'v1n': 'Work', 'v1u': 'J', 'v2s': 'F', 'v2n': 'Force', 'v2u': 'N', 'v3s': 'd', 'v3n': 'Distance', 'v3u': 'm'},
+        {'text': 'KE = \\frac{1}{2}mv^2', 'label': 'Kinetic Energy', 'v1s': 'KE', 'v1n': 'Energy', 'v1u': 'J', 'v2s': 'm', 'v2n': 'Mass', 'v2u': 'kg', 'v3s': 'v', 'v3n': 'Velocity', 'v3u': 'm/s'}
+    ],
+    questions=[
+        {'text': 'What is the unit for Work?', 'a': 'Newton', 'b': 'Watt', 'c': 'Joule', 'd': 'Meter', 'ans': 'C', 'exp': 'Work is measured in Joules (N·m).'},
+        {'text': 'A ball held 2m high has what type of energy?', 'a': 'Kinetic', 'b': 'Gravitational Potential', 'c': 'Elastic', 'd': 'Thermal', 'ans': 'B', 'exp': 'It has potential due to gravity.'}
+    ]
+)
+
+# 3. PHYSICS - Electricity
+add_topic_data('phys-t3',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Circuits', 'icon': 'Zap', 'type': 'content'},
+        {'title': "Ohm's Law", 'icon': 'Calculator', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Understand circuit components', "Calculate using Ohm's Law"],
+    terms=[
+        {'term': 'Voltage', 'def': 'Electrical potential difference (Volts)'},
+        {'term': 'Current', 'def': 'Flow of electric charge (Amps)'},
+        {'term': 'Resistance', 'def': 'Opposition to current flow (Ohms)'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'introduction', 'title': 'Electric Circuits', 'text': 'A closed loop that allows current to flow. Requires a source (battery), load (bulb), and wires.', 'image_url': 'https://images.unsplash.com/photo-1549419163-e380e22784cb?w=800'},
+        {'sec_idx': 3, 'type': 'formula', 'title': "Ohm's Law", 'text': 'V = I \\cdot R'},
+        {'sec_idx': 3, 'type': 'real_world', 'title': 'Resistors', 'text': 'Electronics use resistors to control current so delicate components don\'t burn out.'}
+    ],
+    formulas=[
+        {'text': 'V = I \\cdot R', 'label': "Ohm's Law", 'v1s': 'V', 'v1n': 'Voltage', 'v1u': 'V', 'v2s': 'I', 'v2n': 'Current', 'v2u': 'A', 'v3s': 'R', 'v3n': 'Resistance', 'v3u': 'Ω'}
+    ],
+    questions=[
+        {'text': 'What flows in a circuit?', 'a': 'Protons', 'b': 'Neutrons', 'c': 'Electrons', 'd': 'Atoms', 'ans': 'C', 'exp': 'Current is the flow of electrons.'}
+    ]
+)
+
+# 4. MATH - Algebraic Expressions
+add_topic_data('math-t1',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Basics', 'icon': 'BookOpen', 'type': 'content'},
+        {'title': 'Simplifying', 'icon': 'Minimize2', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Identify variables and coefficients', 'Simplify like terms'],
+    terms=[
+        {'term': 'Variable', 'def': 'A letter representing an unknown number'},
+        {'term': 'Coefficient', 'def': 'Number multiplying a variable'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'text', 'title': 'What is Algebra?', 'text': 'Algebra is generalized arithmetic. We use letters to represent numbers we don\'t know yet.'},
+        {'sec_idx': 3, 'type': 'concept_helper', 'title': 'Like Terms', 'text': 'You can only add terms if they have the same variable part. 2x + 3x = 5x, but 2x + 3y cannot be combined.'},
+        {'sec_idx': 3, 'type': 'warning', 'title': 'Watch the powers', 'text': 'x and x² are NOT like terms!'}
+    ],
+    formulas=[],
+    questions=[
+        {'text': 'Simplify: 3x + 4y - x', 'a': '7xy', 'b': '2x + 4y', 'c': '6xy', 'd': '3x + 3y', 'ans': 'B', 'exp': 'Combine 3x and -x to get 2x. 4y stays separate.'}
+    ]
+)
+
+# 5. MATH - Geometry: Triangles
+add_topic_data('math-t2',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Types', 'icon': 'Triangle', 'type': 'content'},
+        {'title': 'Pythagoras', 'icon': 'Calculator', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Classify triangles', 'Use Pythagorean theorem'],
+    terms=[
+        {'term': 'Hypotenuse', 'def': 'Longest side of a right triangle'},
+        {'term': 'Isosceles', 'def': 'Triangle with 2 equal sides'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'introduction', 'title': 'Triangle Types', 'text': 'Triangles can be classified by sides (equilateral, isosceles, scalene) or angles (acute, obtuse, right).', 'image_url': 'https://images.unsplash.com/photo-1616469829941-c7200ed5dabd?w=800'},
+        {'sec_idx': 3, 'type': 'formula', 'title': 'Pythagorean Theorem', 'text': 'a^2 + b^2 = c^2'},
+        {'sec_idx': 3, 'type': 'text', 'title': 'Usage', 'text': 'Used to find a missing side in a right-angled triangle.'}
+    ],
+    formulas=[
+        {'text': 'a^2 + b^2 = c^2', 'label': 'Pythagorean Theorem', 'v1s': 'c', 'v1n': 'Hypotenuse', 'v1u': '', 'v2s': 'a', 'v2n': 'Side A', 'v2u': '', 'v3s': 'b', 'v3n': 'Side B', 'v3u': ''}
+    ],
+    questions=[
+        {'text': 'Which triangle has all equal sides?', 'a': 'Isosceles', 'b': 'Scalene', 'c': 'Equilateral', 'd': 'Right', 'ans': 'C', 'exp': 'Equi-lateral means equal sides.'}
+    ]
+)
+
+# 6. MATH - Probability
+add_topic_data('math-t3',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Chance', 'icon': 'HelpCircle', 'type': 'content'},
+        {'title': 'Calculating', 'icon': 'Calculator', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Understand probability scale', 'Calculate simple probabilities'],
+    terms=[
+        {'term': 'Event', 'def': 'An outcome or set of outcomes'},
+        {'term': 'Sample Space', 'def': 'Set of all possible outcomes'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'text', 'title': 'The Scale', 'text': 'Probability ranges from 0 (Impossible) to 1 (Certain).'},
+        {'sec_idx': 3, 'type': 'formula', 'title': 'Basic Probability', 'text': 'P(A) = \\frac{\\text{favorable outcomes}}{\\text{total outcomes}}'},
+        {'sec_idx': 3, 'type': 'real_world', 'title': 'Dice', 'text': 'Rolling a 6 on a standard die has a 1/6 chance.', 'image_url': 'https://images.unsplash.com/photo-1595113316349-9fa4eb24f884?w=800'}
+    ],
+    formulas=[
+        {'text': 'P(A) = \\frac{n(A)}{n(S)}', 'label': 'Probability', 'v1s': 'P', 'v1n': 'Probability', 'v1u': '', 'v2s': 'n(A)', 'v2n': 'Favorable', 'v2u': '', 'v3s': 'n(S)', 'v3n': 'Total', 'v3u': ''}
+    ],
+    questions=[
+        {'text': 'Probability of flipping heads?', 'a': '0.25', 'b': '0.5', 'c': '0.75', 'd': '1.0', 'ans': 'B', 'exp': '1 favorable (heads) / 2 total (heads, tails) = 0.5'}
+    ]
+)
+
+# 7. CHEMISTRY - Atomic Structure
+add_topic_data('chem-t1',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'The Atom', 'icon': 'Atom', 'type': 'content'},
+        {'title': 'Subatomic Particles', 'icon': 'Disc', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Describe the structure of an atom', 'Identify protons, neutrons, electrons'],
+    terms=[
+        {'term': 'Nucleus', 'def': 'Central part of atom containing protons/neutrons'},
+        {'term': 'Electron Shell', 'def': 'Region where electrons orbit'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'introduction', 'title': 'Building Blocks', 'text': 'All matter is made of atoms. They are the smallest unit of an element.', 'image_url': 'https://images.unsplash.com/photo-1614730341194-75c60740a070?w=800'},
+        {'sec_idx': 3, 'type': 'text', 'title': 'Inside the Atom', 'text': 'Protons (+ charge) and Neutrons (no charge) are in the center. Electrons (- charge) zoom around the outside.'},
+        {'sec_idx': 3, 'type': 'video', 'title': 'Atomic Model', 'text': 'Visualizing the atom.', 'video_url': 'https://www.youtube.com/watch?v=IO9WS_HNmyg'}
+    ],
+    formulas=[],
+    questions=[
+        {'text': 'Which particle has a positive charge?', 'a': 'Electron', 'b': 'Neutron', 'c': 'Proton', 'd': 'Photon', 'ans': 'C', 'exp': 'Protons are positive (+)'}
+    ]
+)
+
+# 8. CHEMISTRY - Periodic Table
+add_topic_data('chem-t2',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Organization', 'icon': 'Grid', 'type': 'content'},
+        {'title': 'Groups & Periods', 'icon': 'ArrowDown', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Read the Periodic Table', 'Understand Groups and Periods'],
+    terms=[
+        {'term': 'Atomic Number', 'def': 'Number of protons in an atom'},
+        {'term': 'Element', 'def': 'Pure substance of one type of atom'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'introduction', 'title': 'The Map of Elements', 'text': 'The periodic table organizes all known elements by atomic number and chemical properties.', 'image_url': 'https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?w=800'},
+        {'sec_idx': 3, 'type': 'concept_helper', 'title': 'Navigation', 'text': 'Columns are called Groups (elements behave similarly). Rows are called Periods.'},
+        {'sec_idx': 3, 'type': 'real_world', 'title': 'Noble Gases', 'text': 'Group 18 elements are "Noble Gases" - they are very stable and don\'t like to react (like Neon signs).'}
+    ],
+    formulas=[],
+    questions=[
+        {'text': 'Elements in the same column usually have...', 'a': 'Same mass', 'b': 'Similar properties', 'c': 'Same atomic number', 'd': 'Different states', 'ans': 'B', 'exp': 'Groups (columns) share chemical properties.'}
+    ]
+)
+
+# 9. CHEMISTRY - Bonding
+add_topic_data('chem-t3',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Why Bond?', 'icon': 'Link', 'type': 'content'},
+        {'title': 'Ionic vs Covalent', 'icon': 'GitCommit', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Explain why atoms bond', 'Distinguish ionic and covalent bonds'],
+    terms=[
+        {'term': 'Ion', 'def': 'Atom with a charge (lost or gained electrons)'},
+        {'term': 'Molecule', 'def': 'Group of atoms bonded together'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'text', 'title': 'Stability', 'text': 'Atoms bond to become stable, usually by getting a full outer shell of electrons.'},
+        {'sec_idx': 3, 'type': 'text', 'title': 'Ionic Bonding', 'text': 'One atom STEALS electrons from another. Creates + and - ions that attract.'},
+        {'sec_idx': 3, 'type': 'text', 'title': 'Covalent Bonding', 'text': 'Atoms SHARE electrons. Like two people holding hands.', 'image_url': 'https://images.unsplash.com/photo-1532634993-15f421e42ec0?w=800'}
+    ],
+    formulas=[],
+    questions=[
+        {'text': 'In a covalent bond, electrons are...', 'a': 'Transferred', 'b': 'Destroyed', 'c': 'Shared', 'd': 'Doubled', 'ans': 'C', 'exp': 'Co-valent means sharing valence electrons.'}
+    ]
+)
+
+# 10. BIOLOGY - Cell Structure
+add_topic_data('bio-t1',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Cell Theory', 'icon': 'BookOpen', 'type': 'content'},
+        {'title': 'Organelles', 'icon': 'Circle', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['State Cell Theory', 'Identify function of nucleus, mitochondria, cell membrane'],
+    terms=[
+        {'term': 'Organelle', 'def': 'Specialized structure within a cell'},
+        {'term': 'Prokaryote', 'def': 'Simple cell without nucleus (bacteria)'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'introduction', 'title': 'Unit of Life', 'text': 'Cells are the basic structural and functional units of life.', 'image_url': 'https://images.unsplash.com/photo-1530210124550-912dc1381cb8?w=800'},
+        {'sec_idx': 3, 'type': 'text', 'title': 'Mitochondria', 'text': 'The POWERHOUSE of the cell. Generates energy (ATP).'},
+        {'sec_idx': 3, 'type': 'text', 'title': 'Nucleus', 'text': 'The BRAIN. Contains DNA and controls cell activity.'}
+    ],
+    formulas=[],
+    questions=[
+        {'text': 'Which organelle produces energy?', 'a': 'Ribosome', 'b': 'Nucleus', 'c': 'Mitochondria', 'd': 'Vacuole', 'ans': 'C', 'exp': 'Mitochondria perform cellular respiration to make ATP.'}
+    ]
+)
+
+# 11. BIOLOGY - Genetics
+add_topic_data('bio-t2',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'DNA', 'icon': 'Dna', 'type': 'content'},
+        {'title': 'Heredity', 'icon': 'GitBranch', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Describe DNA structure', 'Understand basic inheritance'],
+    terms=[
+        {'term': 'Gene', 'def': 'Unit of heredity'},
+        {'term': 'Allele', 'def': 'Variant form of a gene'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'introduction', 'title': 'Blueprint of Life', 'text': 'DNA holds the instructions for building and operating an organism.', 'image_url': 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800'},
+        {'sec_idx': 3, 'type': 'concept_helper', 'title': 'Dominant vs Recessive', 'text': 'Dominant traits (like brown eyes) often hide recessive traits (like blue eyes).'}
+    ],
+    formulas=[],
+    questions=[
+        {'text': 'What molecule carries genetic info?', 'a': 'Protein', 'b': 'Carbohydrate', 'c': 'DNA', 'd': 'Lipid', 'ans': 'C', 'exp': 'Deoxyribonucleic Acid.'}
+    ]
+)
+
+# 12. BIOLOGY - Ecosystems
+add_topic_data('bio-t3',
+    sections=[
+        {'title': 'Objectives', 'icon': 'Target', 'type': 'objectives'},
+        {'title': 'Components', 'icon': 'Globe', 'type': 'content'},
+        {'title': 'Food Webs', 'icon': 'Share2', 'type': 'content'},
+        {'title': 'Quiz', 'icon': 'HelpCircle', 'type': 'quiz'}
+    ],
+    objectives=['Define ecosystem', 'Trace energy flow in food webs'],
+    terms=[
+        {'term': 'Biotic', 'def': 'Living components (plants, animals)'},
+        {'term': 'Abiotic', 'def': 'Non-living components (sun, water, soil)'}
+    ],
+    content=[
+        {'sec_idx': 2, 'type': 'introduction', 'title': 'Web of Life', 'text': 'An ecosystem includes all living things in an area interacting with each other and their environment.', 'image_url': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800'},
+        {'sec_idx': 3, 'type': 'text', 'title': 'Producers vs Consumers', 'text': 'Plants produce energy from sun. Animals consume plants or other animals.'}
+    ],
+    formulas=[],
+    questions=[
+        {'text': 'Which is an abiotic factor?', 'a': 'Tree', 'b': 'Bacteria', 'c': 'Sunlight', 'd': 'Wolf', 'ans': 'C', 'exp': 'Sunlight is non-living.'}
+    ]
+)
+
 
 # ============================================================================
 # FUNCTIONS
 # ============================================================================
 
-def create_sample_excel(output_path='StudyHub_Sample_Data.xlsx'):
+def create_sample_excel(output_path='public/StudyHub_Complete_Data.xlsx'):
     """Create a sample Excel file with all the required sheets and data."""
     print(f"Creating sample Excel file: {output_path}")
     
@@ -240,6 +588,9 @@ def create_sample_excel(output_path='StudyHub_Sample_Data.xlsx'):
             max_length = max(len(str(col_name)), max(len(str(row.get(col_name, ''))) for row in data) if data else 0)
             ws.column_dimensions[ws.cell(row=1, column=col_idx).column_letter].width = min(max_length + 2, 50)
     
+    # Ensure directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
     wb.save(output_path)
     print(f"✅ Sample Excel file created: {output_path}")
     print(f"   Sheets created: {', '.join(SAMPLE_DATA.keys())}")
@@ -388,7 +739,7 @@ def main():
     args = parser.parse_args()
     
     if args.command == 'create-sample':
-        output = args.output or 'StudyHub_Sample_Data.xlsx'
+        output = args.output or 'public/StudyHub_Complete_Data.xlsx'
         create_sample_excel(output)
     
     elif args.command == 'validate':
