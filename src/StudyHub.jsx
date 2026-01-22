@@ -2221,14 +2221,19 @@ const SettingsPanel = memo(({ onClose }) => {
   const { isDemoMode, refresh, lastSync } = useData();
   const darkMode = settings.darkMode;
 
+  // Google Sheets configuration state
+  const [sheetId, setSheetId] = useState(() => {
+    return localStorage.getItem('studyhub_sheet_id') || GOOGLE_SHEETS_CONFIG.SHEET_ID || '';
+  });
+
   // AI Generation state
   const [aiApiKey, setAiApiKey] = useState(() => {
     // Use env key if available, otherwise localStorage
     return AIService.isEnvKeyConfigured() ? '' : (localStorage.getItem('studyhub_ai_api_key') || '');
   });
-  const [selectedSubject, setSelectedSubject] = useState('');
-  const [selectedTopic, setSelectedTopic] = useState('');
-  const [selectedSubTopic, setSelectedSubTopic] = useState('');
+  // Changed from dropdowns to text inputs
+  const [subjectInput, setSubjectInput] = useState('');
+  const [topicsInput, setTopicsInput] = useState('');
   const [contentType, setContentType] = useState('questions');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationResult, setGenerationResult] = useState(null);
@@ -2253,18 +2258,12 @@ const SettingsPanel = memo(({ onClose }) => {
     }));
   }, [subjects]);
 
-  // Get topics for dropdown (filtered by selected subject)
-  const filteredTopics = useMemo(() => {
-    if (!selectedSubject) return [];
-    const subject = subjects[selectedSubject];
-    if (!subject) return [];
-    return subject.topics.map(topic => ({
-      id: topic.id,
-      name: topic.name,
-      subjectName: subject.name,
-      subjectKey: selectedSubject
-    }));
-  }, [subjects, selectedSubject]);
+  // Save Sheet ID to localStorage
+  const handleSheetIdChange = (e) => {
+    const id = e.target.value;
+    setSheetId(id);
+    localStorage.setItem('studyhub_sheet_id', id);
+  };
 
   // Save API key to localStorage
   const handleApiKeyChange = (e) => {
@@ -2273,14 +2272,13 @@ const SettingsPanel = memo(({ onClose }) => {
     localStorage.setItem('studyhub_ai_api_key', key);
   };
 
-  // Get linked Google Sheet URLs
-  const linkedSheets = useMemo(() => {
-    const sheets = [];
-    if (GOOGLE_SHEETS_CONFIG.SHEET_ID && GOOGLE_SHEETS_CONFIG.SHEET_ID !== 'YOUR_GOOGLE_SHEET_ID_HERE') {
-      sheets.push(`https://docs.google.com/spreadsheets/d/${GOOGLE_SHEETS_CONFIG.SHEET_ID}/edit`);
+  // Get linked Google Sheet URL based on editable sheetId
+  const linkedSheetUrl = useMemo(() => {
+    if (sheetId && sheetId !== 'YOUR_GOOGLE_SHEET_ID_HERE') {
+      return `https://docs.google.com/spreadsheets/d/${sheetId}/edit`;
     }
-    return sheets;
-  }, []);
+    return null;
+  }, [sheetId]);
 
   // Handle AI generation
   const handleGenerateAI = async () => {
@@ -2289,23 +2287,24 @@ const SettingsPanel = memo(({ onClose }) => {
       alert('Please enter an API key or set REACT_APP_GEMINI_API_KEY in .env file');
       return;
     }
-    if (!selectedTopic) {
-      alert('Please select a topic');
+    if (!topicsInput.trim()) {
+      alert('Please enter at least one topic');
       return;
     }
 
-    // Get topic and subject names for better prompts
-    const selectedTopicObj = filteredTopics.find(t => t.id === selectedTopic);
-    const topicName = selectedTopicObj?.name || '';
-    const subjectName = subjects[selectedSubject]?.name || '';
+    // Use text inputs directly for topic and subject names
+    const topicName = topicsInput.trim();
+    const subjectName = subjectInput.trim();
+    // Generate a topic ID from the topic name
+    const topicId = topicName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
     setIsGenerating(true);
     setGenerationResult(null);
     setGenerationError(null);
     try {
       const result = await AIService.generateContent(
-        selectedTopic,
-        selectedSubTopic,
+        topicId,
+        '', // No sub-topic since we removed that dropdown
         contentType,
         effectiveApiKey,
         topicName,
@@ -2364,29 +2363,51 @@ const SettingsPanel = memo(({ onClose }) => {
             </div>
           </div>
 
-          {/* Linked Google Sheets Section */}
+          {/* Google Sheets Configuration */}
           <div>
-            <h3 className={cn("font-bold mb-3", darkMode ? "text-white" : "text-slate-800")}>Linked Google Sheets</h3>
+            <h3 className={cn("font-bold mb-3", darkMode ? "text-white" : "text-slate-800")}>Google Sheets</h3>
             <div className={cn("p-4 rounded-xl", darkMode ? "bg-slate-700" : "bg-slate-100")}>
-              {linkedSheets.length > 0 ? (
-                <div className="space-y-2">
-                  {linkedSheets.map((url, i) => (
-                    <div key={i} className="flex items-start gap-2">
-                      <ExternalLink className={cn("w-4 h-4 flex-shrink-0 mt-0.5", darkMode ? "text-blue-400" : "text-blue-600")} />
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn("text-sm break-all hover:underline", darkMode ? "text-blue-400" : "text-blue-600")}
-                      >
-                        {url}
-                      </a>
-                    </div>
-                  ))}
+              {/* Editable Sheet ID */}
+              <div className="mb-3">
+                <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
+                  Sheet ID
+                </label>
+                <input
+                  type="text"
+                  value={sheetId}
+                  onChange={handleSheetIdChange}
+                  placeholder="Enter your Google Sheet ID..."
+                  className={cn(
+                    "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
+                    darkMode
+                      ? "bg-slate-600 border-slate-500 text-white placeholder-slate-400 focus:ring-emerald-500"
+                      : "bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:ring-emerald-500"
+                  )}
+                />
+                <p className={cn("text-xs mt-1", darkMode ? "text-slate-400" : "text-slate-500")}>
+                  Find it in your Google Sheets URL: docs.google.com/spreadsheets/d/<strong>SHEET_ID</strong>/edit
+                </p>
+              </div>
+
+              {/* Sheet Link */}
+              {linkedSheetUrl && (
+                <div className="flex items-start gap-2 mb-3">
+                  <ExternalLink className={cn("w-4 h-4 flex-shrink-0 mt-0.5", darkMode ? "text-blue-400" : "text-blue-600")} />
+                  <a
+                    href={linkedSheetUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn("text-sm break-all hover:underline", darkMode ? "text-blue-400" : "text-blue-600")}
+                  >
+                    Open in Google Sheets
+                  </a>
                 </div>
-              ) : (
-                <p className={cn("text-sm italic", darkMode ? "text-slate-400" : "text-slate-500")}>
-                  No Google Sheets linked. Configure SHEET_ID in the code to link a sheet.
+              )}
+
+              {/* Last Sync Info */}
+              {lastSync && (
+                <p className={cn("text-xs mb-3", darkMode ? "text-slate-400" : "text-slate-500")}>
+                  Last Synced: {lastSync.toLocaleString()}
                 </p>
               )}
 
@@ -2453,78 +2474,45 @@ const SettingsPanel = memo(({ onClose }) => {
                 )}
               </div>
 
-              {/* Subject Dropdown */}
+              {/* Subject Input */}
               <div>
                 <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
                   Subject
                 </label>
-                <select
-                  value={selectedSubject}
-                  onChange={(e) => { setSelectedSubject(e.target.value); setSelectedTopic(''); setSelectedSubTopic(''); }}
+                <input
+                  type="text"
+                  value={subjectInput}
+                  onChange={(e) => setSubjectInput(e.target.value)}
+                  placeholder="e.g., Physics, Math, Biology..."
                   className={cn(
                     "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
                     darkMode
-                      ? "bg-slate-600 border-slate-500 text-white focus:ring-purple-500"
-                      : "bg-white border-slate-300 text-slate-900 focus:ring-purple-500"
+                      ? "bg-slate-600 border-slate-500 text-white placeholder-slate-400 focus:ring-purple-500"
+                      : "bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:ring-purple-500"
                   )}
-                >
-                  <option value="">Select a subject...</option>
-                  {subjectsList.map(subject => (
-                    <option key={subject.key} value={subject.key}>
-                      {subject.name}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
 
-              {/* Topic Dropdown */}
+              {/* Topics Input (comma-separated) */}
               <div>
                 <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
-                  Topic
+                  Topics
                 </label>
-                <select
-                  value={selectedTopic}
-                  onChange={(e) => { setSelectedTopic(e.target.value); setSelectedSubTopic(''); }}
-                  disabled={!selectedSubject}
+                <textarea
+                  value={topicsInput}
+                  onChange={(e) => setTopicsInput(e.target.value)}
+                  placeholder="Enter topics separated by commas, e.g., Newton's Laws, Energy, Work"
+                  rows={2}
                   className={cn(
-                    "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
+                    "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 resize-none",
                     darkMode
-                      ? "bg-slate-600 border-slate-500 text-white focus:ring-purple-500 disabled:opacity-50"
-                      : "bg-white border-slate-300 text-slate-900 focus:ring-purple-500 disabled:opacity-50"
+                      ? "bg-slate-600 border-slate-500 text-white placeholder-slate-400 focus:ring-purple-500"
+                      : "bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:ring-purple-500"
                   )}
-                >
-                  <option value="">Select a topic...</option>
-                  {filteredTopics.map(topic => (
-                    <option key={topic.id} value={topic.id}>
-                      {topic.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Sub Topic Dropdown */}
-              <div>
-                <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
-                  Sub Topic
-                </label>
-                <select
-                  value={selectedSubTopic}
-                  onChange={(e) => setSelectedSubTopic(e.target.value)}
-                  disabled={!selectedTopic}
-                  className={cn(
-                    "w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2",
-                    darkMode
-                      ? "bg-slate-600 border-slate-500 text-white focus:ring-purple-500 disabled:opacity-50"
-                      : "bg-white border-slate-300 text-slate-900 focus:ring-purple-500 disabled:opacity-50"
-                  )}
-                >
-                  <option value="">Select a sub topic (optional)...</option>
-                  <option value="introduction">Introduction</option>
-                  <option value="key_concepts">Key Concepts</option>
-                  <option value="formulas">Formulas</option>
-                  <option value="applications">Real-World Applications</option>
-                  <option value="practice">Practice Problems</option>
-                </select>
+                />
+                <p className={cn("text-xs mt-1", darkMode ? "text-slate-400" : "text-slate-500")}>
+                  Use commas to separate multiple topics or subtopics
+                </p>
               </div>
 
               {/* Content Type Dropdown */}
@@ -2551,10 +2539,10 @@ const SettingsPanel = memo(({ onClose }) => {
               {/* Generate Button */}
               <button
                 onClick={handleGenerateAI}
-                disabled={isGenerating || (!isEnvKeyConfigured && !aiApiKey) || !selectedTopic}
+                disabled={isGenerating || (!isEnvKeyConfigured && !aiApiKey) || !topicsInput.trim()}
                 className={cn(
                   "w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2",
-                  isGenerating || (!isEnvKeyConfigured && !aiApiKey) || !selectedTopic
+                  isGenerating || (!isEnvKeyConfigured && !aiApiKey) || !topicsInput.trim()
                     ? darkMode ? "bg-slate-600 text-slate-400 cursor-not-allowed" : "bg-slate-300 text-slate-500 cursor-not-allowed"
                     : "bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:shadow-lg"
                 )}
@@ -2571,6 +2559,18 @@ const SettingsPanel = memo(({ onClose }) => {
                   </>
                 )}
               </button>
+
+              {/* AI Data Generation Instructions Link */}
+              <p className={cn("text-xs text-center", darkMode ? "text-slate-400" : "text-slate-500")}>
+                <a
+                  href="/AI_DATA_GENERATION_README.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn("hover:underline", darkMode ? "text-blue-400" : "text-blue-600")}
+                >
+                  View AI Data Generation Instructions
+                </a>
+              </p>
 
               {/* Generation Result */}
               {generationResult && (

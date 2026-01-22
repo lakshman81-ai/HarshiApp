@@ -157,14 +157,16 @@ const MobileSidebarDrawer = memo(({
         {/* Sections List */}
         <div className="flex-1 overflow-y-auto p-4">
           <div className="space-y-1">
-            {sections.map((section, i) => {
-              const isCompleted = i < Math.floor((progressPercent / 100) * sections.length);
-              const isActive = activeSection === i;
+            {sections.filter(section => section.type !== 'quiz').map((section, i) => {
+              // Find actual index in original sections array for progress calculation
+              const originalIndex = sections.findIndex(s => s.id === section.id);
+              const isCompleted = originalIndex < Math.floor((progressPercent / 100) * sections.length);
+              const isActive = activeSection === originalIndex;
 
               return (
                 <button
                   key={section.id}
-                  onClick={() => handleSectionClick(i)}
+                  onClick={() => handleSectionClick(originalIndex)}
                   className={cn(
                     "w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all",
                     isActive

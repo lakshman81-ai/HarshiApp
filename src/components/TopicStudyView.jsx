@@ -13,6 +13,7 @@ import NotesEditorComponent from './NotesEditor';
 const NotesEditor = NotesEditorComponent;
 
 import { Card } from './common/UIComponents';
+import MathFormula from './MathFormula';
 
 const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
     const { progress, subjects, sections, objectives, keyTerms, studyContent, formulas, quizQuestions, updateProgress, settings } = useStudy();
@@ -138,22 +139,23 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
                 <nav className="flex-1 overflow-y-auto p-4">
                     <h3 className={cn("text-xs font-bold uppercase tracking-wider mb-3", darkMode ? "text-slate-500" : "text-slate-400")}>Outline</h3>
                     <div className="space-y-1">
-                        {topicSections.map((section, i) => {
+                        {topicSections.filter(section => section.type !== 'quiz').map((section, i) => {
                             const SectionIcon = ICON_MAP[section.icon] || FileText;
-                            const isCompleted = i < Math.floor((progressPercent / 100) * topicSections.length);
+                            const originalIndex = topicSections.findIndex(s => s.id === section.id);
+                            const isCompleted = originalIndex < Math.floor((progressPercent / 100) * topicSections.length);
                             return (
                                 <button
                                     key={section.id}
-                                    onClick={() => setActiveSection(i)}
+                                    onClick={() => setActiveSection(originalIndex)}
                                     className={cn(
                                         "w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all",
-                                        activeSection === i ? cn("bg-gradient-to-r text-white shadow-lg", config.gradient)
+                                        activeSection === originalIndex ? cn("bg-gradient-to-r text-white shadow-lg", config.gradient)
                                             : isCompleted ? darkMode ? "bg-emerald-900/30 text-emerald-400" : "bg-emerald-50 text-emerald-700"
                                                 : darkMode ? "hover:bg-slate-700 text-slate-400" : "hover:bg-slate-100 text-slate-600"
                                     )}
                                 >
-                                    <div className={cn("w-6 h-6 rounded-full flex items-center justify-center", activeSection === i ? "bg-white/20" : isCompleted ? "bg-emerald-500 text-white" : darkMode ? "border-2 border-slate-600" : "border-2 border-slate-300")}>
-                                        {isCompleted && activeSection !== i ? <Check className="w-4 h-4" /> : <span className="text-xs font-bold">{i + 1}</span>}
+                                    <div className={cn("w-6 h-6 rounded-full flex items-center justify-center", activeSection === originalIndex ? "bg-white/20" : isCompleted ? "bg-emerald-500 text-white" : darkMode ? "border-2 border-slate-600" : "border-2 border-slate-300")}>
+                                        {isCompleted && activeSection !== originalIndex ? <Check className="w-4 h-4" /> : <span className="text-xs font-bold">{i + 1}</span>}
                                     </div>
                                     <span className="font-medium text-sm flex-1">{section.title}</span>
                                 </button>
@@ -237,13 +239,21 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
                                                 <div className="relative">
                                                     <p className="text-blue-300 text-sm font-medium mb-2">{content.title}</p>
                                                     <div className="flex items-center justify-center gap-4 mb-4">
-                                                        <span className="text-4xl sm:text-5xl font-bold text-white font-mono">{content.text}</span>
+                                                        <MathFormula
+                                                            formula={content.text}
+                                                            size="large"
+                                                            className="text-white"
+                                                        />
                                                     </div>
                                                     {topicFormulas[0]?.variables && (
                                                         <div className="grid grid-cols-3 gap-4 text-center mb-4">
                                                             {topicFormulas[0].variables.map((v, j) => (
                                                                 <div key={j}>
-                                                                    <div className={cn("text-2xl font-bold", j === 0 ? "text-blue-400" : j === 1 ? "text-emerald-400" : "text-amber-400")}>{v.symbol}</div>
+                                                                    <MathFormula
+                                                                        formula={v.symbol}
+                                                                        size="medium"
+                                                                        className={cn(j === 0 ? "text-blue-400" : j === 1 ? "text-emerald-400" : "text-amber-400")}
+                                                                    />
                                                                     <div className="text-sm text-slate-400">{v.name} ({v.unit})</div>
                                                                 </div>
                                                             ))}

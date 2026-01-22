@@ -152,19 +152,21 @@ const ContentArea = memo(({
           </>
         )}
 
-        {/* Quiz Section */}
+        {/* Quiz Section - Hidden in print/handout mode via CSS */}
         {currentSection?.type === 'quiz' && (
-          <QuizSection
-            questions={quizQuestions || []}
-            darkMode={darkMode}
-            subjectConfig={config}
-            topicId={topicId}
-            onComplete={onQuizComplete}
-            onUseHint={onUseHint}
-            userXp={userXp}
-            allowHints={true}
-            hintCost={5}
-          />
+          <div className="quiz-section">
+            <QuizSection
+              questions={quizQuestions || []}
+              darkMode={darkMode}
+              subjectConfig={config}
+              topicId={topicId}
+              onComplete={onQuizComplete}
+              onUseHint={onUseHint}
+              userXp={userXp}
+              allowHints={true}
+              hintCost={5}
+            />
+          </div>
         )}
       </div>
     </div>
