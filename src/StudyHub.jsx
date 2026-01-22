@@ -964,6 +964,170 @@ Respond ONLY with valid JSON in this exact format (no markdown, no explanation):
 }
 
 // ============================================================================
+// AI SERVICE - For generating questions and challenges
+// ============================================================================
+
+class AIService {
+  // Generate a daily challenge using AI when none exists in Google Sheets
+  static generateDailyChallenge(subjects, existingQuestions) {
+    // Fallback challenges when no AI API is configured
+    const fallbackChallenges = [
+      {
+        type: 'math_puzzle',
+        subjectKey: 'math',
+        question: 'What is 2^10?',
+        options: [
+          { label: 'A', text: '512' },
+          { label: 'B', text: '1024' },
+          { label: 'C', text: '2048' },
+          { label: 'D', text: '4096' }
+        ],
+        correctAnswer: 'B',
+        explanation: '2^10 = 2×2×2×2×2×2×2×2×2×2 = 1024',
+        hint: 'Remember: 2^10 is also known as 1 kilobyte in computing!',
+        difficulty: 'medium',
+        xpReward: 25
+      },
+      {
+        type: 'physics',
+        subjectKey: 'physics',
+        question: 'If a 5 kg object accelerates at 4 m/s², what force is acting on it?',
+        options: [
+          { label: 'A', text: '9 N' },
+          { label: 'B', text: '1.25 N' },
+          { label: 'C', text: '20 N' },
+          { label: 'D', text: '25 N' }
+        ],
+        correctAnswer: 'C',
+        explanation: 'Using F = ma: F = 5 kg × 4 m/s² = 20 N',
+        hint: 'Use Newton\'s Second Law: F = m × a',
+        difficulty: 'easy',
+        xpReward: 25
+      },
+      {
+        type: 'chemistry',
+        subjectKey: 'chemistry',
+        question: 'What is the chemical symbol for Gold?',
+        options: [
+          { label: 'A', text: 'Go' },
+          { label: 'B', text: 'Gd' },
+          { label: 'C', text: 'Au' },
+          { label: 'D', text: 'Ag' }
+        ],
+        correctAnswer: 'C',
+        explanation: 'Au comes from the Latin word "Aurum" meaning gold.',
+        hint: 'It comes from the Latin word for gold.',
+        difficulty: 'easy',
+        xpReward: 25
+      },
+      {
+        type: 'biology',
+        subjectKey: 'biology',
+        question: 'Which organelle is known as the "powerhouse of the cell"?',
+        options: [
+          { label: 'A', text: 'Nucleus' },
+          { label: 'B', text: 'Mitochondria' },
+          { label: 'C', text: 'Ribosome' },
+          { label: 'D', text: 'Golgi Body' }
+        ],
+        correctAnswer: 'B',
+        explanation: 'Mitochondria produce ATP, the energy currency of cells, through cellular respiration.',
+        hint: 'It produces ATP through cellular respiration.',
+        difficulty: 'easy',
+        xpReward: 25
+      }
+    ];
+
+    // Pick a challenge based on the day of year (cycles through)
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    const challenge = fallbackChallenges[dayOfYear % fallbackChallenges.length];
+
+    const today = new Date().toISOString().split('T')[0];
+    return {
+      id: `ai-dc-${today}`,
+      date: today,
+      ...challenge,
+      isAIGenerated: true
+    };
+  }
+
+  // Generate additional quiz questions using AI
+  static generateQuizQuestions(topicId, topicName, subjectKey, count = 3) {
+    // Fallback questions when no AI API is configured
+    const fallbackQuestions = {
+      physics: [
+        {
+          question: 'What is the SI unit of force?',
+          options: [
+            { label: 'A', text: 'Joule' },
+            { label: 'B', text: 'Newton' },
+            { label: 'C', text: 'Watt' },
+            { label: 'D', text: 'Pascal' }
+          ],
+          correctAnswer: 'B',
+          explanation: 'The Newton (N) is the SI unit of force, named after Sir Isaac Newton.',
+          hint: 'Named after a famous scientist who studied gravity.',
+          difficulty: 'easy'
+        }
+      ],
+      math: [
+        {
+          question: 'What is the value of π (pi) to 2 decimal places?',
+          options: [
+            { label: 'A', text: '3.12' },
+            { label: 'B', text: '3.14' },
+            { label: 'C', text: '3.16' },
+            { label: 'D', text: '3.18' }
+          ],
+          correctAnswer: 'B',
+          explanation: 'π ≈ 3.14159... which rounds to 3.14',
+          hint: 'It starts with 3.1...',
+          difficulty: 'easy'
+        }
+      ],
+      chemistry: [
+        {
+          question: 'What is the atomic number of Carbon?',
+          options: [
+            { label: 'A', text: '4' },
+            { label: 'B', text: '6' },
+            { label: 'C', text: '8' },
+            { label: 'D', text: '12' }
+          ],
+          correctAnswer: 'B',
+          explanation: 'Carbon has 6 protons, so its atomic number is 6.',
+          hint: 'Count the protons in a Carbon atom.',
+          difficulty: 'easy'
+        }
+      ],
+      biology: [
+        {
+          question: 'What is the basic unit of life?',
+          options: [
+            { label: 'A', text: 'Atom' },
+            { label: 'B', text: 'Molecule' },
+            { label: 'C', text: 'Cell' },
+            { label: 'D', text: 'Organ' }
+          ],
+          correctAnswer: 'C',
+          explanation: 'The cell is the basic structural and functional unit of all living organisms.',
+          hint: 'Robert Hooke first discovered them in 1665.',
+          difficulty: 'easy'
+        }
+      ]
+    };
+
+    const questions = fallbackQuestions[subjectKey] || fallbackQuestions.math;
+    return questions.slice(0, count).map((q, i) => ({
+      id: `ai-q-${topicId}-${i}`,
+      ...q,
+      xpReward: 10,
+      isAIGenerated: true
+    }));
+  }
+}
+
+// ============================================================================
 // DEFAULT/FALLBACK DATA
 // ============================================================================
 
