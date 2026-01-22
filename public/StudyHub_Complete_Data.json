@@ -1,0 +1,3153 @@
+{
+  "Subjects": [
+    {
+      "subject_id": "phys-001",
+      "subject_key": "physics",
+      "name": "Physics",
+      "icon": "Zap",
+      "color_hex": "#3B82F6",
+      "light_bg": "bg-blue-50",
+      "gradient_from": "blue-500",
+      "gradient_to": "blue-600",
+      "dark_glow": "shadow-blue-500/20"
+    },
+    {
+      "subject_id": "math-001",
+      "subject_key": "math",
+      "name": "Mathematics",
+      "icon": "Calculator",
+      "color_hex": "#10B981",
+      "light_bg": "bg-emerald-50",
+      "gradient_from": "emerald-500",
+      "gradient_to": "emerald-600",
+      "dark_glow": "shadow-emerald-500/20"
+    },
+    {
+      "subject_id": "chem-001",
+      "subject_key": "chemistry",
+      "name": "Chemistry",
+      "icon": "FlaskConical",
+      "color_hex": "#F59E0B",
+      "light_bg": "bg-amber-50",
+      "gradient_from": "amber-500",
+      "gradient_to": "amber-600",
+      "dark_glow": "shadow-amber-500/20"
+    },
+    {
+      "subject_id": "bio-001",
+      "subject_key": "biology",
+      "name": "Biology",
+      "icon": "Leaf",
+      "color_hex": "#8B5CF6",
+      "light_bg": "bg-violet-50",
+      "gradient_from": "violet-500",
+      "gradient_to": "violet-600",
+      "dark_glow": "shadow-violet-500/20"
+    }
+  ],
+  "Topics": [
+    {
+      "topic_id": "phys-t1",
+      "subject_key": "physics",
+      "topic_name": "Newton's Laws",
+      "duration_minutes": 30,
+      "order_index": 1
+    },
+    {
+      "topic_id": "phys-t2",
+      "subject_key": "physics",
+      "topic_name": "Work & Energy",
+      "duration_minutes": 45,
+      "order_index": 2
+    },
+    {
+      "topic_id": "phys-t3",
+      "subject_key": "physics",
+      "topic_name": "Electricity",
+      "duration_minutes": 40,
+      "order_index": 3
+    },
+    {
+      "topic_id": "math-t1",
+      "subject_key": "math",
+      "topic_name": "Algebraic Expressions",
+      "duration_minutes": 35,
+      "order_index": 1
+    },
+    {
+      "topic_id": "math-t2",
+      "subject_key": "math",
+      "topic_name": "Geometry: Triangles",
+      "duration_minutes": 30,
+      "order_index": 2
+    },
+    {
+      "topic_id": "math-t3",
+      "subject_key": "math",
+      "topic_name": "Probability",
+      "duration_minutes": 25,
+      "order_index": 3
+    },
+    {
+      "topic_id": "chem-t1",
+      "subject_key": "chemistry",
+      "topic_name": "Atomic Structure",
+      "duration_minutes": 40,
+      "order_index": 1
+    },
+    {
+      "topic_id": "chem-t2",
+      "subject_key": "chemistry",
+      "topic_name": "The Periodic Table",
+      "duration_minutes": 35,
+      "order_index": 2
+    },
+    {
+      "topic_id": "chem-t3",
+      "subject_key": "chemistry",
+      "topic_name": "Chemical Bonding",
+      "duration_minutes": 45,
+      "order_index": 3
+    },
+    {
+      "topic_id": "bio-t1",
+      "subject_key": "biology",
+      "topic_name": "Cell Biology",
+      "duration_minutes": 30,
+      "order_index": 1
+    },
+    {
+      "topic_id": "bio-t2",
+      "subject_key": "biology",
+      "topic_name": "Genetics & DNA",
+      "duration_minutes": 40,
+      "order_index": 2
+    },
+    {
+      "topic_id": "bio-t3",
+      "subject_key": "biology",
+      "topic_name": "Ecosystems",
+      "duration_minutes": 35,
+      "order_index": 3
+    }
+  ],
+  "Topic_Sections": [
+    {
+      "section_id": "phys-t1-s1",
+      "topic_id": "phys-t1",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "phys-t1-s2",
+      "topic_id": "phys-t1",
+      "section_title": "Introduction",
+      "section_icon": "BookOpen",
+      "order_index": 2,
+      "section_type": "intro"
+    },
+    {
+      "section_id": "phys-t1-s3",
+      "topic_id": "phys-t1",
+      "section_title": "First Law (Inertia)",
+      "section_icon": "Zap",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "phys-t1-s4",
+      "topic_id": "phys-t1",
+      "section_title": "Second Law (F=ma)",
+      "section_icon": "Calculator",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "phys-t1-s5",
+      "topic_id": "phys-t1",
+      "section_title": "Third Law (Action-Reaction)",
+      "section_icon": "Zap",
+      "order_index": 5,
+      "section_type": "content"
+    },
+    {
+      "section_id": "phys-t1-s6",
+      "topic_id": "phys-t1",
+      "section_title": "Assessment",
+      "section_icon": "HelpCircle",
+      "order_index": 6,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "phys-t2-s1",
+      "topic_id": "phys-t2",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "phys-t2-s2",
+      "topic_id": "phys-t2",
+      "section_title": "Work",
+      "section_icon": "Hammer",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "phys-t2-s3",
+      "topic_id": "phys-t2",
+      "section_title": "Energy Types",
+      "section_icon": "Zap",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "phys-t2-s4",
+      "topic_id": "phys-t2",
+      "section_title": "Conservation",
+      "section_icon": "RefreshCw",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "phys-t2-s5",
+      "topic_id": "phys-t2",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "phys-t3-s1",
+      "topic_id": "phys-t3",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "phys-t3-s2",
+      "topic_id": "phys-t3",
+      "section_title": "Circuits",
+      "section_icon": "Zap",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "phys-t3-s3",
+      "topic_id": "phys-t3",
+      "section_title": "Ohm's Law",
+      "section_icon": "Calculator",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "phys-t3-s4",
+      "topic_id": "phys-t3",
+      "section_title": "Power & Safety",
+      "section_icon": "AlertTriangle",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "phys-t3-s5",
+      "topic_id": "phys-t3",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "math-t1-s1",
+      "topic_id": "math-t1",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "math-t1-s2",
+      "topic_id": "math-t1",
+      "section_title": "Basics",
+      "section_icon": "BookOpen",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "math-t1-s3",
+      "topic_id": "math-t1",
+      "section_title": "Simplifying",
+      "section_icon": "Minimize2",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "math-t1-s4",
+      "topic_id": "math-t1",
+      "section_title": "Expanding & Factoring",
+      "section_icon": "Maximize2",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "math-t1-s5",
+      "topic_id": "math-t1",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "math-t2-s1",
+      "topic_id": "math-t2",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "math-t2-s2",
+      "topic_id": "math-t2",
+      "section_title": "Types",
+      "section_icon": "Triangle",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "math-t2-s3",
+      "topic_id": "math-t2",
+      "section_title": "Pythagoras",
+      "section_icon": "Calculator",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "math-t2-s4",
+      "topic_id": "math-t2",
+      "section_title": "Area & Perimeter",
+      "section_icon": "Grid",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "math-t2-s5",
+      "topic_id": "math-t2",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "math-t3-s1",
+      "topic_id": "math-t3",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "math-t3-s2",
+      "topic_id": "math-t3",
+      "section_title": "Chance",
+      "section_icon": "HelpCircle",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "math-t3-s3",
+      "topic_id": "math-t3",
+      "section_title": "Calculating",
+      "section_icon": "Calculator",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "math-t3-s4",
+      "topic_id": "math-t3",
+      "section_title": "Multiple Events",
+      "section_icon": "GitBranch",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "math-t3-s5",
+      "topic_id": "math-t3",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "chem-t1-s1",
+      "topic_id": "chem-t1",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "chem-t1-s2",
+      "topic_id": "chem-t1",
+      "section_title": "The Atom",
+      "section_icon": "Atom",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "chem-t1-s3",
+      "topic_id": "chem-t1",
+      "section_title": "Subatomic Particles",
+      "section_icon": "Disc",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "chem-t1-s4",
+      "topic_id": "chem-t1",
+      "section_title": "Isotopes",
+      "section_icon": "Copy",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "chem-t1-s5",
+      "topic_id": "chem-t1",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "chem-t2-s1",
+      "topic_id": "chem-t2",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "chem-t2-s2",
+      "topic_id": "chem-t2",
+      "section_title": "Organization",
+      "section_icon": "Grid",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "chem-t2-s3",
+      "topic_id": "chem-t2",
+      "section_title": "Groups & Periods",
+      "section_icon": "ArrowDown",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "chem-t2-s4",
+      "topic_id": "chem-t2",
+      "section_title": "Metals vs Non-Metals",
+      "section_icon": "Layers",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "chem-t2-s5",
+      "topic_id": "chem-t2",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "chem-t3-s1",
+      "topic_id": "chem-t3",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "chem-t3-s2",
+      "topic_id": "chem-t3",
+      "section_title": "Why Bond?",
+      "section_icon": "Link",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "chem-t3-s3",
+      "topic_id": "chem-t3",
+      "section_title": "Ionic Bonding",
+      "section_icon": "Zap",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "chem-t3-s4",
+      "topic_id": "chem-t3",
+      "section_title": "Covalent Bonding",
+      "section_icon": "GitCommit",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "chem-t3-s5",
+      "topic_id": "chem-t3",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "bio-t1-s1",
+      "topic_id": "bio-t1",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "bio-t1-s2",
+      "topic_id": "bio-t1",
+      "section_title": "Cell Theory",
+      "section_icon": "BookOpen",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "bio-t1-s3",
+      "topic_id": "bio-t1",
+      "section_title": "Organelles",
+      "section_icon": "Circle",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "bio-t1-s4",
+      "topic_id": "bio-t1",
+      "section_title": "Plant vs Animal",
+      "section_icon": "Leaf",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "bio-t1-s5",
+      "topic_id": "bio-t1",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "bio-t2-s1",
+      "topic_id": "bio-t2",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "bio-t2-s2",
+      "topic_id": "bio-t2",
+      "section_title": "DNA",
+      "section_icon": "Dna",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "bio-t2-s3",
+      "topic_id": "bio-t2",
+      "section_title": "Heredity",
+      "section_icon": "GitBranch",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "bio-t2-s4",
+      "topic_id": "bio-t2",
+      "section_title": "Punnett Squares",
+      "section_icon": "Grid",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "bio-t2-s5",
+      "topic_id": "bio-t2",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    },
+    {
+      "section_id": "bio-t3-s1",
+      "topic_id": "bio-t3",
+      "section_title": "Objectives",
+      "section_icon": "Target",
+      "order_index": 1,
+      "section_type": "objectives"
+    },
+    {
+      "section_id": "bio-t3-s2",
+      "topic_id": "bio-t3",
+      "section_title": "Components",
+      "section_icon": "Globe",
+      "order_index": 2,
+      "section_type": "content"
+    },
+    {
+      "section_id": "bio-t3-s3",
+      "topic_id": "bio-t3",
+      "section_title": "Food Webs",
+      "section_icon": "Share2",
+      "order_index": 3,
+      "section_type": "content"
+    },
+    {
+      "section_id": "bio-t3-s4",
+      "topic_id": "bio-t3",
+      "section_title": "Cycles",
+      "section_icon": "RefreshCw",
+      "order_index": 4,
+      "section_type": "content"
+    },
+    {
+      "section_id": "bio-t3-s5",
+      "topic_id": "bio-t3",
+      "section_title": "Quiz",
+      "section_icon": "HelpCircle",
+      "order_index": 5,
+      "section_type": "quiz"
+    }
+  ],
+  "Learning_Objectives": [
+    {
+      "objective_id": "obj-phys-t1-1",
+      "topic_id": "phys-t1",
+      "objective_text": "Define inertia and its relationship to mass",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-phys-t1-2",
+      "topic_id": "phys-t1",
+      "objective_text": "Apply F=ma to solve problems",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-phys-t1-3",
+      "topic_id": "phys-t1",
+      "objective_text": "Identify action-reaction pairs",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-phys-t1-4",
+      "topic_id": "phys-t1",
+      "objective_text": "Understand the concept of net force",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-phys-t1-5",
+      "topic_id": "phys-t1",
+      "objective_text": "Distinguish between mass and weight",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-phys-t2-1",
+      "topic_id": "phys-t2",
+      "objective_text": "Define Work in physics",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-phys-t2-2",
+      "topic_id": "phys-t2",
+      "objective_text": "Distinguish between kinetic and potential energy",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-phys-t2-3",
+      "topic_id": "phys-t2",
+      "objective_text": "Apply conservation of energy principle",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-phys-t2-4",
+      "topic_id": "phys-t2",
+      "objective_text": "Calculate work and power",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-phys-t2-5",
+      "topic_id": "phys-t2",
+      "objective_text": "Understand mechanical advantage",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-phys-t3-1",
+      "topic_id": "phys-t3",
+      "objective_text": "Understand circuit components",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-phys-t3-2",
+      "topic_id": "phys-t3",
+      "objective_text": "Calculate using Ohm's Law",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-phys-t3-3",
+      "topic_id": "phys-t3",
+      "objective_text": "Differentiate series and parallel circuits",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-phys-t3-4",
+      "topic_id": "phys-t3",
+      "objective_text": "Calculate electrical power",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-phys-t3-5",
+      "topic_id": "phys-t3",
+      "objective_text": "Identify electrical safety hazards",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-math-t1-1",
+      "topic_id": "math-t1",
+      "objective_text": "Identify variables and coefficients",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-math-t1-2",
+      "topic_id": "math-t1",
+      "objective_text": "Simplify like terms",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-math-t1-3",
+      "topic_id": "math-t1",
+      "objective_text": "Expand algebraic expressions using distributive property",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-math-t1-4",
+      "topic_id": "math-t1",
+      "objective_text": "Factor simple expressions",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-math-t1-5",
+      "topic_id": "math-t1",
+      "objective_text": "Evaluate expressions",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-math-t2-1",
+      "topic_id": "math-t2",
+      "objective_text": "Classify triangles by sides and angles",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-math-t2-2",
+      "topic_id": "math-t2",
+      "objective_text": "Use Pythagorean theorem",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-math-t2-3",
+      "topic_id": "math-t2",
+      "objective_text": "Calculate area of triangles",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-math-t2-4",
+      "topic_id": "math-t2",
+      "objective_text": "Identify triangle properties",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-math-t2-5",
+      "topic_id": "math-t2",
+      "objective_text": "Solve real-world problems involving triangles",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-math-t3-1",
+      "topic_id": "math-t3",
+      "objective_text": "Understand probability scale",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-math-t3-2",
+      "topic_id": "math-t3",
+      "objective_text": "Calculate simple probabilities",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-math-t3-3",
+      "topic_id": "math-t3",
+      "objective_text": "Determine sample spaces",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-math-t3-4",
+      "topic_id": "math-t3",
+      "objective_text": "Calculate probability of multiple events",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-math-t3-5",
+      "topic_id": "math-t3",
+      "objective_text": "Understand complementary events",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-chem-t1-1",
+      "topic_id": "chem-t1",
+      "objective_text": "Describe the structure of an atom",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-chem-t1-2",
+      "topic_id": "chem-t1",
+      "objective_text": "Identify protons, neutrons, electrons",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-chem-t1-3",
+      "topic_id": "chem-t1",
+      "objective_text": "Determine atomic mass and atomic number",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-chem-t1-4",
+      "topic_id": "chem-t1",
+      "objective_text": "Understand isotopes",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-chem-t1-5",
+      "topic_id": "chem-t1",
+      "objective_text": "Draw simple atomic models",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-chem-t2-1",
+      "topic_id": "chem-t2",
+      "objective_text": "Read the Periodic Table",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-chem-t2-2",
+      "topic_id": "chem-t2",
+      "objective_text": "Understand Groups and Periods",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-chem-t2-3",
+      "topic_id": "chem-t2",
+      "objective_text": "Predict properties based on location",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-chem-t2-4",
+      "topic_id": "chem-t2",
+      "objective_text": "Identify metals, non-metals, and metalloids",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-chem-t2-5",
+      "topic_id": "chem-t2",
+      "objective_text": "Know common element families",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-chem-t3-1",
+      "topic_id": "chem-t3",
+      "objective_text": "Explain why atoms bond",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-chem-t3-2",
+      "topic_id": "chem-t3",
+      "objective_text": "Distinguish ionic and covalent bonds",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-chem-t3-3",
+      "topic_id": "chem-t3",
+      "objective_text": "Draw dot and cross diagrams",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-chem-t3-4",
+      "topic_id": "chem-t3",
+      "objective_text": "Predict bond type between elements",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-chem-t3-5",
+      "topic_id": "chem-t3",
+      "objective_text": "Name simple compounds",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-bio-t1-1",
+      "topic_id": "bio-t1",
+      "objective_text": "State Cell Theory",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-bio-t1-2",
+      "topic_id": "bio-t1",
+      "objective_text": "Identify function of nucleus, mitochondria, cell membrane",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-bio-t1-3",
+      "topic_id": "bio-t1",
+      "objective_text": "Distinguish plant and animal cells",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-bio-t1-4",
+      "topic_id": "bio-t1",
+      "objective_text": "Understand specialized cells",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-bio-t1-5",
+      "topic_id": "bio-t1",
+      "objective_text": "Explain diffusion",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-bio-t2-1",
+      "topic_id": "bio-t2",
+      "objective_text": "Describe DNA structure",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-bio-t2-2",
+      "topic_id": "bio-t2",
+      "objective_text": "Understand basic inheritance",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-bio-t2-3",
+      "topic_id": "bio-t2",
+      "objective_text": "Use Punnett Squares",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-bio-t2-4",
+      "topic_id": "bio-t2",
+      "objective_text": "Define genotype and phenotype",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-bio-t2-5",
+      "topic_id": "bio-t2",
+      "objective_text": "Understand mutations",
+      "order_index": 5
+    },
+    {
+      "objective_id": "obj-bio-t3-1",
+      "topic_id": "bio-t3",
+      "objective_text": "Define ecosystem",
+      "order_index": 1
+    },
+    {
+      "objective_id": "obj-bio-t3-2",
+      "topic_id": "bio-t3",
+      "objective_text": "Trace energy flow in food webs",
+      "order_index": 2
+    },
+    {
+      "objective_id": "obj-bio-t3-3",
+      "topic_id": "bio-t3",
+      "objective_text": "Distinguish biotic and abiotic factors",
+      "order_index": 3
+    },
+    {
+      "objective_id": "obj-bio-t3-4",
+      "topic_id": "bio-t3",
+      "objective_text": "Understand carbon and water cycles",
+      "order_index": 4
+    },
+    {
+      "objective_id": "obj-bio-t3-5",
+      "topic_id": "bio-t3",
+      "objective_text": "Identify trophic levels",
+      "order_index": 5
+    }
+  ],
+  "Key_Terms": [
+    {
+      "term_id": "term-phys-t1-1",
+      "topic_id": "phys-t1",
+      "term": "Inertia",
+      "definition": "Resistance of any physical object to any change in its velocity"
+    },
+    {
+      "term_id": "term-phys-t1-2",
+      "topic_id": "phys-t1",
+      "term": "Force",
+      "definition": "A push or pull upon an object resulting from interaction with another object"
+    },
+    {
+      "term_id": "term-phys-t1-3",
+      "topic_id": "phys-t1",
+      "term": "Mass",
+      "definition": "A measure of the amount of matter in an object"
+    },
+    {
+      "term_id": "term-phys-t1-4",
+      "topic_id": "phys-t1",
+      "term": "Net Force",
+      "definition": "The vector sum of all forces acting on an object"
+    },
+    {
+      "term_id": "term-phys-t1-5",
+      "topic_id": "phys-t1",
+      "term": "Acceleration",
+      "definition": "The rate of change of velocity per unit of time"
+    },
+    {
+      "term_id": "term-phys-t2-1",
+      "topic_id": "phys-t2",
+      "term": "Work",
+      "definition": "Force applied over a distance (Joules)"
+    },
+    {
+      "term_id": "term-phys-t2-2",
+      "topic_id": "phys-t2",
+      "term": "Kinetic Energy",
+      "definition": "Energy of motion"
+    },
+    {
+      "term_id": "term-phys-t2-3",
+      "topic_id": "phys-t2",
+      "term": "Potential Energy",
+      "definition": "Stored energy due to position or state"
+    },
+    {
+      "term_id": "term-phys-t2-4",
+      "topic_id": "phys-t2",
+      "term": "Power",
+      "definition": "The rate at which work is done (Watts)"
+    },
+    {
+      "term_id": "term-phys-t2-5",
+      "topic_id": "phys-t2",
+      "term": "Mechanical Energy",
+      "definition": "Sum of potential and kinetic energy"
+    },
+    {
+      "term_id": "term-phys-t3-1",
+      "topic_id": "phys-t3",
+      "term": "Voltage",
+      "definition": "Electrical potential difference (Volts)"
+    },
+    {
+      "term_id": "term-phys-t3-2",
+      "topic_id": "phys-t3",
+      "term": "Current",
+      "definition": "Flow of electric charge (Amps)"
+    },
+    {
+      "term_id": "term-phys-t3-3",
+      "topic_id": "phys-t3",
+      "term": "Resistance",
+      "definition": "Opposition to current flow (Ohms)"
+    },
+    {
+      "term_id": "term-phys-t3-4",
+      "topic_id": "phys-t3",
+      "term": "Series Circuit",
+      "definition": "A circuit with only one path for current"
+    },
+    {
+      "term_id": "term-phys-t3-5",
+      "topic_id": "phys-t3",
+      "term": "Parallel Circuit",
+      "definition": "A circuit with multiple paths for current"
+    },
+    {
+      "term_id": "term-math-t1-1",
+      "topic_id": "math-t1",
+      "term": "Variable",
+      "definition": "A letter representing an unknown number"
+    },
+    {
+      "term_id": "term-math-t1-2",
+      "topic_id": "math-t1",
+      "term": "Coefficient",
+      "definition": "Number multiplying a variable"
+    },
+    {
+      "term_id": "term-math-t1-3",
+      "topic_id": "math-t1",
+      "term": "Constant",
+      "definition": "A fixed value that does not change"
+    },
+    {
+      "term_id": "term-math-t1-4",
+      "topic_id": "math-t1",
+      "term": "Like Terms",
+      "definition": "Terms that have identical variable parts"
+    },
+    {
+      "term_id": "term-math-t1-5",
+      "topic_id": "math-t1",
+      "term": "Distributive Property",
+      "definition": "a(b + c) = ab + ac"
+    },
+    {
+      "term_id": "term-math-t2-1",
+      "topic_id": "math-t2",
+      "term": "Hypotenuse",
+      "definition": "Longest side of a right triangle"
+    },
+    {
+      "term_id": "term-math-t2-2",
+      "topic_id": "math-t2",
+      "term": "Isosceles",
+      "definition": "Triangle with 2 equal sides"
+    },
+    {
+      "term_id": "term-math-t2-3",
+      "topic_id": "math-t2",
+      "term": "Equilateral",
+      "definition": "Triangle with 3 equal sides"
+    },
+    {
+      "term_id": "term-math-t2-4",
+      "topic_id": "math-t2",
+      "term": "Scalene",
+      "definition": "Triangle with no equal sides"
+    },
+    {
+      "term_id": "term-math-t2-5",
+      "topic_id": "math-t2",
+      "term": "Right Angle",
+      "definition": "90 degree angle"
+    },
+    {
+      "term_id": "term-math-t3-1",
+      "topic_id": "math-t3",
+      "term": "Event",
+      "definition": "An outcome or set of outcomes"
+    },
+    {
+      "term_id": "term-math-t3-2",
+      "topic_id": "math-t3",
+      "term": "Sample Space",
+      "definition": "Set of all possible outcomes"
+    },
+    {
+      "term_id": "term-math-t3-3",
+      "topic_id": "math-t3",
+      "term": "Impossible",
+      "definition": "Probability of 0"
+    },
+    {
+      "term_id": "term-math-t3-4",
+      "topic_id": "math-t3",
+      "term": "Certain",
+      "definition": "Probability of 1 (or 100%)"
+    },
+    {
+      "term_id": "term-math-t3-5",
+      "topic_id": "math-t3",
+      "term": "Independent Events",
+      "definition": "Events where one outcome does not affect the other"
+    },
+    {
+      "term_id": "term-chem-t1-1",
+      "topic_id": "chem-t1",
+      "term": "Nucleus",
+      "definition": "Central part of atom containing protons/neutrons"
+    },
+    {
+      "term_id": "term-chem-t1-2",
+      "topic_id": "chem-t1",
+      "term": "Electron Shell",
+      "definition": "Region where electrons orbit"
+    },
+    {
+      "term_id": "term-chem-t1-3",
+      "topic_id": "chem-t1",
+      "term": "Atomic Number",
+      "definition": "Number of protons (defines the element)"
+    },
+    {
+      "term_id": "term-chem-t1-4",
+      "topic_id": "chem-t1",
+      "term": "Mass Number",
+      "definition": "Protons + Neutrons"
+    },
+    {
+      "term_id": "term-chem-t1-5",
+      "topic_id": "chem-t1",
+      "term": "Isotope",
+      "definition": "Same element with different number of neutrons"
+    },
+    {
+      "term_id": "term-chem-t2-1",
+      "topic_id": "chem-t2",
+      "term": "Group",
+      "definition": "Vertical column (similar properties)"
+    },
+    {
+      "term_id": "term-chem-t2-2",
+      "topic_id": "chem-t2",
+      "term": "Period",
+      "definition": "Horizontal row (electron shells)"
+    },
+    {
+      "term_id": "term-chem-t2-3",
+      "topic_id": "chem-t2",
+      "term": "Alkali Metals",
+      "definition": "Group 1 elements (highly reactive)"
+    },
+    {
+      "term_id": "term-chem-t2-4",
+      "topic_id": "chem-t2",
+      "term": "Noble Gases",
+      "definition": "Group 18 elements (unreactive)"
+    },
+    {
+      "term_id": "term-chem-t2-5",
+      "topic_id": "chem-t2",
+      "term": "Halogens",
+      "definition": "Group 17 elements (reactive non-metals)"
+    },
+    {
+      "term_id": "term-chem-t3-1",
+      "topic_id": "chem-t3",
+      "term": "Ion",
+      "definition": "Atom with a charge (lost or gained electrons)"
+    },
+    {
+      "term_id": "term-chem-t3-2",
+      "topic_id": "chem-t3",
+      "term": "Molecule",
+      "definition": "Group of atoms bonded together"
+    },
+    {
+      "term_id": "term-chem-t3-3",
+      "topic_id": "chem-t3",
+      "term": "Ionic Bond",
+      "definition": "Transfer of electrons (Metal + Non-Metal)"
+    },
+    {
+      "term_id": "term-chem-t3-4",
+      "topic_id": "chem-t3",
+      "term": "Covalent Bond",
+      "definition": "Sharing of electrons (Non-Metal + Non-Metal)"
+    },
+    {
+      "term_id": "term-chem-t3-5",
+      "topic_id": "chem-t3",
+      "term": "Valence Shell",
+      "definition": "Outermost electron shell"
+    },
+    {
+      "term_id": "term-bio-t1-1",
+      "topic_id": "bio-t1",
+      "term": "Organelle",
+      "definition": "Specialized structure within a cell"
+    },
+    {
+      "term_id": "term-bio-t1-2",
+      "topic_id": "bio-t1",
+      "term": "Prokaryote",
+      "definition": "Simple cell without nucleus (bacteria)"
+    },
+    {
+      "term_id": "term-bio-t1-3",
+      "topic_id": "bio-t1",
+      "term": "Eukaryote",
+      "definition": "Complex cell with nucleus (plants, animals)"
+    },
+    {
+      "term_id": "term-bio-t1-4",
+      "topic_id": "bio-t1",
+      "term": "Chloroplast",
+      "definition": "Site of photosynthesis in plants"
+    },
+    {
+      "term_id": "term-bio-t1-5",
+      "topic_id": "bio-t1",
+      "term": "Cell Wall",
+      "definition": "Rigid outer layer of plant cells"
+    },
+    {
+      "term_id": "term-bio-t2-1",
+      "topic_id": "bio-t2",
+      "term": "Gene",
+      "definition": "Unit of heredity"
+    },
+    {
+      "term_id": "term-bio-t2-2",
+      "topic_id": "bio-t2",
+      "term": "Allele",
+      "definition": "Variant form of a gene (e.g., Blue vs Brown eyes)"
+    },
+    {
+      "term_id": "term-bio-t2-3",
+      "topic_id": "bio-t2",
+      "term": "Dominant",
+      "definition": "Trait that shows up if present (Capital letter)"
+    },
+    {
+      "term_id": "term-bio-t2-4",
+      "topic_id": "bio-t2",
+      "term": "Recessive",
+      "definition": "Trait that is hidden by dominant (Lowercase)"
+    },
+    {
+      "term_id": "term-bio-t2-5",
+      "topic_id": "bio-t2",
+      "term": "Genotype",
+      "definition": "Genetic makeup (e.g., Bb)"
+    },
+    {
+      "term_id": "term-bio-t2-6",
+      "topic_id": "bio-t2",
+      "term": "Phenotype",
+      "definition": "Physical appearance (e.g., Brown eyes)"
+    },
+    {
+      "term_id": "term-bio-t3-1",
+      "topic_id": "bio-t3",
+      "term": "Biotic",
+      "definition": "Living components (plants, animals)"
+    },
+    {
+      "term_id": "term-bio-t3-2",
+      "topic_id": "bio-t3",
+      "term": "Abiotic",
+      "definition": "Non-living components (sun, water, soil)"
+    },
+    {
+      "term_id": "term-bio-t3-3",
+      "topic_id": "bio-t3",
+      "term": "Producer",
+      "definition": "Organism that makes its own food (plants)"
+    },
+    {
+      "term_id": "term-bio-t3-4",
+      "topic_id": "bio-t3",
+      "term": "Consumer",
+      "definition": "Organism that eats others"
+    },
+    {
+      "term_id": "term-bio-t3-5",
+      "topic_id": "bio-t3",
+      "term": "Decomposer",
+      "definition": "Breaks down dead matter"
+    }
+  ],
+  "Study_Content": [
+    {
+      "content_id": "cont-phys-t1-1",
+      "section_id": "phys-t1-s2",
+      "content_type": "introduction",
+      "content_title": "The Foundations of Dynamics",
+      "content_text": "Isaac Newton's three laws of motion describe the relationship between the motion of an object and the forces acting on it.",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t1-2",
+      "section_id": "phys-t1-s3",
+      "content_type": "concept_helper",
+      "content_title": "Law of Inertia",
+      "content_text": "An object at rest stays at rest and an object in motion stays in motion unless acted upon by an unbalanced force.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t1-3",
+      "section_id": "phys-t1-s3",
+      "content_type": "real_world",
+      "content_title": "Seatbelts",
+      "content_text": "When a car stops suddenly, your body keeps moving forward due to inertia. Seatbelts provide the unbalanced force to stop you.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t1-4",
+      "section_id": "phys-t1-s3",
+      "content_type": "warning",
+      "content_title": "Inertia is NOT a force",
+      "content_text": "Inertia is a property of matter, not a force that pushes you.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t1-5",
+      "section_id": "phys-t1-s4",
+      "content_type": "formula",
+      "content_title": "The Equation",
+      "content_text": "F = ma",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t1-6",
+      "section_id": "phys-t1-s4",
+      "content_type": "text",
+      "content_title": "Explanation",
+      "content_text": "Force equals mass times acceleration. The more mass an object has, the more force is needed to accelerate it.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t1-7",
+      "section_id": "phys-t1-s4",
+      "content_type": "concept_helper",
+      "content_title": "Proportionality",
+      "content_text": "Acceleration is directly proportional to Force and inversely proportional to Mass.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t1-8",
+      "section_id": "phys-t1-s5",
+      "content_type": "text",
+      "content_title": "Symmetry in Forces",
+      "content_text": "For every action, there is an equal and opposite reaction. Forces always come in pairs.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t1-9",
+      "section_id": "phys-t1-s5",
+      "content_type": "warning",
+      "content_title": "Common Mistake",
+      "content_text": "Action and reaction forces act on DIFFERENT objects, so they do not cancel each other out!",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t1-10",
+      "section_id": "phys-t1-s5",
+      "content_type": "real_world",
+      "content_title": "Rocket Propulsion",
+      "content_text": "A rocket pushes gas down (action), and the gas pushes the rocket up (reaction).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t2-11",
+      "section_id": "phys-t2-s2",
+      "content_type": "introduction",
+      "content_title": "Physics Definition of Work",
+      "content_text": "In physics, work is done only when a force moves an object. Pushing a wall and not moving it means zero work is done!",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1516937941348-c096b542b9c9?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t2-12",
+      "section_id": "phys-t2-s2",
+      "content_type": "formula",
+      "content_title": "Work Formula",
+      "content_text": "W = F \\cdot d",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t2-13",
+      "section_id": "phys-t2-s2",
+      "content_type": "concept_helper",
+      "content_title": "Direction Matters",
+      "content_text": "The force must be in the same direction as the movement for maximum work.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t2-14",
+      "section_id": "phys-t2-s3",
+      "content_type": "text",
+      "content_title": "Kinetic vs Potential",
+      "content_text": "A roller coaster at the top has high Potential Energy. As it falls, it converts to Kinetic Energy.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t2-15",
+      "section_id": "phys-t2-s3",
+      "content_type": "video",
+      "content_title": "Roller Coaster Physics",
+      "content_text": "Watch how energy transforms.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": "https://www.youtube.com/watch?v=Jnj8mc04r9E"
+    },
+    {
+      "content_id": "cont-phys-t2-16",
+      "section_id": "phys-t2-s4",
+      "content_type": "concept_helper",
+      "content_title": "Law of Conservation",
+      "content_text": "Energy cannot be created or destroyed, only transformed.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t2-17",
+      "section_id": "phys-t2-s4",
+      "content_type": "flowchart",
+      "content_title": "Energy Transformation",
+      "content_text": "Visualizing how Potential Energy converts to Kinetic Energy.",
+      "order_index": 1,
+      "image_url": "https://mermaid.ink/img/pako:eNpVkMtqwzAQRX9FzKqF_IAeCqWbQsFQAqG7tciyxBZiS0ZSCyX_Xsdf4tJldTPn3DszGtToFCpoeD3pW_QeXwZ0h8-z_sQ12p05sB_tQ4B794dY6_tHj9F59GfW_4E-sB-sO9Z_sBfsC_vAPrAf7IA11v2wF-wL-8A-sB_s4J-x0k5bCg0ZylJyoOQYpZJMy5qrpRCSk0pWUp5S8oOQnJSkC_lLyU_2z7-Xw6GgUCqVbLhQ0pCpkHJYl0qJ4uO6Ff_2B2HqSgM?type=png",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t2-18",
+      "section_id": "phys-t2-s4",
+      "content_type": "real_world",
+      "content_title": "Pendulums",
+      "content_text": "A swinging pendulum constantly swaps PE and KE. It stops eventually only because of air resistance (friction).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t3-19",
+      "section_id": "phys-t3-s2",
+      "content_type": "introduction",
+      "content_title": "Electric Circuits",
+      "content_text": "A closed loop that allows current to flow. Requires a source (battery), load (bulb), and wires.",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1549419163-e380e22784cb?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t3-20",
+      "section_id": "phys-t3-s2",
+      "content_type": "concept_helper",
+      "content_title": "Series vs Parallel",
+      "content_text": "In Series, if one bulb goes out, they all go out. In Parallel, others stay on.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t3-21",
+      "section_id": "phys-t3-s3",
+      "content_type": "formula",
+      "content_title": "Ohm's Law",
+      "content_text": "V = I \\cdot R",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t3-22",
+      "section_id": "phys-t3-s3",
+      "content_type": "real_world",
+      "content_title": "Resistors",
+      "content_text": "Electronics use resistors to control current so delicate components don't burn out.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t3-23",
+      "section_id": "phys-t3-s3",
+      "content_type": "text",
+      "content_title": "Analogy",
+      "content_text": "Voltage is like water pressure, Current is like water flow, Resistance is like a narrow pipe.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t3-24",
+      "section_id": "phys-t3-s4",
+      "content_type": "formula",
+      "content_title": "Electrical Power",
+      "content_text": "P = I \\cdot V",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-phys-t3-25",
+      "section_id": "phys-t3-s4",
+      "content_type": "warning",
+      "content_title": "Short Circuits",
+      "content_text": "Never connect positive directly to negative without a load! It creates dangerous heat.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t1-26",
+      "section_id": "math-t1-s2",
+      "content_type": "text",
+      "content_title": "What is Algebra?",
+      "content_text": "Algebra is generalized arithmetic. We use letters to represent numbers we don't know yet.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t1-27",
+      "section_id": "math-t1-s2",
+      "content_type": "image",
+      "content_title": "Parts of an Expression",
+      "content_text": "Visual breakdown of 3x + 5",
+      "order_index": 1,
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Algebraic_term.svg/320px-Algebraic_term.svg.png",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t1-28",
+      "section_id": "math-t1-s3",
+      "content_type": "concept_helper",
+      "content_title": "Like Terms",
+      "content_text": "You can only add terms if they have the same variable part. 2x + 3x = 5x, but 2x + 3y cannot be combined.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t1-29",
+      "section_id": "math-t1-s3",
+      "content_type": "warning",
+      "content_title": "Watch the powers",
+      "content_text": "x and x² are NOT like terms!",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t1-30",
+      "section_id": "math-t1-s4",
+      "content_type": "formula",
+      "content_title": "Distributive Property",
+      "content_text": "a(b + c) = ab + ac",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t1-31",
+      "section_id": "math-t1-s4",
+      "content_type": "real_world",
+      "content_title": "Budgeting",
+      "content_text": "If you buy 3 shirts for $x each and 2 pants for $y each, total cost is 3x + 2y.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t1-32",
+      "section_id": "math-t1-s4",
+      "content_type": "text",
+      "content_title": "Factoring",
+      "content_text": "Factoring is the reverse of expanding. 2x + 4 = 2(x + 2).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t2-33",
+      "section_id": "math-t2-s2",
+      "content_type": "introduction",
+      "content_title": "Triangle Types",
+      "content_text": "Triangles can be classified by sides (equilateral, isosceles, scalene) or angles (acute, obtuse, right).",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1616469829941-c7200ed5dabd?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t2-34",
+      "section_id": "math-t2-s2",
+      "content_type": "concept_helper",
+      "content_title": "Angle Sum",
+      "content_text": "The sum of angles in ANY triangle is always 180°.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t2-35",
+      "section_id": "math-t2-s3",
+      "content_type": "formula",
+      "content_title": "Pythagorean Theorem",
+      "content_text": "a^2 + b^2 = c^2",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t2-36",
+      "section_id": "math-t2-s3",
+      "content_type": "text",
+      "content_title": "Usage",
+      "content_text": "Used to find a missing side in a right-angled triangle. c is always the hypotenuse.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t2-37",
+      "section_id": "math-t2-s4",
+      "content_type": "formula",
+      "content_title": "Area of Triangle",
+      "content_text": "A = \\frac{1}{2}bh",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t2-38",
+      "section_id": "math-t2-s4",
+      "content_type": "real_world",
+      "content_title": "Construction",
+      "content_text": "Builders use the 3-4-5 rule (Pythagoras) to check if corners are perfectly square.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t2-39",
+      "section_id": "math-t2-s4",
+      "content_type": "warning",
+      "content_title": "Height must be perpendicular",
+      "content_text": "When calculating area, the height must be at a 90° angle to the base.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t3-40",
+      "section_id": "math-t3-s2",
+      "content_type": "text",
+      "content_title": "The Scale",
+      "content_text": "Probability ranges from 0 (Impossible) to 1 (Certain). Fractions, decimals, or percentages can be used.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t3-41",
+      "section_id": "math-t3-s2",
+      "content_type": "image",
+      "content_title": "Probability Scale",
+      "content_text": "0 ----- 0.5 ----- 1",
+      "order_index": 1,
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Probability_Scale_Line.svg/640px-Probability_Scale_Line.svg.png",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t3-42",
+      "section_id": "math-t3-s3",
+      "content_type": "formula",
+      "content_title": "Basic Probability",
+      "content_text": "P(A) = \\frac{\\text{favorable outcomes}}{\\text{total outcomes}}",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t3-43",
+      "section_id": "math-t3-s3",
+      "content_type": "real_world",
+      "content_title": "Dice",
+      "content_text": "Rolling a 6 on a standard die has a 1/6 chance.",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1595113316349-9fa4eb24f884?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t3-44",
+      "section_id": "math-t3-s3",
+      "content_type": "concept_helper",
+      "content_title": "Complementary Events",
+      "content_text": "P(Not A) = 1 - P(A). Chance of rain is 20%, chance of NO rain is 80%.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t3-45",
+      "section_id": "math-t3-s4",
+      "content_type": "text",
+      "content_title": "Multiple Events",
+      "content_text": "For independent events (like flipping two coins), multiply the probabilities.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-math-t3-46",
+      "section_id": "math-t3-s4",
+      "content_type": "warning",
+      "content_title": "Gambler's Fallacy",
+      "content_text": "Past results do not affect independent future results. The coin doesn't \"remember\" it was heads.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t1-47",
+      "section_id": "chem-t1-s2",
+      "content_type": "introduction",
+      "content_title": "Building Blocks",
+      "content_text": "All matter is made of atoms. They are the smallest unit of an element.",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1614730341194-75c60740a070?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t1-48",
+      "section_id": "chem-t1-s3",
+      "content_type": "text",
+      "content_title": "Inside the Atom",
+      "content_text": "Protons (+ charge) and Neutrons (no charge) are in the center. Electrons (- charge) zoom around the outside.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t1-49",
+      "section_id": "chem-t1-s3",
+      "content_type": "video",
+      "content_title": "Atomic Model",
+      "content_text": "Visualizing the atom.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": "https://www.youtube.com/watch?v=IO9WS_HNmyg"
+    },
+    {
+      "content_id": "cont-chem-t1-50",
+      "section_id": "chem-t1-s3",
+      "content_type": "concept_helper",
+      "content_title": "Empty Space",
+      "content_text": "Atoms are mostly empty space. If the nucleus was a marble, the atom would be a stadium!",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t1-51",
+      "section_id": "chem-t1-s4",
+      "content_type": "real_world",
+      "content_title": "Carbon Dating",
+      "content_text": "We use Carbon-14 (an isotope) to figure out how old ancient fossils are.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t1-52",
+      "section_id": "chem-t1-s4",
+      "content_type": "image",
+      "content_title": "Bohr Model",
+      "content_text": "Simplified view of electron shells",
+      "order_index": 1,
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Bohr-atom-PAR.svg/320px-Bohr-atom-PAR.svg.png",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t2-53",
+      "section_id": "chem-t2-s2",
+      "content_type": "introduction",
+      "content_title": "The Map of Elements",
+      "content_text": "The periodic table organizes all known elements by atomic number and chemical properties.",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t2-54",
+      "section_id": "chem-t2-s3",
+      "content_type": "concept_helper",
+      "content_title": "Navigation",
+      "content_text": "Columns are called Groups (elements behave similarly). Rows are called Periods.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t2-55",
+      "section_id": "chem-t2-s3",
+      "content_type": "real_world",
+      "content_title": "Noble Gases",
+      "content_text": "Group 18 elements are \"Noble Gases\" - they are very stable and don't like to react (like Neon signs).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t2-56",
+      "section_id": "chem-t2-s4",
+      "content_type": "text",
+      "content_title": "Metals vs Non-Metals",
+      "content_text": "Metals are on the left (shiny, conduct), Non-metals on the right (dull, insulate). Staircase line separates them.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t2-57",
+      "section_id": "chem-t2-s4",
+      "content_type": "warning",
+      "content_title": "Hydrogen Exception",
+      "content_text": "Hydrogen is in Group 1 but it is a NON-METAL gas, not a metal.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t2-58",
+      "section_id": "chem-t2-s4",
+      "content_type": "image",
+      "content_title": "Periodic Table Sections",
+      "content_text": "Color coded regions",
+      "order_index": 1,
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Periodic_Table_Structure.svg/640px-Periodic_Table_Structure.svg.png",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t3-59",
+      "section_id": "chem-t3-s2",
+      "content_type": "text",
+      "content_title": "Stability",
+      "content_text": "Atoms bond to become stable, usually by getting a full outer shell of electrons (Octet Rule).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t3-60",
+      "section_id": "chem-t3-s3",
+      "content_type": "text",
+      "content_title": "Ionic Bonding",
+      "content_text": "One atom STEALS electrons from another. Creates + and - ions that attract.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t3-61",
+      "section_id": "chem-t3-s3",
+      "content_type": "concept_helper",
+      "content_title": "Metal + Non-Metal",
+      "content_text": "Ionic bonds usually happen between a metal and a non-metal (e.g., NaCl).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t3-62",
+      "section_id": "chem-t3-s4",
+      "content_type": "text",
+      "content_title": "Covalent Bonding",
+      "content_text": "Atoms SHARE electrons. Like two people holding hands.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t3-63",
+      "section_id": "chem-t3-s4",
+      "content_type": "image",
+      "content_title": "Water Molecule",
+      "content_text": "H2O is a covalent bond",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1532634993-15f421e42ec0?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-chem-t3-64",
+      "section_id": "chem-t3-s4",
+      "content_type": "real_world",
+      "content_title": "Salt vs Sugar",
+      "content_text": "Salt is Ionic (high melting point), Sugar is Covalent (low melting point).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t1-65",
+      "section_id": "bio-t1-s2",
+      "content_type": "introduction",
+      "content_title": "Unit of Life",
+      "content_text": "Cells are the basic structural and functional units of life.",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1530210124550-912dc1381cb8?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t1-66",
+      "section_id": "bio-t1-s3",
+      "content_type": "text",
+      "content_title": "Mitochondria",
+      "content_text": "The POWERHOUSE of the cell. Generates energy (ATP).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t1-67",
+      "section_id": "bio-t1-s3",
+      "content_type": "text",
+      "content_title": "Nucleus",
+      "content_text": "The BRAIN. Contains DNA and controls cell activity.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t1-68",
+      "section_id": "bio-t1-s4",
+      "content_type": "concept_helper",
+      "content_title": "Plant Differences",
+      "content_text": "Plant cells have Cell Walls and Chloroplasts. Animal cells do not.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t1-69",
+      "section_id": "bio-t1-s4",
+      "content_type": "flowchart",
+      "content_title": "Animal vs Plant",
+      "content_text": "Comparison diagram",
+      "order_index": 1,
+      "image_url": "https://mermaid.ink/img/pako:eNpVkEFqwzAQRf8iZtVC_IAeCqWbQsFQAqG7tciyxBZiS0ZSCyX_Xsdf4tJldfPnzZtRo1OooOH1pG_Re3wZ0B0-z_oT12h35sB-tA8B7t0fYq3vHz1G59GfWf8H-sB-sO5Y_8FesC_sA_vAfrAD1lj3w16wL-wD-8B-sIN_xko7bSk0ZChLyYGSY5RKMitrLpdCSM4qWUv5UsmvQnJWkq7kLyU_2T__Xg6HgkKlVLLhQklD5kLKcV0pJYqP61b82x-HqSgN?type=png",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t1-70",
+      "section_id": "bio-t1-s4",
+      "content_type": "real_world",
+      "content_title": "Specialized Cells",
+      "content_text": "Red blood cells have no nucleus to carry more oxygen. Nerve cells are long to send signals.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t2-71",
+      "section_id": "bio-t2-s2",
+      "content_type": "introduction",
+      "content_title": "Blueprint of Life",
+      "content_text": "DNA holds the instructions for building and operating an organism.",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t2-72",
+      "section_id": "bio-t2-s2",
+      "content_type": "text",
+      "content_title": "Double Helix",
+      "content_text": "DNA looks like a twisted ladder. The rungs are base pairs (A-T, C-G).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t2-73",
+      "section_id": "bio-t2-s3",
+      "content_type": "concept_helper",
+      "content_title": "Dominant vs Recessive",
+      "content_text": "Dominant traits (like brown eyes) often hide recessive traits (like blue eyes).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t2-74",
+      "section_id": "bio-t2-s4",
+      "content_type": "text",
+      "content_title": "Punnett Squares",
+      "content_text": "A tool to predict the probability of offspring traits.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t2-75",
+      "section_id": "bio-t2-s4",
+      "content_type": "image",
+      "content_title": "Punnett Square Example",
+      "content_text": "Crossing Bb x Bb",
+      "order_index": 1,
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Punnett_Square.svg/320px-Punnett_Square.svg.png",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t2-76",
+      "section_id": "bio-t2-s4",
+      "content_type": "real_world",
+      "content_title": "Inheritance",
+      "content_text": "You get half your DNA from mom and half from dad.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t3-77",
+      "section_id": "bio-t3-s2",
+      "content_type": "introduction",
+      "content_title": "Web of Life",
+      "content_text": "An ecosystem includes all living things in an area interacting with each other and their environment.",
+      "order_index": 1,
+      "image_url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t3-78",
+      "section_id": "bio-t3-s2",
+      "content_type": "concept_helper",
+      "content_title": "Biotic vs Abiotic",
+      "content_text": "Biotic = Living (Wolf). Abiotic = Non-living (Water).",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t3-79",
+      "section_id": "bio-t3-s3",
+      "content_type": "text",
+      "content_title": "Energy Flow",
+      "content_text": "Energy starts from the Sun -> Producers -> Consumers.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t3-80",
+      "section_id": "bio-t3-s3",
+      "content_type": "warning",
+      "content_title": "Energy Loss",
+      "content_text": "90% of energy is lost at each level (heat, movement). Only 10% is passed on.",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t3-81",
+      "section_id": "bio-t3-s3",
+      "content_type": "flowchart",
+      "content_title": "Food Chain",
+      "content_text": "Sun -> Grass -> Rabbit -> Fox",
+      "order_index": 1,
+      "image_url": "https://mermaid.ink/img/pako:eNpVkM1qwzAQhF9FzKqF9AN6KJRQKBhKIHS3FllWbCG2ZCSt0JL3Xsdf4tKldTPfzGhGo1OooOH1rO_RB3wd0B0-z_oT12h35sB-tA8B7t0fYu3vHz3G4NGfWf8H-sB-sO5Y_8FesC_sA_vAfrAD1lj3w16wL-wD-8B-sIN_xko7bSk0ZChLyYGSY5RKMitrLpdCSM4qWUv5UsmvQnJWkq7kLyU_2T__Xg6HgkKlVLLhQklD5kLKcV0pJYqP61b82x-HqSgN?type=png",
+      "video_url": ""
+    },
+    {
+      "content_id": "cont-bio-t3-82",
+      "section_id": "bio-t3-s4",
+      "content_type": "real_world",
+      "content_title": "Decomposers",
+      "content_text": "Fungi and bacteria recycle nutrients back into the soil. Without them, we would be buried in waste!",
+      "order_index": 1,
+      "image_url": "",
+      "video_url": ""
+    }
+  ],
+  "Formulas": [
+    {
+      "formula_id": "form-phys-t1-1",
+      "topic_id": "phys-t1",
+      "formula_text": "F = m \\cdot a",
+      "formula_label": "Newton's Second Law",
+      "variable_1_symbol": "F",
+      "variable_1_name": "Force",
+      "variable_1_unit": "N",
+      "variable_2_symbol": "m",
+      "variable_2_name": "Mass",
+      "variable_2_unit": "kg",
+      "variable_3_symbol": "a",
+      "variable_3_name": "Acceleration",
+      "variable_3_unit": "m/s²"
+    },
+    {
+      "formula_id": "form-phys-t1-2",
+      "topic_id": "phys-t1",
+      "formula_text": "W = m \\cdot g",
+      "formula_label": "Weight",
+      "variable_1_symbol": "W",
+      "variable_1_name": "Weight",
+      "variable_1_unit": "N",
+      "variable_2_symbol": "m",
+      "variable_2_name": "Mass",
+      "variable_2_unit": "kg",
+      "variable_3_symbol": "g",
+      "variable_3_name": "Gravity",
+      "variable_3_unit": "m/s²"
+    },
+    {
+      "formula_id": "form-phys-t2-1",
+      "topic_id": "phys-t2",
+      "formula_text": "W = F \\cdot d",
+      "formula_label": "Work",
+      "variable_1_symbol": "W",
+      "variable_1_name": "Work",
+      "variable_1_unit": "J",
+      "variable_2_symbol": "F",
+      "variable_2_name": "Force",
+      "variable_2_unit": "N",
+      "variable_3_symbol": "d",
+      "variable_3_name": "Distance",
+      "variable_3_unit": "m"
+    },
+    {
+      "formula_id": "form-phys-t2-2",
+      "topic_id": "phys-t2",
+      "formula_text": "KE = \\frac{1}{2}mv^2",
+      "formula_label": "Kinetic Energy",
+      "variable_1_symbol": "KE",
+      "variable_1_name": "Energy",
+      "variable_1_unit": "J",
+      "variable_2_symbol": "m",
+      "variable_2_name": "Mass",
+      "variable_2_unit": "kg",
+      "variable_3_symbol": "v",
+      "variable_3_name": "Velocity",
+      "variable_3_unit": "m/s"
+    },
+    {
+      "formula_id": "form-phys-t2-3",
+      "topic_id": "phys-t2",
+      "formula_text": "PE_g = mgh",
+      "formula_label": "Gravitational Potential Energy",
+      "variable_1_symbol": "PE",
+      "variable_1_name": "Potential Energy",
+      "variable_1_unit": "J",
+      "variable_2_symbol": "m",
+      "variable_2_name": "Mass",
+      "variable_2_unit": "kg",
+      "variable_3_symbol": "h",
+      "variable_3_name": "Height",
+      "variable_3_unit": "m"
+    },
+    {
+      "formula_id": "form-phys-t3-1",
+      "topic_id": "phys-t3",
+      "formula_text": "V = I \\cdot R",
+      "formula_label": "Ohm's Law",
+      "variable_1_symbol": "V",
+      "variable_1_name": "Voltage",
+      "variable_1_unit": "V",
+      "variable_2_symbol": "I",
+      "variable_2_name": "Current",
+      "variable_2_unit": "A",
+      "variable_3_symbol": "R",
+      "variable_3_name": "Resistance",
+      "variable_3_unit": "Ω"
+    },
+    {
+      "formula_id": "form-phys-t3-2",
+      "topic_id": "phys-t3",
+      "formula_text": "P = I \\cdot V",
+      "formula_label": "Electrical Power",
+      "variable_1_symbol": "P",
+      "variable_1_name": "Power",
+      "variable_1_unit": "W",
+      "variable_2_symbol": "I",
+      "variable_2_name": "Current",
+      "variable_2_unit": "A",
+      "variable_3_symbol": "V",
+      "variable_3_name": "Voltage",
+      "variable_3_unit": "V"
+    },
+    {
+      "formula_id": "form-math-t1-1",
+      "topic_id": "math-t1",
+      "formula_text": "a(b + c) = ab + ac",
+      "formula_label": "Distributive Property",
+      "variable_1_symbol": "a",
+      "variable_1_name": "Factor",
+      "variable_1_unit": "",
+      "variable_2_symbol": "b",
+      "variable_2_name": "Term 1",
+      "variable_2_unit": "",
+      "variable_3_symbol": "c",
+      "variable_3_name": "Term 2",
+      "variable_3_unit": ""
+    },
+    {
+      "formula_id": "form-math-t2-1",
+      "topic_id": "math-t2",
+      "formula_text": "a^2 + b^2 = c^2",
+      "formula_label": "Pythagorean Theorem",
+      "variable_1_symbol": "c",
+      "variable_1_name": "Hypotenuse",
+      "variable_1_unit": "",
+      "variable_2_symbol": "a",
+      "variable_2_name": "Side A",
+      "variable_2_unit": "",
+      "variable_3_symbol": "b",
+      "variable_3_name": "Side B",
+      "variable_3_unit": ""
+    },
+    {
+      "formula_id": "form-math-t2-2",
+      "topic_id": "math-t2",
+      "formula_text": "A = \\frac{1}{2}b \\cdot h",
+      "formula_label": "Area of Triangle",
+      "variable_1_symbol": "A",
+      "variable_1_name": "Area",
+      "variable_1_unit": "units²",
+      "variable_2_symbol": "b",
+      "variable_2_name": "Base",
+      "variable_2_unit": "units",
+      "variable_3_symbol": "h",
+      "variable_3_name": "Height",
+      "variable_3_unit": "units"
+    },
+    {
+      "formula_id": "form-math-t3-1",
+      "topic_id": "math-t3",
+      "formula_text": "P(A) = \\frac{n(A)}{n(S)}",
+      "formula_label": "Probability",
+      "variable_1_symbol": "P",
+      "variable_1_name": "Probability",
+      "variable_1_unit": "",
+      "variable_2_symbol": "n(A)",
+      "variable_2_name": "Favorable",
+      "variable_2_unit": "",
+      "variable_3_symbol": "n(S)",
+      "variable_3_name": "Total",
+      "variable_3_unit": ""
+    },
+    {
+      "formula_id": "form-math-t3-2",
+      "topic_id": "math-t3",
+      "formula_text": "P(A \\cap B) = P(A) \\times P(B)",
+      "formula_label": "Independent Events",
+      "variable_1_symbol": "P",
+      "variable_1_name": "Probability",
+      "variable_1_unit": "",
+      "variable_2_symbol": "A",
+      "variable_2_name": "Event A",
+      "variable_2_unit": "",
+      "variable_3_symbol": "B",
+      "variable_3_name": "Event B",
+      "variable_3_unit": ""
+    },
+    {
+      "formula_id": "form-chem-t1-1",
+      "topic_id": "chem-t1",
+      "formula_text": "A = Z + N",
+      "formula_label": "Mass Number",
+      "variable_1_symbol": "A",
+      "variable_1_name": "Mass No",
+      "variable_1_unit": "",
+      "variable_2_symbol": "Z",
+      "variable_2_name": "Protons",
+      "variable_2_unit": "",
+      "variable_3_symbol": "N",
+      "variable_3_name": "Neutrons",
+      "variable_3_unit": ""
+    }
+  ],
+  "Quiz_Questions": [
+    {
+      "question_id": "quiz-phys-t1-1",
+      "topic_id": "phys-t1",
+      "question_text": "Which property of an object determines its inertia?",
+      "option_a": "Volume",
+      "option_b": "Mass",
+      "option_c": "Weight",
+      "option_d": "Velocity",
+      "correct_answer": "B",
+      "explanation": "Mass is a direct measure of inertia.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t1-2",
+      "topic_id": "phys-t1",
+      "question_text": "If you double the force on an object, what happens to its acceleration?",
+      "option_a": "Doubles",
+      "option_b": "Halves",
+      "option_c": "Quadruples",
+      "option_d": "Stays same",
+      "correct_answer": "A",
+      "explanation": "Acceleration is directly proportional to force (F=ma).",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t1-3",
+      "topic_id": "phys-t1",
+      "question_text": "A 10kg object accelerates at 2 m/s². What is the force?",
+      "option_a": "5 N",
+      "option_b": "12 N",
+      "option_c": "20 N",
+      "option_d": "0.2 N",
+      "correct_answer": "C",
+      "explanation": "F = m * a = 10 * 2 = 20 N.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t1-4",
+      "topic_id": "phys-t1",
+      "question_text": "Which law explains why a book sits still on a table?",
+      "option_a": "1st Law",
+      "option_b": "2nd Law",
+      "option_c": "3rd Law",
+      "option_d": "Gravitational Law",
+      "correct_answer": "A",
+      "explanation": "1st Law: Objects at rest stay at rest unless acted on by unbalanced force.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t1-5",
+      "topic_id": "phys-t1",
+      "question_text": "Action and reaction forces are always...",
+      "option_a": "Unequal",
+      "option_b": "In the same direction",
+      "option_c": "Acting on the same object",
+      "option_d": "Equal and opposite",
+      "correct_answer": "D",
+      "explanation": "Newton's 3rd Law states they are equal in magnitude and opposite in direction.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t2-1",
+      "topic_id": "phys-t2",
+      "question_text": "What is the unit for Work?",
+      "option_a": "Newton",
+      "option_b": "Watt",
+      "option_c": "Joule",
+      "option_d": "Meter",
+      "correct_answer": "C",
+      "explanation": "Work is measured in Joules (N·m).",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t2-2",
+      "topic_id": "phys-t2",
+      "question_text": "A ball held 2m high has what type of energy?",
+      "option_a": "Kinetic",
+      "option_b": "Gravitational Potential",
+      "option_c": "Elastic",
+      "option_d": "Thermal",
+      "correct_answer": "B",
+      "explanation": "It has potential due to gravity.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t2-3",
+      "topic_id": "phys-t2",
+      "question_text": "If you lift a 5kg box 2 meters, how much work did you do? (g=10)",
+      "option_a": "10 J",
+      "option_b": "50 J",
+      "option_c": "100 J",
+      "option_d": "7 J",
+      "correct_answer": "C",
+      "explanation": "W = Fd = mgd = 5 * 10 * 2 = 100 J.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t2-4",
+      "topic_id": "phys-t2",
+      "question_text": "Energy of motion is called...",
+      "option_a": "Potential",
+      "option_b": "Kinetic",
+      "option_c": "Thermal",
+      "option_d": "Chemical",
+      "correct_answer": "B",
+      "explanation": "Kinetic comes from the Greek word \"kinesis\" (motion).",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t2-5",
+      "topic_id": "phys-t2",
+      "question_text": "Can energy be destroyed?",
+      "option_a": "Yes, by friction",
+      "option_b": "Yes, in black holes",
+      "option_c": "No, only transformed",
+      "option_d": "No, except nuclear",
+      "correct_answer": "C",
+      "explanation": "Law of Conservation of Energy states it cannot be created or destroyed.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t3-1",
+      "topic_id": "phys-t3",
+      "question_text": "What flows in a circuit?",
+      "option_a": "Protons",
+      "option_b": "Neutrons",
+      "option_c": "Electrons",
+      "option_d": "Atoms",
+      "correct_answer": "C",
+      "explanation": "Current is the flow of electrons.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t3-2",
+      "topic_id": "phys-t3",
+      "question_text": "In which circuit type do all lights go out if one breaks?",
+      "option_a": "Parallel",
+      "option_b": "Series",
+      "option_c": "Open",
+      "option_d": "Short",
+      "correct_answer": "B",
+      "explanation": "Series circuits have only one path.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t3-3",
+      "topic_id": "phys-t3",
+      "question_text": "If V=12V and R=4Ω, what is the Current?",
+      "option_a": "3 A",
+      "option_b": "48 A",
+      "option_c": "0.33 A",
+      "option_d": "16 A",
+      "correct_answer": "A",
+      "explanation": "I = V/R = 12/4 = 3 Amps.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t3-4",
+      "topic_id": "phys-t3",
+      "question_text": "What unit measures Resistance?",
+      "option_a": "Volt",
+      "option_b": "Amp",
+      "option_c": "Ohm",
+      "option_d": "Watt",
+      "correct_answer": "C",
+      "explanation": "Ohms (Ω) measure resistance.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-phys-t3-5",
+      "topic_id": "phys-t3",
+      "question_text": "What happens to current if resistance increases (Voltage constant)?",
+      "option_a": "Increases",
+      "option_b": "Decreases",
+      "option_c": "Stays same",
+      "option_d": "Becomes zero",
+      "correct_answer": "B",
+      "explanation": "Current and Resistance are inversely proportional.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t1-1",
+      "topic_id": "math-t1",
+      "question_text": "Simplify: 3x + 4y - x",
+      "option_a": "7xy",
+      "option_b": "2x + 4y",
+      "option_c": "6xy",
+      "option_d": "3x + 3y",
+      "correct_answer": "B",
+      "explanation": "Combine 3x and -x to get 2x. 4y stays separate.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t1-2",
+      "topic_id": "math-t1",
+      "question_text": "Expand: 2(x + 3)",
+      "option_a": "2x + 3",
+      "option_b": "2x + 6",
+      "option_c": "x + 6",
+      "option_d": "5x",
+      "correct_answer": "B",
+      "explanation": "Multiply 2 by both terms inside: 2*x + 2*3.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t1-3",
+      "topic_id": "math-t1",
+      "question_text": "What is the coefficient in 5y?",
+      "option_a": "y",
+      "option_b": "5",
+      "option_c": "5y",
+      "option_d": "Unknown",
+      "correct_answer": "B",
+      "explanation": "The number multiplying the variable is the coefficient.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t1-4",
+      "topic_id": "math-t1",
+      "question_text": "Are 3x and 3x² like terms?",
+      "option_a": "Yes",
+      "option_b": "No",
+      "option_c": "Sometimes",
+      "option_d": "Only if x=1",
+      "correct_answer": "B",
+      "explanation": "No, because the exponents are different.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t1-5",
+      "topic_id": "math-t1",
+      "question_text": "Evaluate 2x + 1 when x = 4",
+      "option_a": "6",
+      "option_b": "7",
+      "option_c": "9",
+      "option_d": "8",
+      "correct_answer": "C",
+      "explanation": "2(4) + 1 = 8 + 1 = 9.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t2-1",
+      "topic_id": "math-t2",
+      "question_text": "Which triangle has all equal sides?",
+      "option_a": "Isosceles",
+      "option_b": "Scalene",
+      "option_c": "Equilateral",
+      "option_d": "Right",
+      "correct_answer": "C",
+      "explanation": "Equi-lateral means equal sides.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t2-2",
+      "topic_id": "math-t2",
+      "question_text": "Calculate the hypotenuse if sides are 3 and 4.",
+      "option_a": "5",
+      "option_b": "6",
+      "option_c": "7",
+      "option_d": "25",
+      "correct_answer": "A",
+      "explanation": "3² + 4² = 9 + 16 = 25. √25 = 5.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t2-3",
+      "topic_id": "math-t2",
+      "question_text": "Sum of angles in a triangle?",
+      "option_a": "90",
+      "option_b": "180",
+      "option_c": "360",
+      "option_d": "100",
+      "correct_answer": "B",
+      "explanation": "Always 180 degrees.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t2-4",
+      "topic_id": "math-t2",
+      "question_text": "Area of a triangle with base 10 and height 5?",
+      "option_a": "50",
+      "option_b": "25",
+      "option_c": "15",
+      "option_d": "100",
+      "correct_answer": "B",
+      "explanation": "0.5 * 10 * 5 = 25.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t2-5",
+      "topic_id": "math-t2",
+      "question_text": "A triangle with angles 90, 45, 45 is...",
+      "option_a": "Obtuse",
+      "option_b": "Acute",
+      "option_c": "Right Isosceles",
+      "option_d": "Equilateral",
+      "correct_answer": "C",
+      "explanation": "Right (has 90°) and Isosceles (two equal angles/sides).",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t3-1",
+      "topic_id": "math-t3",
+      "question_text": "Probability of flipping heads?",
+      "option_a": "0.25",
+      "option_b": "0.5",
+      "option_c": "0.75",
+      "option_d": "1.0",
+      "correct_answer": "B",
+      "explanation": "1 favorable (heads) / 2 total (heads, tails) = 0.5",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t3-2",
+      "topic_id": "math-t3",
+      "question_text": "Probability of rolling a 7 on a standard die?",
+      "option_a": "1/6",
+      "option_b": "1/2",
+      "option_c": "0",
+      "option_d": "1",
+      "correct_answer": "C",
+      "explanation": "Impossible. Die only goes to 6.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t3-3",
+      "topic_id": "math-t3",
+      "question_text": "If P(Win) = 0.4, what is P(Lose)?",
+      "option_a": "0.4",
+      "option_b": "0.6",
+      "option_c": "0.5",
+      "option_d": "0.1",
+      "correct_answer": "B",
+      "explanation": "1 - 0.4 = 0.6",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t3-4",
+      "topic_id": "math-t3",
+      "question_text": "Probability of flipping heads TWICE in a row?",
+      "option_a": "0.5",
+      "option_b": "0.25",
+      "option_c": "0.1",
+      "option_d": "0.75",
+      "correct_answer": "B",
+      "explanation": "0.5 * 0.5 = 0.25",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-math-t3-5",
+      "topic_id": "math-t3",
+      "question_text": "The set of all possible outcomes is called...",
+      "option_a": "Event",
+      "option_b": "Probability",
+      "option_c": "Sample Space",
+      "option_d": "Result",
+      "correct_answer": "C",
+      "explanation": "Definition of Sample Space.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t1-1",
+      "topic_id": "chem-t1",
+      "question_text": "Which particle has a positive charge?",
+      "option_a": "Electron",
+      "option_b": "Neutron",
+      "option_c": "Proton",
+      "option_d": "Photon",
+      "correct_answer": "C",
+      "explanation": "Protons are positive (+)",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t1-2",
+      "topic_id": "chem-t1",
+      "question_text": "Where are electrons found?",
+      "option_a": "Nucleus",
+      "option_b": "Shells",
+      "option_c": "Inside protons",
+      "option_d": "Everywhere",
+      "correct_answer": "B",
+      "explanation": "Electrons orbit in shells/clouds around the nucleus.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t1-3",
+      "topic_id": "chem-t1",
+      "question_text": "Atomic number tells you the number of...",
+      "option_a": "Neutrons",
+      "option_b": "Electrons",
+      "option_c": "Protons",
+      "option_d": "Isotopes",
+      "correct_answer": "C",
+      "explanation": "Atomic number = number of protons.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t1-4",
+      "topic_id": "chem-t1",
+      "question_text": "Isotopes have different numbers of...",
+      "option_a": "Protons",
+      "option_b": "Neutrons",
+      "option_c": "Electrons",
+      "option_d": "Shells",
+      "correct_answer": "B",
+      "explanation": "Isotopes are same element (same protons) but different mass (neutrons).",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t1-5",
+      "topic_id": "chem-t1",
+      "question_text": "Most of an atom is...",
+      "option_a": "Solid",
+      "option_b": "Liquid",
+      "option_c": "Empty space",
+      "option_d": "Gas",
+      "correct_answer": "C",
+      "explanation": "The nucleus is tiny compared to the electron cloud volume.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t2-1",
+      "topic_id": "chem-t2",
+      "question_text": "Elements in the same column usually have...",
+      "option_a": "Same mass",
+      "option_b": "Similar properties",
+      "option_c": "Same atomic number",
+      "option_d": "Different states",
+      "correct_answer": "B",
+      "explanation": "Groups (columns) share chemical properties.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t2-2",
+      "topic_id": "chem-t2",
+      "question_text": "Which group contains the Noble Gases?",
+      "option_a": "1",
+      "option_b": "2",
+      "option_c": "17",
+      "option_d": "18",
+      "correct_answer": "D",
+      "explanation": "Group 18 (far right) are Noble Gases.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t2-3",
+      "topic_id": "chem-t2",
+      "question_text": "Where are metals found on the table?",
+      "option_a": "Left",
+      "option_b": "Right",
+      "option_c": "Top only",
+      "option_d": "Bottom only",
+      "correct_answer": "A",
+      "explanation": "Metals make up the majority of the left side.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t2-4",
+      "topic_id": "chem-t2",
+      "question_text": "Horizontal rows are called...",
+      "option_a": "Groups",
+      "option_b": "Families",
+      "option_c": "Periods",
+      "option_d": "Sections",
+      "correct_answer": "C",
+      "explanation": "Periods go across.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t2-5",
+      "topic_id": "chem-t2",
+      "question_text": "Which element is a non-metal in Group 1?",
+      "option_a": "Lithium",
+      "option_b": "Sodium",
+      "option_c": "Hydrogen",
+      "option_d": "Potassium",
+      "correct_answer": "C",
+      "explanation": "Hydrogen is the exception.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t3-1",
+      "topic_id": "chem-t3",
+      "question_text": "In a covalent bond, electrons are...",
+      "option_a": "Transferred",
+      "option_b": "Destroyed",
+      "option_c": "Shared",
+      "option_d": "Doubled",
+      "correct_answer": "C",
+      "explanation": "Co-valent means sharing valence electrons.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t3-2",
+      "topic_id": "chem-t3",
+      "question_text": "Ionic bonds occur between...",
+      "option_a": "Two metals",
+      "option_b": "Two non-metals",
+      "option_c": "Metal and Non-metal",
+      "option_d": "Noble gases",
+      "correct_answer": "C",
+      "explanation": "Opposites attract (Metal loses, Non-metal gains).",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t3-3",
+      "topic_id": "chem-t3",
+      "question_text": "What charge does an atom get if it loses an electron?",
+      "option_a": "Positive",
+      "option_b": "Negative",
+      "option_c": "Neutral",
+      "option_d": "Unknown",
+      "correct_answer": "A",
+      "explanation": "Losing a negative electron leaves a net positive charge.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t3-4",
+      "topic_id": "chem-t3",
+      "question_text": "NaCl (Table Salt) is...",
+      "option_a": "Covalent",
+      "option_b": "Ionic",
+      "option_c": "Metallic",
+      "option_d": "Magnetic",
+      "correct_answer": "B",
+      "explanation": "Sodium (Metal) + Chlorine (Non-Metal).",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-chem-t3-5",
+      "topic_id": "chem-t3",
+      "question_text": "Why do atoms bond?",
+      "option_a": "To get bigger",
+      "option_b": "To become unstable",
+      "option_c": "To fill outer shell",
+      "option_d": "To change element",
+      "correct_answer": "C",
+      "explanation": "Full outer shell means stability.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t1-1",
+      "topic_id": "bio-t1",
+      "question_text": "Which organelle produces energy?",
+      "option_a": "Ribosome",
+      "option_b": "Nucleus",
+      "option_c": "Mitochondria",
+      "option_d": "Vacuole",
+      "correct_answer": "C",
+      "explanation": "Mitochondria perform cellular respiration to make ATP.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t1-2",
+      "topic_id": "bio-t1",
+      "question_text": "What is found in plant cells but NOT animal cells?",
+      "option_a": "Nucleus",
+      "option_b": "Cell Wall",
+      "option_c": "Mitochondria",
+      "option_d": "Cell Membrane",
+      "correct_answer": "B",
+      "explanation": "Cell Wall provides rigid structure for plants.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t1-3",
+      "topic_id": "bio-t1",
+      "question_text": "Control center of the cell?",
+      "option_a": "Nucleus",
+      "option_b": "Cytoplasm",
+      "option_c": "Membrane",
+      "option_d": "Golgi",
+      "correct_answer": "A",
+      "explanation": "Nucleus holds DNA instructions.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t1-4",
+      "topic_id": "bio-t1",
+      "question_text": "Simple cells like bacteria are...",
+      "option_a": "Eukaryotes",
+      "option_b": "Prokaryotes",
+      "option_c": "Animals",
+      "option_d": "Plants",
+      "correct_answer": "B",
+      "explanation": "Prokaryotes lack a membrane-bound nucleus.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t1-5",
+      "topic_id": "bio-t1",
+      "question_text": "Photosynthesis happens in...",
+      "option_a": "Mitochondria",
+      "option_b": "Chloroplasts",
+      "option_c": "Ribosomes",
+      "option_d": "Vacuoles",
+      "correct_answer": "B",
+      "explanation": "Chloroplasts contain chlorophyll for photosynthesis.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t2-1",
+      "topic_id": "bio-t2",
+      "question_text": "What molecule carries genetic info?",
+      "option_a": "Protein",
+      "option_b": "Carbohydrate",
+      "option_c": "DNA",
+      "option_d": "Lipid",
+      "correct_answer": "C",
+      "explanation": "Deoxyribonucleic Acid.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t2-2",
+      "topic_id": "bio-t2",
+      "question_text": "Shape of DNA?",
+      "option_a": "Single Helix",
+      "option_b": "Double Helix",
+      "option_c": "Circle",
+      "option_d": "Square",
+      "correct_answer": "B",
+      "explanation": "Twisted ladder shape.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t2-3",
+      "topic_id": "bio-t2",
+      "question_text": "If B is Brown (dominant) and b is blue (recessive), what is Bb?",
+      "option_a": "Blue",
+      "option_b": "Brown",
+      "option_c": "Green",
+      "option_d": "Mix",
+      "correct_answer": "B",
+      "explanation": "Dominant B masks recessive b.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t2-4",
+      "topic_id": "bio-t2",
+      "question_text": "Physical appearance is called...",
+      "option_a": "Genotype",
+      "option_b": "Phenotype",
+      "option_c": "Karyotype",
+      "option_d": "Biotype",
+      "correct_answer": "B",
+      "explanation": "Pheno = Physical.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t2-5",
+      "topic_id": "bio-t2",
+      "question_text": "Probability of bb from Bb x Bb?",
+      "option_a": "0%",
+      "option_b": "25%",
+      "option_c": "50%",
+      "option_d": "100%",
+      "correct_answer": "B",
+      "explanation": "1 out of 4 squares will be bb.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t3-1",
+      "topic_id": "bio-t3",
+      "question_text": "Which is an abiotic factor?",
+      "option_a": "Tree",
+      "option_b": "Bacteria",
+      "option_c": "Sunlight",
+      "option_d": "Wolf",
+      "correct_answer": "C",
+      "explanation": "Sunlight is non-living.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t3-2",
+      "topic_id": "bio-t3",
+      "question_text": "Organisms that make their own food are...",
+      "option_a": "Consumers",
+      "option_b": "Producers",
+      "option_c": "Decomposers",
+      "option_d": "Predators",
+      "correct_answer": "B",
+      "explanation": "Producers (plants) use photosynthesis.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t3-3",
+      "topic_id": "bio-t3",
+      "question_text": "How much energy is passed to the next level?",
+      "option_a": "100%",
+      "option_b": "50%",
+      "option_c": "10%",
+      "option_d": "0%",
+      "correct_answer": "C",
+      "explanation": "10% rule. Rest is lost as heat.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t3-4",
+      "topic_id": "bio-t3",
+      "question_text": "A network of interconnected food chains is a...",
+      "option_a": "Food Web",
+      "option_b": "Pyramid",
+      "option_c": "Cycle",
+      "option_d": "Biome",
+      "correct_answer": "A",
+      "explanation": "Web implies multiple connections.",
+      "xp_reward": 10
+    },
+    {
+      "question_id": "quiz-bio-t3-5",
+      "topic_id": "bio-t3",
+      "question_text": "What is the primary source of energy for Earth?",
+      "option_a": "The Moon",
+      "option_b": "Volcanoes",
+      "option_c": "The Sun",
+      "option_d": "Wind",
+      "correct_answer": "C",
+      "explanation": "Sunlight drives photosynthesis.",
+      "xp_reward": 10
+    }
+  ],
+  "Achievements": [
+    {
+      "achievement_id": "first-login",
+      "icon": "Zap",
+      "name": "First Login",
+      "description": "Welcome to StudyHub!",
+      "unlock_condition": "Login for the first time"
+    },
+    {
+      "achievement_id": "first-quiz",
+      "icon": "HelpCircle",
+      "name": "First Quiz",
+      "description": "Complete your first quiz",
+      "unlock_condition": "Complete any quiz"
+    },
+    {
+      "achievement_id": "streak-5",
+      "icon": "Flame",
+      "name": "5-Day Streak",
+      "description": "Study 5 days in a row",
+      "unlock_condition": "streak >= 5"
+    },
+    {
+      "achievement_id": "streak-10",
+      "icon": "Flame",
+      "name": "10-Day Streak",
+      "description": "Study 10 days in a row",
+      "unlock_condition": "streak >= 10"
+    },
+    {
+      "achievement_id": "topic-complete",
+      "icon": "CheckCircle2",
+      "name": "Topic Master",
+      "description": "Complete any topic",
+      "unlock_condition": "Any topic progress = 100"
+    },
+    {
+      "achievement_id": "subject-50",
+      "icon": "Trophy",
+      "name": "Halfway There",
+      "description": "50% in any subject",
+      "unlock_condition": "Any subject progress >= 50"
+    },
+    {
+      "achievement_id": "perfect-quiz",
+      "icon": "Star",
+      "name": "Perfect Score",
+      "description": "Score 100% on a quiz",
+      "unlock_condition": "Any quiz score = 100"
+    },
+    {
+      "achievement_id": "all-subjects",
+      "icon": "Award",
+      "name": "Well Rounded",
+      "description": "Study all 4 subjects",
+      "unlock_condition": "All subjects accessed"
+    }
+  ]
+}
