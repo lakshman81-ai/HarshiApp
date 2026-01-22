@@ -204,7 +204,7 @@ export class DataTransformer {
                 options: [
                     { label: 'A', text: row.option_a || '' },
                     { label: 'B', text: row.option_b || '' },
-                    { label: 'C', text: 'C', text: row.option_c || '' },
+                    { label: 'C', text: row.option_c || '' },
                     { label: 'D', text: row.option_d || '' }
                 ].filter(opt => opt.text),
                 correctAnswer: row.correct_answer?.toUpperCase() || 'A',

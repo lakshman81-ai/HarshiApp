@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { BookOpen, Star, Flame, CheckCircle2, Clock, Sun, Moon, Settings } from 'lucide-react';
+import { BookOpen, Star, Flame, CheckCircle2, Clock, Sun, Moon, Settings, Trophy } from 'lucide-react';
 import { useStudy } from '../contexts/StudyContext';
 import { useData } from '../contexts/DataContext';
 import { cn } from '../utils';

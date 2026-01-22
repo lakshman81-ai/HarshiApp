@@ -1,18 +1,9 @@
 import React, { memo, useState } from 'react';
-import { BookOpen, Star, ChevronLeft, FileText, Check, StickyNote, Target, Lightbulb, AlertTriangle, Globe, FlaskConical, Download, HelpCircle, CheckCircle2, ChevronRight, Bookmark, Copy } from 'lucide-react';
+import { BookOpen, Star, ChevronLeft, FileText, Check, StickyNote, Target, Lightbulb, AlertTriangle, Globe, FlaskConical, CheckCircle2, ChevronRight, Bookmark, Copy } from 'lucide-react';
 import { useStudy } from '../contexts/StudyContext';
 import { cn } from '../utils';
 import { ICON_MAP } from '../constants';
-import { NotesEditor } from './NotesEditor';
-// Note: NotesEditor import might be named export or default. I made it default in step 182.
-// Check step 182: `export default NotesEditor;`
-// So import NotesEditor from './NotesEditor'; matches default.
-// Wait, I used named import in the code below `import { NotesEditor }`. I should fix that.
-
-import NotesEditorComponent from './NotesEditor';
-const NotesEditor = NotesEditorComponent;
-
-import { Card } from './common/UIComponents';
+import NotesEditor from './NotesEditor';
 
 const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
     const { progress, subjects, sections, objectives, keyTerms, studyContent, formulas, quizQuestions, updateProgress, settings } = useStudy();
@@ -139,7 +130,6 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
                     <h3 className={cn("text-xs font-bold uppercase tracking-wider mb-3", darkMode ? "text-slate-500" : "text-slate-400")}>Outline</h3>
                     <div className="space-y-1">
                         {topicSections.map((section, i) => {
-                            const SectionIcon = ICON_MAP[section.icon] || FileText;
                             const isCompleted = i < Math.floor((progressPercent / 100) * topicSections.length);
                             return (
                                 <button
