@@ -4,6 +4,7 @@ import { useStudy } from '../contexts/StudyContext';
 import { cn } from '../utils';
 import { ICON_MAP } from '../constants';
 import NotesEditor from './NotesEditor';
+import HandoutView from './HandoutView';
 
 const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
     const { progress, subjects, sections, objectives, keyTerms, studyContent, formulas, quizQuestions, updateProgress, settings } = useStudy();
@@ -23,6 +24,7 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
 
     const [activeSection, setActiveSection] = useState(0);
     const [showNotes, setShowNotes] = useState(false);
+    const [showHandout, setShowHandout] = useState(false);
     const [quizAnswer, setQuizAnswer] = useState(null);
     const [quizSubmitted, setQuizSubmitted] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -88,6 +90,21 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
 
     return (
         <div className={cn("min-h-screen flex", darkMode ? "bg-slate-900" : "bg-slate-50")}>
+            {/* Handout View */}
+            {showHandout && (
+                <HandoutView
+                    subject={config}
+                    topic={topic}
+                    objectives={topicObjectives}
+                    terms={topicTerms}
+                    formulas={topicFormulas}
+                    sections={topicSections}
+                    studyContent={studyContent}
+                    quizQuestions={topicQuizzes}
+                    onClose={() => setShowHandout(false)}
+                />
+            )}
+
             {/* Image Modal */}
             {enlargedImage && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setEnlargedImage(null)}>
@@ -196,6 +213,14 @@ const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
                         <h2 className={cn("text-xl font-bold", darkMode ? "text-white" : "text-slate-800")}>{currentSection?.title}</h2>
                     </div>
                     <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setShowHandout(true)}
+                            className={cn("hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors", darkMode ? "hover:bg-slate-700 text-slate-400" : "hover:bg-slate-100 text-slate-600")}
+                            title="Print Handout"
+                        >
+                            <FileText className="w-4 h-4" />
+                            <span className="hidden lg:inline">Handout</span>
+                        </button>
                         <button onClick={() => currentSection && toggleBookmark(currentSection.id)} className={cn("p-2 rounded-lg", bookmarked.includes(`${topicKey}-${currentSection?.id}`) ? "bg-amber-100 text-amber-600" : darkMode ? "hover:bg-slate-700 text-slate-400" : "hover:bg-slate-100 text-slate-500")}>
                             <Bookmark className="w-5 h-5" />
                         </button>
