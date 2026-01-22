@@ -140,7 +140,9 @@ export class DataTransformer {
                 type: row.content_type || 'text',
                 title: row.content_title || '',
                 text: row.content_text || '',
-                orderIndex: parseInt(row.order_index) || 0
+                orderIndex: parseInt(row.order_index) || 0,
+                imageUrl: row.image_url || '',
+                videoUrl: row.video_url || ''
             });
         });
 
