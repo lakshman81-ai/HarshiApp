@@ -1,0 +1,3 @@
+## 2024-05-22 - [Inline Functions Defeating React.memo]
+**Learning:** In `Grade8_StudyHub_Complete.jsx`, inline arrow functions were passed as props to `Dashboard`, `SubjectOverview`, and `TopicStudyView`. Since these components are wrapped in `React.memo`, the inline functions (being new references on every render) caused these heavy components to re-render unnecessarily whenever the parent `AppContent` re-rendered (e.g., on context updates or loading state changes), completely negating the benefit of `memo`.
+**Action:** Always wrap handler functions passed to `memo`-ized components in `useCallback` to ensure stable references and prevent cascading re-renders.

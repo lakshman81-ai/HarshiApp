@@ -3,15 +3,7 @@ import { BookOpen, Star, ChevronLeft, FileText, Check, StickyNote, Target, Light
 import { useStudy } from '../contexts/StudyContext';
 import { cn } from '../utils';
 import { ICON_MAP } from '../constants';
-import { NotesEditor } from './NotesEditor';
-// Note: NotesEditor import might be named export or default. I made it default in step 182.
-// Check step 182: `export default NotesEditor;`
-// So import NotesEditor from './NotesEditor'; matches default.
-// Wait, I used named import in the code below `import { NotesEditor }`. I should fix that.
-
-import NotesEditorComponent from './NotesEditor';
-const NotesEditor = NotesEditorComponent;
-
+import NotesEditor from './NotesEditor';
 import { Card } from './common/UIComponents';
 
 const StudyGuide = memo(({ subject, topicIndex, onBack, onOpenSettings }) => {
