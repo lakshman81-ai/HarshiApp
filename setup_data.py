@@ -90,7 +90,7 @@ SHEET_SCHEMAS = {
     }
 }
 
-CONTENT_TYPES = ['introduction', 'formula', 'concept_helper', 'warning', 'real_world', 'text', 'video']
+CONTENT_TYPES = ['introduction', 'formula', 'concept_helper', 'warning', 'real_world', 'text', 'video', 'image', 'flowchart']
 SECTION_TYPES = ['objectives', 'intro', 'content', 'applications', 'quiz']
 VALID_ICONS = ['Zap', 'Calculator', 'FlaskConical', 'Leaf', 'Trophy', 'Star', 'Award', 'Flame',
                'HelpCircle', 'CheckCircle2', 'Target', 'BookOpen', 'FileText', 'Clock', 'Globe',
@@ -283,11 +283,13 @@ add_topic_data('phys-t2',
         {'sec_idx': 2, 'type': 'formula', 'title': 'Work Formula', 'text': 'W = F \\cdot d'},
         {'sec_idx': 3, 'type': 'text', 'title': 'Kinetic vs Potential', 'text': 'A roller coaster at the top has high Potential Energy. As it falls, it converts to Kinetic Energy.'},
         {'sec_idx': 3, 'type': 'video', 'title': 'Roller Coaster Physics', 'text': 'Watch how energy transforms.', 'video_url': 'https://www.youtube.com/watch?v=Jnj8mc04r9E'},
-        {'sec_idx': 4, 'type': 'concept_helper', 'title': 'Law of Conservation', 'text': 'Energy cannot be created or destroyed, only transformed.'}
+        {'sec_idx': 4, 'type': 'concept_helper', 'title': 'Law of Conservation', 'text': 'Energy cannot be created or destroyed, only transformed.'},
+        {'sec_idx': 4, 'type': 'flowchart', 'title': 'Energy Transformation', 'text': 'Visualizing how Potential Energy converts to Kinetic Energy.', 'image_url': 'https://mermaid.ink/img/pako:eNpVkMtqwzAQRX9FzKqF_IAeCqWbQsFQAqG7tciyxBZiS0ZSCyX_Xsdf4tJldTPn3DszGtToFCpoeD3pW_QeXwZ0h8-z_sQ12p05sB_tQ4B794dY6_tHj9F59GfW_4E-sB-sO9Z_sBfsC_vAPrAf7IA11v2wF-wL-8A-sB_s4J-x0k5bCg0ZylJyoOQYpZJMy5qrpRCSk0pWUp5S8oOQnJSkC_lLyU_2z7-Xw6GgUCqVbLhQ0pCpkHJYl0qJ4uO6Ff_2B2HqSgM?type=png'}
     ],
     formulas=[
         {'text': 'W = F \\cdot d', 'label': 'Work', 'v1s': 'W', 'v1n': 'Work', 'v1u': 'J', 'v2s': 'F', 'v2n': 'Force', 'v2u': 'N', 'v3s': 'd', 'v3n': 'Distance', 'v3u': 'm'},
-        {'text': 'KE = \\frac{1}{2}mv^2', 'label': 'Kinetic Energy', 'v1s': 'KE', 'v1n': 'Energy', 'v1u': 'J', 'v2s': 'm', 'v2n': 'Mass', 'v2u': 'kg', 'v3s': 'v', 'v3n': 'Velocity', 'v3u': 'm/s'}
+        {'text': 'KE = \\frac{1}{2}mv^2', 'label': 'Kinetic Energy', 'v1s': 'KE', 'v1n': 'Energy', 'v1u': 'J', 'v2s': 'm', 'v2n': 'Mass', 'v2u': 'kg', 'v3s': 'v', 'v3n': 'Velocity', 'v3u': 'm/s'},
+        {'text': 'PE_g = mgh', 'label': 'Gravitational Potential Energy', 'v1s': 'PE', 'v1n': 'Potential Energy', 'v1u': 'J', 'v2s': 'm', 'v2n': 'Mass', 'v2u': 'kg', 'v3s': 'h', 'v3n': 'Height', 'v3u': 'm'}
     ],
     questions=[
         {'text': 'What is the unit for Work?', 'a': 'Newton', 'b': 'Watt', 'c': 'Joule', 'd': 'Meter', 'ans': 'C', 'exp': 'Work is measured in Joules (N·m).'},
