@@ -1,5 +1,5 @@
 import React, { memo, useState, useMemo } from 'react';
-import { BookOpen, FileText, HelpCircle, ClipboardList, Settings, ChevronLeft, CheckCircle2, Circle, CircleDot, Clock, ChevronRight, Check, Download, Search, X, Hash, Variable } from 'lucide-react';
+import { BookOpen, FileText, HelpCircle, Settings, ChevronLeft, CheckCircle2, Circle, CircleDot, Clock, ChevronRight, Check, Search, X, Hash, Variable } from 'lucide-react';
 import { useStudy } from '../contexts/StudyContext';
 import { cn } from '../utils';
 import { ICON_MAP, calculateSubjectProgress } from '../constants';
@@ -151,7 +151,7 @@ const SubjectOverview = memo(({ subject, onBack, onSelectTopic, onOpenSettings }
                 <div className="max-w-6xl mx-auto px-4 sm:px-6">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2 sm:py-0">
                         <div className="flex gap-1 overflow-x-auto no-scrollbar">
-                            {[{ id: 'topics', label: 'Topics', icon: FileText }, { id: 'quiz', label: 'Quizzes', icon: HelpCircle }, { id: 'handout', label: 'Handout', icon: ClipboardList }].map(tab => (
+                            {[{ id: 'topics', label: 'Topics', icon: FileText }].map(tab => (
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
@@ -298,27 +298,6 @@ const SubjectOverview = memo(({ subject, onBack, onSelectTopic, onOpenSettings }
                     </div>
                 )}
 
-                {activeTab === 'quiz' && (
-                    <Card darkMode={darkMode} className="p-8 text-center">
-                        <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4", darkMode ? "bg-slate-700" : "bg-slate-100")}>
-                            <HelpCircle className={cn("w-8 h-8", darkMode ? "text-slate-500" : "text-slate-400")} />
-                        </div>
-                        <h3 className={cn("text-xl font-bold mb-2", darkMode ? "text-white" : "text-slate-700")}>Subject Quiz</h3>
-                        <p className={cn("mb-6", darkMode ? "text-slate-400" : "text-slate-500")}>Test your knowledge across all topics in {config.name}</p>
-                        <button className={cn("px-8 py-3 bg-gradient-to-r text-white rounded-xl font-bold hover:shadow-lg transition-all", config.gradient)}>Start Quiz</button>
-                    </Card>
-                )}
-
-                {activeTab === 'handout' && (
-                    <Card darkMode={darkMode} className="p-8 text-center">
-                        <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4", darkMode ? "bg-slate-700" : "bg-slate-100")}>
-                            <Download className={cn("w-8 h-8", darkMode ? "text-slate-500" : "text-slate-400")} />
-                        </div>
-                        <h3 className={cn("text-xl font-bold mb-2", darkMode ? "text-white" : "text-slate-700")}>Quick Reference Sheet</h3>
-                        <p className={cn("mb-6", darkMode ? "text-slate-400" : "text-slate-500")}>Download a summary of all {config.name} topics</p>
-                        <button className={cn("px-8 py-3 bg-gradient-to-r text-white rounded-xl font-bold hover:shadow-lg transition-all", config.gradient)}>Download PDF</button>
-                    </Card>
-                )}
             </div>
         </div>
     );
