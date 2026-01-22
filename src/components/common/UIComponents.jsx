@@ -8,6 +8,7 @@ export const SyncStatusBadge = memo(({ darkMode }) => {
 
     const statusConfig = {
         idle: { icon: Cloud, color: 'text-slate-400', bg: darkMode ? 'bg-slate-700' : 'bg-slate-100', text: 'Ready' },
+        loading: { icon: Loader2, color: 'text-blue-500', bg: darkMode ? 'bg-blue-900/30' : 'bg-blue-50', text: 'Loading...' },
         syncing: { icon: Loader2, color: 'text-blue-500', bg: darkMode ? 'bg-blue-900/30' : 'bg-blue-50', text: 'Syncing...' },
         success: { icon: Wifi, color: 'text-emerald-500', bg: darkMode ? 'bg-emerald-900/30' : 'bg-emerald-50', text: 'Synced' },
         error: { icon: AlertCircle, color: 'text-red-500', bg: darkMode ? 'bg-red-900/30' : 'bg-red-50', text: 'Error' },
@@ -30,7 +31,7 @@ export const SyncStatusBadge = memo(({ darkMode }) => {
                 )}
                 title={error || (lastSync ? `Last sync: ${lastSync.toLocaleTimeString()}` : 'Click to refresh')}
             >
-                <Icon className={cn("w-4 h-4", config.color, syncStatus === 'syncing' && "animate-spin")} />
+                <Icon className={cn("w-4 h-4", config.color, (syncStatus === 'syncing' || syncStatus === 'loading') && "animate-spin")} />
                 <span className="hidden sm:inline">{config.text}</span>
             </button>
         </div>
