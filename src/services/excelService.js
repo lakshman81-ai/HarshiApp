@@ -17,7 +17,9 @@ const processSheetRows = (rows) => {
 export const fetchLocalExcelData = async () => {
     log('Fetching local Excel file...');
     try {
-        const response = await fetch('StudyHub_Complete_Data.xlsx');
+        // Use process.env.PUBLIC_URL to handle deployment paths (e.g. /HarshiApp/)
+        const publicUrl = process.env.PUBLIC_URL || '';
+        const response = await fetch(`${publicUrl}/StudyHub_Complete_Data.xlsx`);
         if (!response.ok) throw new Error('Failed to load local data file');
 
         const arrayBuffer = await response.arrayBuffer();
