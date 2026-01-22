@@ -54,9 +54,13 @@ const SettingsPanel = memo(({ onClose }) => {
     const [selectedSubject, setSelectedSubject] = useState(settings.selectedSubject || 'physics');
     const [selectedTopics, setSelectedTopics] = useState(settings.selectedTopics || []);
     const [customSubtopics, setCustomSubtopics] = useState(settings.customSubtopics || '');
+    const [customTopicsText, setCustomTopicsText] = useState(settings.customTopicsText || '');
     const [isGenerating, setIsGenerating] = useState(false);
     const [generationStatus, setGenerationStatus] = useState(null);
     const [uploadStatus, setUploadStatus] = useState(null);
+    const [customSheetId, setCustomSheetId] = useState(() => {
+        return localStorage.getItem('studyhub_sheet_id') || GOOGLE_SHEETS_CONFIG.SHEET_ID || '';
+    });
     const fileInputRef = useRef(null);
 
     const darkMode = settings.darkMode;
@@ -71,6 +75,9 @@ const SettingsPanel = memo(({ onClose }) => {
         }
         if (settings.customSubtopics) {
             setCustomSubtopics(settings.customSubtopics);
+        }
+        if (settings.customTopicsText) {
+            setCustomTopicsText(settings.customTopicsText);
         }
     }, [settings]);
 
@@ -95,6 +102,18 @@ const SettingsPanel = memo(({ onClose }) => {
         updateSettings({ customSubtopics: value });
     };
 
+    const handleCustomTopicsChange = (e) => {
+        const value = e.target.value;
+        setCustomTopicsText(value);
+        updateSettings({ customTopicsText: value });
+    };
+
+    const handleSheetIdChange = (e) => {
+        const value = e.target.value;
+        setCustomSheetId(value);
+        localStorage.setItem('studyhub_sheet_id', value);
+    };
+
     const handleDataSourceChange = (source) => {
         updateDataSource(source);
     };
@@ -106,15 +125,12 @@ const SettingsPanel = memo(({ onClose }) => {
 
             const subjectLabel = SUBJECT_OPTIONS.find(s => s.value === selectedSubject)?.label || selectedSubject;
 
-            if (selectedTopics.length === 0) {
-                throw new Error('Please select at least one topic');
+            if (!customTopicsText.trim()) {
+                throw new Error('Please enter at least one topic');
             }
 
-            // Get topic labels
-            const topicLabels = selectedTopics.map(t => {
-                const topic = TOPIC_OPTIONS[selectedSubject]?.find(opt => opt.value === t);
-                return topic?.label || t;
-            }).join(', ');
+            // Use custom topics text directly (comma-separated)
+            const topicLabels = customTopicsText.trim();
 
             // Generate content using AI
             const generatedData = ContentGenerator.generateContent(subjectLabel, topicLabels, customSubtopics);
@@ -131,7 +147,7 @@ const SettingsPanel = memo(({ onClose }) => {
             // Save settings
             updateSettings({
                 selectedSubject,
-                selectedTopics,
+                customTopicsText,
                 customSubtopics
             });
 
@@ -224,8 +240,6 @@ const SettingsPanel = memo(({ onClose }) => {
     const statusInfo = getSyncStatusDisplay();
     const StatusIcon = statusInfo.icon;
 
-    const availableTopics = TOPIC_OPTIONS[selectedSubject] || [];
-
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
             <div className={cn("w-full max-w-lg rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col", darkMode ? "bg-slate-800" : "bg-white")}>
@@ -295,11 +309,11 @@ const SettingsPanel = memo(({ onClose }) => {
 
                                 {/* Google Sheets Toggle */}
                                 <button
-                                    onClick={() => isGoogleSheetsConfigured && handleDataSourceChange('google')}
-                                    disabled={!isGoogleSheetsConfigured}
+                                    onClick={() => (isGoogleSheetsConfigured || customSheetId) && handleDataSourceChange('google')}
+                                    disabled={!isGoogleSheetsConfigured && !customSheetId}
                                     className={cn(
                                         "w-full flex items-center justify-between p-3 rounded-lg border transition-all",
-                                        !isGoogleSheetsConfigured
+                                        (!isGoogleSheetsConfigured && !customSheetId)
                                             ? darkMode ? "bg-slate-700/50 border-slate-600 opacity-50 cursor-not-allowed" : "bg-slate-100 border-slate-200 opacity-50 cursor-not-allowed"
                                             : dataSource === 'google'
                                                 ? darkMode ? "bg-emerald-900/30 border-emerald-500" : "bg-emerald-50 border-emerald-500"
@@ -307,25 +321,40 @@ const SettingsPanel = memo(({ onClose }) => {
                                     )}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <FileSpreadsheet className={cn("w-5 h-5", dataSource === 'google' && isGoogleSheetsConfigured ? "text-emerald-500" : darkMode ? "text-slate-400" : "text-slate-500")} />
+                                        <FileSpreadsheet className={cn("w-5 h-5", dataSource === 'google' && (isGoogleSheetsConfigured || customSheetId) ? "text-emerald-500" : darkMode ? "text-slate-400" : "text-slate-500")} />
                                         <div className="text-left">
                                             <p className={cn("font-medium text-sm", darkMode ? "text-slate-200" : "text-slate-700")}>
                                                 Google Sheets
                                             </p>
                                             <p className={cn("text-xs", darkMode ? "text-slate-400" : "text-slate-500")}>
-                                                {isGoogleSheetsConfigured
-                                                    ? `Sheet ID: ${GOOGLE_SHEETS_CONFIG.SHEET_ID.substring(0, 15)}...`
+                                                {(isGoogleSheetsConfigured || customSheetId)
+                                                    ? 'Connected'
                                                     : 'Not configured'
                                                 }
                                             </p>
                                         </div>
                                     </div>
-                                    {dataSource === 'google' && isGoogleSheetsConfigured ? (
+                                    {dataSource === 'google' && (isGoogleSheetsConfigured || customSheetId) ? (
                                         <ToggleRight className="w-6 h-6 text-emerald-500" />
                                     ) : (
                                         <ToggleLeft className={cn("w-6 h-6", darkMode ? "text-slate-500" : "text-slate-400")} />
                                     )}
                                 </button>
+
+                                {/* Editable Sheet ID */}
+                                <div className="mt-3">
+                                    <label className={cn("block text-xs font-medium mb-1", darkMode ? "text-slate-400" : "text-slate-600")}>Sheet ID</label>
+                                    <input
+                                        type="text"
+                                        value={customSheetId}
+                                        onChange={handleSheetIdChange}
+                                        placeholder="Enter your Google Sheet ID..."
+                                        className={cn(
+                                            "w-full p-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2",
+                                            darkMode ? "bg-slate-700 border-slate-600 text-slate-200 focus:ring-indigo-500/50" : "bg-white border-slate-200 text-slate-700 focus:ring-indigo-200"
+                                        )}
+                                    />
+                                </div>
                             </div>
 
                             {/* Last Sync */}
@@ -403,26 +432,16 @@ const SettingsPanel = memo(({ onClose }) => {
                                 </select>
                             </div>
 
-                            {/* Topics Selection */}
+                            {/* Topics Text Input */}
                             <div>
-                                <label className={cn("block text-sm font-medium mb-2", darkMode ? "text-slate-400" : "text-slate-600")}>Topics (select at least one)</label>
-                                <div className="space-y-2">
-                                    {availableTopics.map(topic => (
-                                        <button
-                                            key={topic.value}
-                                            onClick={() => handleTopicToggle(topic.value)}
-                                            className={cn(
-                                                "w-full flex items-center justify-between p-2.5 rounded-lg border text-sm transition-all",
-                                                selectedTopics.includes(topic.value)
-                                                    ? darkMode ? "bg-amber-900/30 border-amber-500 text-amber-300" : "bg-amber-50 border-amber-500 text-amber-800"
-                                                    : darkMode ? "bg-slate-700 border-slate-600 text-slate-300 hover:border-slate-500" : "bg-white border-slate-200 text-slate-700 hover:border-slate-300"
-                                            )}
-                                        >
-                                            <span>{topic.label}</span>
-                                            <CheckCircle2 className={cn("w-4 h-4", selectedTopics.includes(topic.value) ? "opacity-100" : "opacity-0")} />
-                                        </button>
-                                    ))}
-                                </div>
+                                <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-400" : "text-slate-600")}>Topics (comma separated)</label>
+                                <textarea
+                                    value={customTopicsText}
+                                    onChange={handleCustomTopicsChange}
+                                    placeholder="e.g. Newton's Laws, Work & Energy, Electricity"
+                                    className={cn("w-full p-3 rounded-xl border text-sm focus:outline-none focus:ring-2", darkMode ? "bg-slate-700 border-slate-600 text-slate-200 focus:ring-amber-500/50" : "bg-white border-slate-200 text-slate-700 focus:ring-amber-200")}
+                                    rows={2}
+                                />
                             </div>
 
                             {/* Subtopics */}
@@ -452,10 +471,10 @@ const SettingsPanel = memo(({ onClose }) => {
                             {/* Generate Button */}
                             <button
                                 onClick={handleGenerateContent}
-                                disabled={isGenerating || selectedTopics.length === 0}
+                                disabled={isGenerating || !customTopicsText.trim()}
                                 className={cn(
                                     "w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all",
-                                    isGenerating || selectedTopics.length === 0
+                                    isGenerating || !customTopicsText.trim()
                                         ? darkMode ? "bg-slate-600 text-slate-400 cursor-not-allowed" : "bg-slate-200 text-slate-400 cursor-not-allowed"
                                         : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl"
                                 )}
@@ -472,6 +491,20 @@ const SettingsPanel = memo(({ onClose }) => {
                                     </>
                                 )}
                             </button>
+
+                            {/* AI Data Generation Documentation Link */}
+                            <a
+                                href={`${process.env.PUBLIC_URL || ''}/AI_DATA_GENERATION_README.md`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={cn(
+                                    "flex items-center justify-center gap-2 text-sm font-medium transition-colors mt-3",
+                                    darkMode ? "text-amber-400 hover:text-amber-300" : "text-amber-600 hover:text-amber-700"
+                                )}
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                                View AI Data Generation Guide
+                            </a>
                         </div>
                     </div>
 
