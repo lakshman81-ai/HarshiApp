@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Loader2 } from 'lucide-react';
 import { DataProvider, useData } from './contexts/DataContext';
 import { StudyProvider, useStudy } from './contexts/StudyContext';
@@ -18,6 +18,36 @@ const AppContent = () => {
   const [topicIndex, setTopicIndex] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
 
+  const handleSelectSubject = useCallback((s) => {
+    setSubject(s);
+    setView('subject');
+  }, []);
+
+  const handleOpenSettings = useCallback(() => {
+    setShowSettings(true);
+  }, []);
+
+  const handleCloseSettings = useCallback(() => {
+    setShowSettings(false);
+  }, []);
+
+  const handleGoHome = useCallback(() => {
+    setView('dashboard');
+  }, []);
+
+  const handleSubjectBack = useCallback(() => {
+    setView('dashboard');
+  }, []);
+
+  const handleSelectTopic = useCallback((i) => {
+    setTopicIndex(i);
+    setView('study');
+  }, []);
+
+  const handleStudyBack = useCallback(() => {
+    setView('subject');
+  }, []);
+
   if (isLoading) {
     return (
       <div className={cn("min-h-screen flex flex-col items-center justify-center", darkMode ? "bg-slate-900" : "bg-slate-50")}>
@@ -31,18 +61,18 @@ const AppContent = () => {
     <div className={cn("font-sans antialiased", darkMode && "dark")}>
       {view === 'dashboard' && (
         <Dashboard
-          onSelectSubject={(s) => { setSubject(s); setView('subject'); }}
-          onOpenSettings={() => setShowSettings(true)}
-          onGoHome={() => setView('dashboard')}
+          onSelectSubject={handleSelectSubject}
+          onOpenSettings={handleOpenSettings}
+          onGoHome={handleGoHome}
         />
       )}
 
       {view === 'subject' && subject && (
         <SubjectOverview
           subject={subject}
-          onBack={() => setView('dashboard')}
-          onSelectTopic={(i) => { setTopicIndex(i); setView('study'); }}
-          onOpenSettings={() => setShowSettings(true)}
+          onBack={handleSubjectBack}
+          onSelectTopic={handleSelectTopic}
+          onOpenSettings={handleOpenSettings}
         />
       )}
 
@@ -50,12 +80,12 @@ const AppContent = () => {
         <TopicStudyView
           subject={subject}
           topicIndex={topicIndex}
-          onBack={() => setView('subject')}
-          onOpenSettings={() => setShowSettings(true)}
+          onBack={handleStudyBack}
+          onOpenSettings={handleOpenSettings}
         />
       )}
 
-      {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} />}
+      {showSettings && <SettingsPanel onClose={handleCloseSettings} />}
 
       <style>{`
         @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
