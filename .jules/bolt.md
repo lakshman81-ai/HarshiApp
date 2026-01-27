@@ -1,0 +1,3 @@
+## 2024-05-22 - Context Provider Chaining Optimization
+**Learning:** `StudyProvider` consumes `DataContext`. Background sync updates in `DataContext` (like `isRefreshing` toggling during auto-refresh) trigger `StudyProvider` re-renders. Without memoization of `StudyContext` value, these background updates cause the entire UI (consumers of `StudyContext`) to re-render, even if the actual study content (subjects, etc.) hasn't changed.
+**Action:** Always memoize Context values with `useMemo`, especially in chained providers. For dependent providers, list specific data properties as dependencies instead of the entire parent context object to isolate consumers from irrelevant updates.
