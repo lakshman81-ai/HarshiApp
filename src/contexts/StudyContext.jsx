@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useData } from './DataContext';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 import { cn } from '../utils';
@@ -116,9 +116,10 @@ export const StudyProvider = ({ children }) => {
 
             updateProgress({ streak: newStreak, lastStudyDate: today, achievements: newAchievements });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const value = {
+    const value = useMemo(() => ({
         progress,
         settings,
         subjects: data?.subjects || {},
@@ -135,7 +136,7 @@ export const StudyProvider = ({ children }) => {
         showToast,
         toast,
         setToast
-    };
+    }), [progress, settings, data, updateProgress, toggleDarkMode, updateSettings, showToast, toast]);
 
     return (
         <StudyContext.Provider value={value}>
