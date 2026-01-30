@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useData } from './DataContext';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
-import { cn } from '../utils';
 
 const DEFAULT_PROGRESS = {
     topics: {},
@@ -47,30 +45,12 @@ const useLocalStorage = (key, initialValue) => {
     return [storedValue, setValue];
 };
 
-const Toast = ({ message, type, onClose }) => {
-    useEffect(() => {
-        const timer = setTimeout(onClose, 3000);
-        return () => clearTimeout(timer);
-    }, [onClose]);
-
-    const colors = { success: 'bg-emerald-500', error: 'bg-red-500', info: 'bg-blue-500', warning: 'bg-amber-500' };
-
-    return (
-        <div className={cn("fixed bottom-4 right-4 z-50 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2", colors[type])}>
-            {type === 'success' && <CheckCircle2 className="w-5 h-5" />}
-            {type === 'error' && <AlertCircle className="w-5 h-5" />}
-            {message}
-        </div>
-    );
-};
-
 export const StudyProvider = ({ children }) => {
     const data = useData();
     const [savedData, setSavedData] = useLocalStorage(STORAGE_KEY, {
         progress: DEFAULT_PROGRESS,
         settings: { darkMode: false, notifications: true, soundEffects: true }
     });
-    const [toast, setToast] = useState(null);
 
     const progress = savedData.progress;
     const settings = savedData.settings;
@@ -98,10 +78,6 @@ export const StudyProvider = ({ children }) => {
         updateSettings({ darkMode: !settings.darkMode });
     }, [settings.darkMode, updateSettings]);
 
-    const showToast = useCallback((message, type = 'info') => {
-        setToast({ message, type });
-    }, []);
-
     // Update streak on load
     useEffect(() => {
         const today = new Date().toDateString();
@@ -116,9 +92,10 @@ export const StudyProvider = ({ children }) => {
 
             updateProgress({ streak: newStreak, lastStudyDate: today, achievements: newAchievements });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const value = {
+    const value = React.useMemo(() => ({
         progress,
         settings,
         subjects: data?.subjects || {},
@@ -131,16 +108,19 @@ export const StudyProvider = ({ children }) => {
         achievements: data?.achievements || [],
         updateProgress,
         toggleDarkMode,
-        updateSettings,
-        showToast,
-        toast,
-        setToast
-    };
+        updateSettings
+    }), [
+        progress,
+        settings,
+        data,
+        updateProgress,
+        toggleDarkMode,
+        updateSettings
+    ]);
 
     return (
         <StudyContext.Provider value={value}>
             {children}
-            {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
         </StudyContext.Provider>
     );
 };
