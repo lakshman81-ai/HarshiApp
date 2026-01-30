@@ -147,7 +147,9 @@ export const DataProvider = ({ children }) => {
         return () => clearInterval(interval);
     }, [dataSource, isGoogleSheetsConfigured, loadData]);
 
-    const value = {
+    const refresh = useCallback(() => loadData(true), [loadData]);
+
+    const value = React.useMemo(() => ({
         ...data,
         isLoading,
         isRefreshing,
@@ -158,8 +160,20 @@ export const DataProvider = ({ children }) => {
         dataSource,
         updateDataSource,
         isGoogleSheetsConfigured,
-        refresh: () => loadData(true)
-    };
+        refresh
+    }), [
+        data,
+        isLoading,
+        isRefreshing,
+        error,
+        lastSync,
+        syncStatus,
+        isDemoMode,
+        dataSource,
+        updateDataSource,
+        isGoogleSheetsConfigured,
+        refresh
+    ]);
 
     return (
         <DataContext.Provider value={value}>
