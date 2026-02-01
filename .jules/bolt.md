@@ -1,0 +1,3 @@
+## 2024-05-23 - Context Memoization and Inline Handlers
+**Learning:** In this codebase, the `DataContext` and `StudyContext` are at the root. Without `useMemo` on their `value` objects, any state change in these providers (even if irrelevant to downstream components) forces a full app re-render. Additionally, `Grade8_StudyHub_Complete.jsx` passes inline functions to `React.memo` components (`Dashboard`, `SubjectOverview`), effectively disabling the memoization.
+**Action:** Always memoize Context values (`useMemo`) and wrap handlers passed to heavy children in `useCallback` to ensure `React.memo` works as intended.

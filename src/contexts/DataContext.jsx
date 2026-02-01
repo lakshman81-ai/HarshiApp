@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { sheetsService } from '../services/GoogleSheetsService';
 import { DataTransformer } from '../services/DataTransformer';
 import { fetchLocalExcelData } from '../services/excelService';
@@ -147,7 +147,9 @@ export const DataProvider = ({ children }) => {
         return () => clearInterval(interval);
     }, [dataSource, isGoogleSheetsConfigured, loadData]);
 
-    const value = {
+    // Memoize the context value to prevent unnecessary re-renders of consumers
+    // when the provider re-renders but the data hasn't changed.
+    const value = useMemo(() => ({
         ...data,
         isLoading,
         isRefreshing,
@@ -159,7 +161,7 @@ export const DataProvider = ({ children }) => {
         updateDataSource,
         isGoogleSheetsConfigured,
         refresh: () => loadData(true)
-    };
+    }), [data, isLoading, isRefreshing, error, lastSync, syncStatus, isDemoMode, dataSource, updateDataSource, isGoogleSheetsConfigured, loadData]);
 
     return (
         <DataContext.Provider value={value}>
